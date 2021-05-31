@@ -1,0 +1,44 @@
+submit*sh
+submit*sh*err
+submit*sh*log
+submit*sh*out
+
+#geometry file
+*.gdml
+
+#S2ROOT build
+build
+*.swp
+*.o
+
+#S2ROOT simulation/analysis data
+data
+*.root
+*.graw
+
+#mac
+.AppleDouble
+
+#geant4 executable
+*.g4sim
+
+#log files created from build/run
+log/*
+*.log
+
+#cmake configuration log files
+!log/*.in
+
+#documetation directory(doxygen)
+doc
+
+#temporary directories
+temp*/
+
+#figures
+figures/
+*.pdf
+*.png
+*.eps
+*.jpg
+*.jpeg

@@ -1,0 +1,13 @@
+#G4VisFile     s  #KEBIPATH/at-tpc/macros/input/vis.mac
+G4MacroFile   s  $KEBIPATH/at-tpc/macros/input/run_geant4.mac
+G4InputFile   s  $KEBIPATH/at-tpc/macros/generate/test.gen
+G4OutputFile  s  $KEBIPATH/data/ATTPC.mc.root
+
+tpcPar f $KEBIPATH/at-tpc/macros/input/par_at-tpc.conf
+
+#SensitiveDetectors s ATTPC
+
+MCSetEdepSumTree b 0
+MCStepPersistency b 1
+MCSecondaryPersistency b 1
+MCTrackVertexPersistency b 1
