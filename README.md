@@ -93,8 +93,8 @@ root example_read_track.C
 ----
 ## LAMPS AT-TPC Simulation
 
-Default directory is [kebi/at-tpc/macros]
-Default parameter file is [attpc.par]
+Default directory is [kebi/at-tpc/macros](https://github.com/ggfdsa10/KEBI_AT-TPC/tree/main/kebi/at-tpc/macros)
+Default parameter file is [attpc.par](https://github.com/ggfdsa10/KEBI_AT-TPC/tree/main/kebi/at-tpc/macros)
 
 ### 1. Geant4 simulation
 
@@ -111,7 +111,7 @@ root igi.C
 ```bash
 root eve.C
 ```
-The eve parameter file [input/par_at-tpc_eve.conf]
+The eve parameter file [input/par_at-tpc_eve.conf](https://github.com/ggfdsa10/KEBI_AT-TPC/tree/main/kebi/at-tpc/macros/input)
 
 
 ## Links
