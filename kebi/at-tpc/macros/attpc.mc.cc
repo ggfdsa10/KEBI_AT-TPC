@@ -31,7 +31,7 @@ int main(int argc, char** argv)
   
   auto par = runManager -> GetParameterContainer();
   G4bool Random = par -> GetParBool("RandomEngine");
-  
+
   if (Random == true) {
     G4Random::setTheSeed(time(0));
     runManager -> SetUserAction(new ATTPCRandomPrimaryGenerate());

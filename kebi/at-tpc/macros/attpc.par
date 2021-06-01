@@ -7,7 +7,7 @@ tpcPar f $KEBIPATH/at-tpc/macros/input/par_at-tpc.conf
 
 #SensitiveDetectors s ATTPC
 
-MCSetEdepSumTree b 0
+MCSetEdepSumTree b 1
 MCStepPersistency b 1
 MCSecondaryPersistency b 1
 MCTrackVertexPersistency b 1

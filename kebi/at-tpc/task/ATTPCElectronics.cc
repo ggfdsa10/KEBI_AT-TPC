@@ -1,7 +1,7 @@
 #include "KBRun.hh"
 #include "ATTPCElectronics.hh"
-#include "TRandom.h"
 #include <iostream>
+
 using namespace std;
 
 ClassImp(ATTPCElectronics)
@@ -31,6 +31,8 @@ bool ATTPCElectronics::Init()
   fPulseFunction = pulseGen -> GetPulseFunction();
   fPulseFunction -> SetParameters(fEChargeToADC,0);
 
+  rand = new TRandom3(time(0));
+   
   return true;
 }
 
@@ -38,7 +40,6 @@ void ATTPCElectronics::Exec(Option_t*)
 {
   Int_t nPads = fPadArray -> GetEntries();
 
-  std::cout << nPads << "**************" << std::endl;
   for (Int_t iPad = 0; iPad < nPads; iPad++) {
     KBPad *pad = (KBPad *) fPadArray -> At(iPad);
     Double_t out[512] = {0};
@@ -96,10 +97,11 @@ void ATTPCElectronics::Exec(Option_t*)
     for (Int_t iTb = saturatedFrom+5; iTb < fNTbs; iTb++)
       out[iTb] = 0;
 
-    
-    for (Int_t i = 0; i< 512; i++){
-      Double_t noise = gRandom -> Uniform(100)-50;
-      out[i] += 450+noise;
+    if(fNoiseOn == true){
+      for (Int_t i = 0; i< 512; i++){
+	Double_t noise = rand -> Gaus(434,42);
+	out[i] += noise;
+      }
     }
     pad -> SetBufferOut(out);
   }

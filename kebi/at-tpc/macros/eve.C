@@ -6,13 +6,11 @@ void nx(Int_t eventID = -1) {
   cout << "Event " << fEventID << endl;
 }
 
-// the last output from KBRun is used if input is "last".
 void eve(TString input = "ATTPC")
 {
   auto run = new KBRun();
-  run -> SetInputFile(input+".digi");
-  run -> AddFriend(input+".mc");
-  //run -> AddFriend(name+".digi");
+  run -> SetInputFile(input+".mc");
+  run -> AddFriend(input+".digi");
 
   run -> AddDetector(new ATTPC());
   run -> SetTag("eve");

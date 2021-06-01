@@ -23,8 +23,9 @@ void ATTPCTrackingAction::PreUserTrackingAction(const G4Track* track)
 {
   G4int parentID = track -> GetParentID();
   G4int PDG = track -> GetDefinition() -> GetPDGEncoding();
+  G4int source = track -> GetTrackID();
 
-  if (parentID == 1 && PDG == 11) {
+  if ((parentID == 1 && PDG == 11) || source == 1 ) {
     G4ThreeVector momentum = track -> GetMomentum();
     G4ThreeVector position = track -> GetPosition();
     G4double KEnergy = track -> GetKineticEnergy();

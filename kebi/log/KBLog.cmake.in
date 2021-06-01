@@ -1,0 +1,66 @@
+set(KEBI_PATH @KEBI_PATH@)
+set(CREATE_GIT_LOG @CREATE_GIT_LOG@)
+set(BUILD_DOXYGEN_DOC @BUILD_DOXYGEN_DOC@)
+
+find_package(Git)
+if(CREATE_GIT_LOG)
+  if(NOT GIT_FOUND)
+    message(FATAL_ERROR "Git is needed to create git-log.")
+    set(CREATE_GIT_LOG off)
+  endif()
+endif()
+
+if(BUILD_DOXYGEN_DOC)
+  find_package(Doxygen)
+  if(NOT DOXYGEN_FOUND)
+    message(FATAL_ERROR "Doxygen is needed to build the documentation.")
+    set(BUILD_DOXYGEN_DOC off)
+  endif()
+endif()
+
+if(CREATE_GIT_LOG)
+  execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse --abbrev-ref HEAD OUTPUT_VARIABLE KEBI_GIT_BRANCH OUTPUT_STRIP_TRAILING_WHITESPACE WORKING_DIRECTORY ${KEBI_PATH})
+  execute_process(COMMAND ${GIT_EXECUTABLE} rev-list --count ${KEBI_GIT_BRANCH} OUTPUT_VARIABLE KEBI_GIT_COMMIT_COUNT OUTPUT_STRIP_TRAILING_WHITESPACE WORKING_DIRECTORY ${KEBI_PATH})
+  execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse --short ${KEBI_GIT_BRANCH} OUTPUT_VARIABLE KEBI_GIT_HASH_SHORT OUTPUT_STRIP_TRAILING_WHITESPACE WORKING_DIRECTORY ${KEBI_PATH})
+  set(KEBI_VERSION "${KEBI_GIT_BRANCH}.${KEBI_GIT_COMMIT_COUNT}.${KEBI_GIT_HASH_SHORT}")
+  set(KEBI_VERSION_SHORT "${KEBI_GIT_HASH_SHORT}")
+
+  execute_process(COMMAND ${GIT_EXECUTABLE} branch -l OUTPUT_VARIABLE KEBI_GIT_BRANCH_LIST OUTPUT_STRIP_TRAILING_WHITESPACE WORKING_DIRECTORY ${KEBI_PATH})
+  string(REPLACE "\n" ";" KEBI_GIT_BRANCH_LIST "${KEBI_GIT_BRANCH_LIST}")
+  string(REPLACE " " "" KEBI_GIT_BRANCH_LIST "${KEBI_GIT_BRANCH_LIST}")
+  string(REPLACE "*" "" KEBI_GIT_BRANCH_LIST "${KEBI_GIT_BRANCH_LIST}")
+
+  foreach(_branch ${KEBI_GIT_BRANCH_LIST})
+    execute_process(COMMAND ${GIT_EXECUTABLE} log --reverse --oneline ${_branch} OUTPUT_VARIABLE KEBI_GIT_BRANCH_LOGS)
+    list(APPEND KEBI_GIT_BRANCH_LOG_LIST "__BRANCH__ ${_branch}")
+    foreach(_log ${KEBI_GIT_BRANCH_LOGS})
+      list(APPEND KEBI_GIT_BRANCH_LOG_LIST ${_log})
+    endforeach(_log)
+  endforeach(_branch)
+
+  string(REPLACE ";" "\n" KEBI_GIT_BRANCH_LOG_LIST "${KEBI_GIT_BRANCH_LOG_LIST}")
+
+  execute_process(COMMAND ${GIT_EXECUTABLE} rev-parse --abbrev-ref HEAD OUTPUT_VARIABLE GETDECODER_GIT_BRANCH OUTPUT_STRIP_TRAILING_WHITESPACE WORKING_DIRECTORY ${KEBI_PATH}/GETDECODER)
+  execute_process(COMMAND ${GIT_EXECUTABLE} rev-list --count ${GETDECODER_GIT_BRANCH} OUTPUT_VARIABLE GETDECODER_GIT_COMMIT_COUNT OUTPUT_STRIP_TRAILING_WHITESPACE WORKING_DIRECTORY ${KEBI_PATH}/GETDECODER)
+  set(GETDECODER_VERSION "${GETDECODER_GIT_BRANCH}.${GETDECODER_GIT_COMMIT_COUNT}")
+
+  execute_process(COMMAND ${GIT_EXECUTABLE} log --pretty=format:"%h %an %ar : %s" -1 OUTPUT_VARIABLE KEBI_GIT_LOG_TEMP)
+  execute_process(COMMAND ${GIT_EXECUTABLE} status -s      OUTPUT_VARIABLE KEBI_GIT_STATUS OUTPUT_STRIP_TRAILING_WHITESPACE)
+  execute_process(COMMAND ${GIT_EXECUTABLE} diff -U0 OUTPUT_VARIABLE KEBI_GIT_DIFF OUTPUT_STRIP_TRAILING_WHITESPACE)
+  string(REPLACE \" "" KEBI_GIT_LOG ${KEBI_GIT_LOG_TEMP})
+
+  cmake_host_system_information(RESULT KEBI_HOSTNAME QUERY HOSTNAME)
+
+  set(KEBI_USERNAME $ENV{USER})
+
+  configure_file(${KEBI_PATH}/log/KBCompiled.h.in  ${KEBI_PATH}/log/KBCompiled.h @ONLY)
+  configure_file(${KEBI_PATH}/log/KBCompiledStatus.log.in ${KEBI_PATH}/log/KBCompiledStatus.log @ONLY)
+  configure_file(${KEBI_PATH}/log/KBCompiledDiff.log.in ${KEBI_PATH}/log/KBCompiledDiff.log @ONLY)
+  configure_file(${KEBI_PATH}/log/KBBranchList.log.in ${KEBI_PATH}/log/KBBranchList.log @ONLY)
+endif()
+
+if(BUILD_DOXYGEN_DOC)
+  configure_file(${KEBI_PATH}/log/doxy.conf.in ${KEBI_PATH}/log/doxy.conf @ONLY)
+  execute_process(COMMAND ${DOXYGEN_EXECUTABLE} ${KEBI_PATH}/log/doxy.conf 
+                  WORKING_DIRECTORY ${KEBI_PATH})
+endif()

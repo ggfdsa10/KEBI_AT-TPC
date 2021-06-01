@@ -153,7 +153,7 @@ Double_t ATTPCPadPlane::PadDisplacement() const
 
 bool ATTPCPadPlane::IsInBoundary(Double_t i, Double_t j)
 {
-  if ( i <= fBasePadPos+0.25 && j <= fBasePadPos+0.25)
+  if ( i <= fBasePadPos+0.125 && j <= fBasePadPos+0.125)
     return true;
     
   return false;
@@ -202,10 +202,10 @@ void ATTPCPadPlane::DrawFrame(Option_t *option)
 {
   Color_t lineColor = kBlack;
 
-  TLine* line1 = new TLine(fBasePadPos+0.25, 0., fBasePadPos+0.25, fBasePadPos+0.25);
-  TLine* line2 = new TLine(0., 0., fBasePadPos+0.25, 0.);
-  TLine* line3 = new TLine(0., 0., 0., fBasePadPos+0.25);
-  TLine* line4 = new TLine(0.,fBasePadPos+0.25,fBasePadPos+0.25,fBasePadPos+0.25);
+  TLine* line1 = new TLine(fBasePadPos +0.125, 0., fBasePadPos +0.125, fBasePadPos +0.125);
+  TLine* line2 = new TLine(0., 0., fBasePadPos +0.125, 0.);
+  TLine* line3 = new TLine(0., 0., 0., fBasePadPos +0.125);
+  TLine* line4 = new TLine(0., fBasePadPos +0.125, fBasePadPos +0.125, fBasePadPos +0.125);
 
   line1 -> SetLineColor(lineColor);
   line2 -> SetLineColor(lineColor);
@@ -230,7 +230,7 @@ TCanvas *ATTPCPadPlane::GetCanvas(Option_t *option)
 
 Int_t ATTPCPadPlane::FindSection(Double_t i, Double_t j)
 {
-  if ((i <= fBasePadPos+0.025 || i >= 0) && (j <= fBasePadPos+0.025 || j >= 0))
+  if ((i <= fBasePadPos +0.125 || i >= 0) && (j <= fBasePadPos +0.125 || j >= 0))
     {
       return 0;
     }

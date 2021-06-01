@@ -65,7 +65,12 @@ void ATTPCDriftElectron::Exec(Option_t*)
     KBMCTrack* track = (KBMCTrack*) fMCTrackArray -> At(itrack);
 
     Int_t trackID = track -> GetParentID();
+    Int_t SourceCut = track -> GetTrackID();
     Double_t KEnergy = (track -> GetKE())*1000000; //[ev]
+
+    if(SourceCut == 1)
+      continue;
+    
     
     KBVector3 posMC(track -> GetVX(), track -> GetVY(), track -> GetVZ());
     posMC.SetReferenceAxis(fTpc -> GetEFieldAxis());

@@ -39,7 +39,7 @@ class ATTPCPadPlane : public KBPadPlane
     Double_t fPadWidth = 2.625; // [mm]
     Double_t fPadHeight = 12; // [mm]
     Double_t fPadGap = 0.5; // [mm]
-    Double_t fBasePadPos = 100.; // [mm]
+    Double_t fBasePadPos = 100. - 0.125; // [mm]
   
     std::vector<Int_t> fNRowsInLayer[1];
     std::map<std::vector<Int_t>, Int_t> fPadMap;

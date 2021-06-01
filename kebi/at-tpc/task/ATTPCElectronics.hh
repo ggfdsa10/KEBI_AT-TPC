@@ -8,6 +8,7 @@
 #include "TF1.h"
 #include "TClonesArray.h"
 #include <time.h>
+#include "TRandom3.h"
 
 class ATTPCElectronics : public KBTask
 { 
@@ -19,10 +20,9 @@ class ATTPCElectronics : public KBTask
     void Exec(Option_t*);
 
   private:
-    void Noise();
-  
     TClonesArray* fPadArray;
 
+    TRandom3 *rand = nullptr;  
     Int_t fNPlanes;
     Int_t fNTbs;
     Double_t fEChargeToADC;
