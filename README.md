@@ -107,9 +107,11 @@ Default parameter file is [attpc.par](https://github.com/ggfdsa10/KEBI_AT-TPC/tr
 root digi.C
 ```
 
-### Event display 
+### 3. Event display 
 ```bash
 root eve.C
+
+nx()
 ```
 The eve parameter file [input/par_at-tpc_eve.conf](https://github.com/ggfdsa10/KEBI_AT-TPC/tree/main/kebi/at-tpc/macros/input)
 
@@ -117,7 +119,7 @@ The eve parameter file [input/par_at-tpc_eve.conf](https://github.com/ggfdsa10/K
 ```bash
 root SumADC.C
 ```
-OutPut File [kebi/at-tpc/output_data/ADC_analysis.root](https://github.com/ggfdsa10/KEBI_AT-TPC/tree/main/kebi/at-tpc/output_data)
+OutPut File [kebi/at-tpc/output_data/](https://github.com/ggfdsa10/KEBI_AT-TPC/tree/main/kebi/at-tpc/output_data)
 
 
 
