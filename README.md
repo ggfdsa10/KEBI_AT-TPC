@@ -122,7 +122,7 @@ nx()
 ```
 The eve parameter file [input/par_at-tpc_eve.conf](https://github.com/ggfdsa10/KEBI_AT-TPC/tree/main/kebi/at-tpc/macros/input)
 
-### ADC data (ADC data simulation)
+### 4. ADC data (ADC data simulation)
 ```bash
 root ADC_Analysis.C
 ```
