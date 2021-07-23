@@ -93,7 +93,7 @@ root example_read_track.C
 ----
 ## LAMPS AT-TPC Simulation
 
-Default directory is [kebi/at-tpc/macros](https://github.com/ggfdsa10/KEBI_AT-TPC/tree/main/kebi/at-tpc/macros)
+Default execution directory is [kebi/at-tpc/macros](https://github.com/ggfdsa10/KEBI_AT-TPC/tree/main/kebi/at-tpc/macros)
 Default parameter file is [attpc.par](https://github.com/ggfdsa10/KEBI_AT-TPC/tree/main/kebi/at-tpc/macros)
 
 ### 1. Geant4 simulation
@@ -104,14 +104,23 @@ Default parameter file is [attpc.par](https://github.com/ggfdsa10/KEBI_AT-TPC/tr
 
 ### 2. Digitization (electronics simulation)
 ```bash
-root igi.C
+root digi.C
 ```
 
-### Event display 
+### 3. Event display 
 ```bash
 root eve.C
+
+nx()
 ```
 The eve parameter file [input/par_at-tpc_eve.conf](https://github.com/ggfdsa10/KEBI_AT-TPC/tree/main/kebi/at-tpc/macros/input)
+
+### ADC data (ADC data simulation)
+```bash
+root ADC_Analysis.C
+```
+OutPut File [kebi/at-tpc/output_data/](https://github.com/ggfdsa10/KEBI_AT-TPC/tree/main/kebi/at-tpc/output_data)
+
 
 
 ## Links
