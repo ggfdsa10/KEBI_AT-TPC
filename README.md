@@ -104,7 +104,7 @@ Default parameter file is [attpc.par](https://github.com/ggfdsa10/KEBI_AT-TPC/tr
 
 ### 2. Digitization (electronics simulation)
 ```bash
-root igi.C
+root digi.C
 ```
 
 ### Event display 
@@ -112,6 +112,13 @@ root igi.C
 root eve.C
 ```
 The eve parameter file [input/par_at-tpc_eve.conf](https://github.com/ggfdsa10/KEBI_AT-TPC/tree/main/kebi/at-tpc/macros/input)
+
+### ADC data (ADC data simulation)
+```bash
+root SumADC.C
+```
+OutPut File [kebi/at-tpc/output_data/ADC_analysis.root](https://github.com/ggfdsa10/KEBI_AT-TPC/tree/main/kebi/at-tpc/output_data)
+
 
 
 ## Links
