@@ -96,7 +96,7 @@ root example_read_track.C
 Default execution directory is [kebi/at-tpc/macros](https://github.com/ggfdsa10/KEBI_AT-TPC/tree/main/kebi/at-tpc/macros)
 Default parameter file is [attpc.par](https://github.com/ggfdsa10/KEBI_AT-TPC/tree/main/kebi/at-tpc/macros)
 
-### 0. Setup Simulation Parameters
+### 0. Setup simulation parameters
 
 Before execution AT-TPC Simulation, you have to set parameters.
 
