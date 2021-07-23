@@ -143,7 +143,7 @@ Double_t ATTPCDriftElectron::PolyaFunction(Double_t *x, Double_t *Par){
 
 void ATTPCDriftElectron::GainDistribution(){
   fGEMLayerTerm = 0.2; //[cm]
-  Double_t Electron = 219.5;
+  Double_t Electron = 219.1;
   Double_t Fano = 0.2; // about 0.2 in Argon based gas mixture
   Double_t GainMean = TMath::Exp(-16.84+0.07451*fGemVolt);
   Double_t GainVariance = 1/(pow(TMath::Exp(-20.7+0.07985*fGemVolt) / GainMean, 2)*Electron - Fano);
