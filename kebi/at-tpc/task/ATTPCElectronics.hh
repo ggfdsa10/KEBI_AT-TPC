@@ -1,19 +1,18 @@
 #ifndef ATTPCELECTRONICS_HH
 #define ATTPCELECTRONICS_HH
 
+#include <time.h>
 #include "KBTask.hh"
 #include "LHTpc.hh"
 #include "KBPulseGenerator.hh"
-#include "TH2D.h"
 #include "TF1.h"
 #include "TClonesArray.h"
-#include <time.h>
 #include "TRandom3.h"
 
 class ATTPCElectronics : public KBTask
 { 
   public:
-    ATTPCElectronics(Bool_t usePointChargeMC = false);
+    ATTPCElectronics(Bool_t usePointChargeMC = true);
     virtual ~ATTPCElectronics() {}
 
     bool Init();
@@ -22,17 +21,17 @@ class ATTPCElectronics : public KBTask
   private:
     TClonesArray* fPadArray;
 
-    TRandom3 *rand = nullptr;  
+    TRandom3 *fRandom = nullptr;  
     Int_t fNPlanes;
     Int_t fNTbs;
     Double_t fEChargeToADC;
     Double_t fDynamicRange;
     Double_t fElectronCharge = 1.6021773349e-19; // [C]
-    Double_t fADCMaxAmp = 4096; // Dynamic range maximum ratio
+    Double_t fADCMaxAmp = 4095; // Dynamic range maximum ratio
 
     TF1 *fPulseFunction;
 
-    Bool_t fUsePointChargeMC = false;
+    Bool_t fUsePointChargeMC = true;
     Bool_t fNoiseOn;
 
   ClassDef(ATTPCElectronics, 1)

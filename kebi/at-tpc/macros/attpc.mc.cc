@@ -2,6 +2,7 @@
 #include "globals.hh"
 #include "Randomize.hh"
 #include "G4StepLimiterPhysics.hh"
+#include "G4UImanager.hh"
 
 #include "KBCompiled.h"
 #include "KBParameterContainer.hh"
@@ -19,8 +20,9 @@
 
 int main(int argc, char** argv)
 {
+  G4Random::setTheSeed(time(0));
   auto runManager = new KBG4RunManager();
-  
+
   G4VModularPhysicsList* physicsList = new ATTPCPhysicsList;
   physicsList -> RegisterPhysics(new G4StepLimiterPhysics());
 
@@ -28,16 +30,26 @@ int main(int argc, char** argv)
   runManager -> SetParameterContainer(argv[1]);
   runManager -> SetUserInitialization(new ATTPCDetectorConstruction());
   runManager -> SetUserAction(new ATTPCTrackingAction());
-  
+
   auto par = runManager -> GetParameterContainer();
+  TString EventNum = par -> GetParString("Event");
   G4bool Random = par -> GetParBool("RandomEngine");
 
-  if (Random == true) {
-    G4Random::setTheSeed(time(0));
+  if (Random == true) { 
     runManager -> SetUserAction(new ATTPCRandomPrimaryGenerate());
   }
   
   runManager -> Initialize();
+
+  G4UImanager* uiManager = G4UImanager::GetUIpointer();
+  uiManager -> ApplyCommand("/run/suppressPP true");
+
+  if(EventNum == "-1"){
+    uiManager -> ApplyCommand("/run/beamOnAll");
+  }
+  else{
+    uiManager -> ApplyCommand("/run/beamOn "+EventNum);
+  }
   runManager -> Run(argc, argv);
 
   delete runManager;

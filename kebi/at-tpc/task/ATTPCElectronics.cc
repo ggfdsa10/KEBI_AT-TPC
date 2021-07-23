@@ -23,7 +23,7 @@ bool ATTPCElectronics::Init()
   fDynamicRange = par -> GetParDouble("DynamicRange");
   fNoiseOn = par -> GetParBool("NoiseOn");
 
-  fEChargeToADC = fElectronCharge/(fDynamicRange *1.0e-15/fADCMaxAmp);
+  fEChargeToADC = fElectronCharge/(fDynamicRange *1.0e-15)*fADCMaxAmp;
 
   fPadArray = (TClonesArray *) run -> GetBranch("Pad");
 
@@ -31,7 +31,7 @@ bool ATTPCElectronics::Init()
   fPulseFunction = pulseGen -> GetPulseFunction();
   fPulseFunction -> SetParameters(fEChargeToADC,0);
 
-  rand = new TRandom3(time(0));
+  fRandom = new TRandom3(time(0));
    
   return true;
 }
@@ -61,24 +61,23 @@ void ATTPCElectronics::Exec(Option_t*)
         }
       }
     }
-    else {
-      Double_t *in = pad -> GetBufferIn();
-      for (Int_t iTb = 0; iTb < fNTbs; iTb++) {
-        if (in[iTb] == 0)
-          continue;
 
-        for (Int_t iTb2 = 0; iTb2 < 100; iTb2++) {
-          Int_t tb = iTb+iTb2;
-          if (tb >= fNTbs)
-            break;
-
-          out[tb] += in[iTb] * fPulseFunction -> Eval(iTb2+0.5);
+    else { 
+      auto tbs = pad -> GetMCTbArray();
+      auto evs = pad -> GetMCWeightArray();
+      Int_t numMCIDs = tbs -> size();
+      for (auto iMC = 0; iMC < numMCIDs; ++iMC)
+      {
+        auto tb1 = tbs -> at(iMC);
+        auto ev1 = evs -> at(iMC);
+        for (Int_t tb = 0; tb < 512; ++tb) {
+          out[tb] += ev1;
           if (out[tb] > fADCMaxAmp)
             out[tb] = fADCMaxAmp+1;
         }
       }
     }
-
+    
     auto saturated = false;
     Int_t saturatedFrom = 100000;
     Int_t saturatedTo = 100000;
@@ -99,8 +98,8 @@ void ATTPCElectronics::Exec(Option_t*)
 
     if(fNoiseOn == true){
       for (Int_t i = 0; i< 512; i++){
-	Double_t noise = rand -> Gaus(434,42);
-	out[i] += noise;
+	      Double_t noise = fRandom -> Gaus(434,42);
+	      out[i] += noise;
       }
     }
     pad -> SetBufferOut(out);

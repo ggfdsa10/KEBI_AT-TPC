@@ -25,18 +25,19 @@ void ATTPCTrackingAction::PreUserTrackingAction(const G4Track* track)
   G4int PDG = track -> GetDefinition() -> GetPDGEncoding();
   G4int source = track -> GetTrackID();
 
-  if ((parentID == 1 && PDG == 11) || source == 1 ) {
+  if ((parentID == 1 && PDG == 11) || source == 1) {
     G4ThreeVector momentum = track -> GetMomentum();
     G4ThreeVector position = track -> GetPosition();
     G4double KEnergy = track -> GetKineticEnergy();
     G4int volumeID = track -> GetVolume() -> GetCopyNo();
     
     const G4VProcess *process = track -> GetCreatorProcess();
+
     G4String processName = "Primary";
     if (process != nullptr)
       processName = process -> GetProcessName();
     G4int processID = fProcessTable -> GetParInt(processName);
-    
+
     fRunManager -> AddMCTrack(track -> GetTrackID(), track -> GetParentID(), track -> GetDefinition() -> GetPDGEncoding(), momentum.x(), momentum.y(), momentum.z(), volumeID, position.x(), position.y(), position.z(), KEnergy, processID);
   }
 }

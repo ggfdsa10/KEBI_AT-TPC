@@ -138,12 +138,14 @@ void KBG4RunManager::Run(G4int argc, char **argv, const G4String &type)
     auto fileName = fPar -> GetParString("G4MacroFile");
     g4_info << "Initializing Geant4 run with macro " << fileName << endl;
     uiManager -> ApplyCommand(command+fileName);
+
   }
 
   WriteToFile(fProcessTable);
   WriteToFile(fSensitiveDetectors);
   WriteToFile(fVolumes);
   EndOfRun();
+ 
 }
 
 void KBG4RunManager::BeamOnAll()

@@ -13,7 +13,6 @@ ATTPCPhysicsList::ATTPCPhysicsList() : G4VModularPhysicsList()
     if (elem == NULL) break;
     RegisterPhysics(elem);
   }
-
 }
 
 
@@ -39,21 +38,19 @@ void ATTPCPhysicsList::AddParameters()
     G4PAIModel* pai = new G4PAIModel(particle, "PAIModel");
     G4PAIPhotModel* paiphot = new G4PAIPhotModel(particle, "G4PAIModel");
     
-    config -> SetExtraEmModel("alpha", "ionIoni", pai, "regionTPC", 10 *eV, 100 *TeV, pai);
+    //config -> SetExtraEmModel("alpha", "ionIoni", pai, "regionTPC", 10 *eV, 100 *TeV, pai);
     config -> SetExtraEmModel("mu-", "muIoni",pai,"regionTPC",10 *eV, 100 *TeV, pai);
     config -> SetExtraEmModel("proton", "hIoni", pai, "regionTPC", 10 *eV, 100 *TeV, pai);
-    
-
-    
+    //config -> SetExtraEmModel("e-", "eIoni", pai, "regionTPC", 26 *eV, 100 *TeV, pai);
   }
   
 }
 
 void ATTPCPhysicsList::SetCuts()
 {
-  G4ProductionCutsTable::GetProductionCutsTable()->SetEnergyRange(10*CLHEP::eV, 10000000 *CLHEP::MeV);
+  G4ProductionCutsTable::GetProductionCutsTable()->SetEnergyRange(1.3*CLHEP::eV, 10000000 *CLHEP::MeV);
   G4Region* region = G4RegionStore::GetInstance()->GetRegion("regionTPC");
-
+  
   G4ProductionCuts* cuts = new G4ProductionCuts();
   cuts -> SetProductionCut(0. *CLHEP::nm, G4ProductionCuts::GetIndex("e-"));
 
