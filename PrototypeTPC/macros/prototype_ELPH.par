@@ -1,0 +1,7 @@
+# 
+prototypeBase file prototype.par
+
+# Run
+expRunSummary    string  data_ELPH/ELPH_exp_run_summary.dat
+pathToRawData    string  /home/lamps/data_ELPH/
+pathToMetaData   string  /home/lamps/data_ELPH/

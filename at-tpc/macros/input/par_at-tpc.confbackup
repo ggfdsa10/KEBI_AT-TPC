@@ -1,0 +1,44 @@
+### Geant4 Random
+RandomEngine b true  # (true : Particle random generate) (false : Created as a file)
+### random generate particle selct
+RandomParticle s mu-  # Option (mu-, proton, 4He) // To be updated
+
+### world size [mm]
+worldX d 60.
+worldY d 60.
+worldZ d 150.
+
+### AT-TPC half size [mm]
+tpcX d 50.
+tpcY d 50.
+tpcZ d 75.
+
+### axis of direction
+tpcBFieldAxis a z  # axis of B-field direction
+tpcEFieldAxis a -z  # axis of E-field direction
+tpcDriftAxis a -z  # direction of electric field
+padRefAxis a[] x, y  # axis of Pad Plane 
+
+### B-field [Tesla] 
+bfieldX d 0.     
+bfieldY d 0.     
+bfieldZ d 0.
+
+### Electric parameters
+efield d 130.  # Drift Area E-field [V/cm]
+gemvolt d. 310.  # Gem Voltage [V]   // To be updataed
+DynamicRange i 120 # Dynamic Range [fC]
+NTbs i 512  # ADC amplitude size
+TBtime d 20  # Time Bucket [ns]
+
+### circumstance parameters 
+temperature d 20.  # [°C]
+pressure d 760.  # [Torr] // To be updated
+
+### gas Type
+detMatName s p10  # Option (p10, p20, 4He) // p20, 4He To be updated
+gasdata s $KEBIPATH/at-tpc/macros/input/p10_293.15K_760torr.gas # Gas Data with Garfield++
+
+### pad Type
+PadPlaneType s ATTPCPadPlane # Option (ATTPCPadPlane, 2, 3) // 2,3 To be updated
+
