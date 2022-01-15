@@ -48,9 +48,7 @@ figures/
 GenFit/build/
 
 #GenFit install directories
-GenFit/install
-include/
-lib/
+GenFit/install/
 
 at-tpc/diffusion/
 
