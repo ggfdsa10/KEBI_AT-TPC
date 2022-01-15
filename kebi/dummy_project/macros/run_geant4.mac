@@ -1,3 +1,0 @@
-#/run/setCutForAGivenParticle e- 100. mm
-
-/run/beamOn 10
