@@ -48,6 +48,7 @@ class KBHit : public KBWPoint
     void SetSortValue(Double_t val);
     void SetSortByX(bool sortEarlierIfSmaller);
     void SetSortByY(bool sortEarlierIfSmaller);
+    void SetSortByR(bool sortEarlierIfSmaller);
     void SetSortByZ(bool sortEarlierIfSmaller);
     void SetSortByCharge(bool sortEarlierIfSmaller);
     void SetSortByDistanceTo(TVector3 point, bool sortEarlierIfCloser);

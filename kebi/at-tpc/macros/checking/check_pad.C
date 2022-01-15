@@ -1,7 +1,7 @@
 void check_pad()
 {
   auto tpc = new ATTPC();
-  tpc -> AddPar("&KEBIPATH/at-tpc/macros/input/par_at-tpc.conf");
+  tpc -> AddPar("./par_at-tpc.conf");
   tpc -> Init();
 
   auto padplane = (ATTPCPadPlane *) tpc -> GetPadPlane();
@@ -22,7 +22,7 @@ void check_pad()
   auto cvs = padplane -> GetCanvas();
   //hist_padplane -> SetName("PadPlane");
   //hist_padplane -> SetTitle("PadPlane");
-
+  padplane -> FindPadID(0,0);
   gStyle -> SetPalette(kBird);
   hist_padplane -> Draw("colz");
   //hist_padplane -> Draw("text");

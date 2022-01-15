@@ -55,6 +55,8 @@ foreach(_kbproject ${KEBI_PROJECT_LIST})
   add_subdirectory(${_kbproject})
 endforeach(_kbproject)
 
+
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/")
 #=====================================================================================
 # You need to tell CMake where to find the ROOT installation. This can be done in a number of ways:
 #   - ROOT built with CMake. Add in CMAKE_PREFIX_PATH the installation prefix for ROOT
@@ -70,6 +72,25 @@ else(ACTIVATE_EVE)
 endif(ACTIVATE_EVE)
 
 include(${ROOT_USE_FILE})
+
+set(TOOLS_LIBRARIES_LIST ${ROOT_LIBRARIES} CACHE INTERNAL "")
+
+Set(LD_LIBRARY_PATH ${LD_LIBRARY_PATH})
+
+find_package(Eigen3  REQUIRED)
+find_package(Rave    REQUIRED)
+find_package(GENFIT2 REQUIRED)
+
+include_directories(${EIGEN3_INCLUDE_DIR})
+include_directories(${GENFIT2_INCLUDE_DIR})
+
+set(LINK_DIRECTORIES
+  ${ROOT_LIBRARY_DIR}
+  ${RAVE_LIBRARY_DIR}
+  ${GENFIT2_LIBRARY_DIR}
+)
+
+link_directories(${LINK_DIRECTORIES})
 
 if(BUILD_GEANT4_SIM)
   find_package(Geant4 REQUIRED ui_all vis_all)
@@ -111,7 +132,7 @@ foreach(_name ${KEBI_SOURCE_NAME_LIST})
 endforeach(_name)
 
 add_library(KEBI SHARED ${KEBI_LIB_LIST})
-target_link_libraries(KEBI ${ROOT_LIBRARIES})
+target_link_libraries(KEBI ${TOOLS_LIBRARIES_LIST})
 
 if(BUILD_GEANT4_SIM)
   foreach(_directory ${KEBI_GEANT4_DIRECTORY_LIST})

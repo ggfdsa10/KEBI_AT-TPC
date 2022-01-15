@@ -1224,7 +1224,8 @@ void KBRun::DrawDetectorPlanes()
     histPlane -> Reset();
 
     auto cvs = (TCanvas *) fCvsDetectorPlaneArray -> At(iPlane);
-
+    cvs -> SetWindowSize(930,830);
+    cvs -> SetCanvasSize(900,800);
     if (plane -> InheritsFrom("KBPadPlane"))
     {
       auto padplane = (KBPadPlane *) plane;

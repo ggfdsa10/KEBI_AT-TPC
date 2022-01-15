@@ -28,6 +28,8 @@ void KBMCTrack::Clear(Option_t *option)
   fVY.clear(); fVY.push_back(-999);
   fVZ.clear(); fVZ.push_back(-999);
   fKE.clear(); fKE.push_back(-999);
+  fEdep1.clear(); fEdep1.push_back(-999);
+  fEdep2.clear(); fEdep2.push_back(-999);
   fDetectorID.clear(); fDetectorID.push_back(-999);
 
   fCreatorProcessID = 0;
@@ -63,10 +65,12 @@ void KBMCTrack::SetVX(Double_t val)     { fVX[0] = val; }
 void KBMCTrack::SetVY(Double_t val)     { fVY[0] = val; }
 void KBMCTrack::SetVZ(Double_t val)     { fVZ[0] = val; }
 void KBMCTrack::SetKE(Double_t val)     { fKE[0] = val; }
+void KBMCTrack::SetEdep1(Double_t val)     { fEdep1[0] = val; }
+void KBMCTrack::SetEdep2(Double_t val)     { fEdep2[0] = val; }
 void KBMCTrack::SetDetectorID(Int_t id) { fDetectorID[0] = id; }
 void KBMCTrack::SetCreatorProcessID(Int_t id)  { fCreatorProcessID = id; }
 
-void KBMCTrack::SetMCTrack(Int_t trackID, Int_t parentID, Int_t pdg, Double_t px, Double_t py, Double_t pz, Int_t detectorID, Double_t vx, Double_t vy, Double_t vz, Double_t ke, Int_t processID)
+void KBMCTrack::SetMCTrack(Int_t trackID, Int_t parentID, Int_t pdg, Double_t px, Double_t py, Double_t pz, Int_t detectorID, Double_t vx, Double_t vy, Double_t vz, Double_t ke, Double_t edep1, Double_t edep2, Int_t processID)
 {
   fTrackID = trackID;
   fParentID = parentID;
@@ -78,6 +82,8 @@ void KBMCTrack::SetMCTrack(Int_t trackID, Int_t parentID, Int_t pdg, Double_t px
   fVY[0] = vy;
   fVZ[0] = vz;
   fKE[0] = ke;
+  fEdep1[0] = edep1;
+  fEdep2[0] = edep2;
   fDetectorID[0] = detectorID;
   fCreatorProcessID = processID;
 }
@@ -106,6 +112,8 @@ Double_t KBMCTrack::GetVZ(Int_t idx) const { return fVZ[idx]; }
 TVector3 KBMCTrack::GetVertex(Int_t idx) const { return TVector3(fVX[idx], fVY[idx], fVZ[idx]); }
 
 Double_t KBMCTrack::GetKE(Int_t idx) const { return fKE[idx]; }
+Double_t KBMCTrack::GetEdep1(Int_t idx) const { return fEdep1[idx]; }
+Double_t KBMCTrack::GetEdep2(Int_t idx) const { return fEdep2[idx]; }
 
 Int_t KBMCTrack::GetDetectorID(Int_t idx) const { return fDetectorID[idx]; }
 

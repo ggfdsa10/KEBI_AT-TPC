@@ -1,4 +1,7 @@
 #include "ATTPCDetectorConstruction.hh"
+#include "ATTPCRectnglePad.hh"
+#include "ATTPCHoneyCombPad.hh"
+
 #include "KBG4RunManager.hh"
 #include "G4RunManager.hh"
 #include "G4NistManager.hh"
@@ -41,6 +44,24 @@ G4VPhysicalVolume* ATTPCDetectorConstruction::Construct()
   G4double bfieldY = par -> GetParDouble("bfieldY");
   G4double bfieldZ = par -> GetParDouble("bfieldZ");
 
+  auto PadPlaneType = par -> GetParString("PadPlaneType");
+  G4double PadWidth;  
+  G4double PadHeight;  
+  G4double PadGap;  
+
+  if(PadPlaneType == "RectanglePad"){
+    ATTPCRectnglePad *fPadPlane = new ATTPCRectnglePad(); 
+    PadWidth = fPadPlane ->GetPadWidth();
+    PadHeight = fPadPlane ->GetPadHeight();
+    PadGap = fPadPlane ->GetPadGap();
+  }
+  else if(PadPlaneType == "HoneyCombPad"){
+    ATTPCHoneyCombPad *fPadPlane = new ATTPCHoneyCombPad(); 
+    PadWidth = fPadPlane ->GetPadWidth();
+    PadHeight = fPadPlane ->GetPadHeight();
+    PadGap = fPadPlane ->GetPadGap();  
+  }
+
   G4double Temperature = par -> GetParDouble("temperature");
   G4double STPTemperature = 273.15;
   G4double labTemperature = STPTemperature + Temperature *kelvin;
@@ -52,6 +73,7 @@ G4VPhysicalVolume* ATTPCDetectorConstruction::Construct()
   G4double densityArGas = 0.001782 *g/cm3*STPTemperature/labTemperature;
   G4double densityMethane = 0.000717 *g/cm3*STPTemperature/labTemperature;
   G4double densityHeGas = 0.000179 *g/cm3*STPTemperature/labTemperature;
+  G4double densityVacuum = 1e-15;
  
   
   G4Material *ArGas = new G4Material("ArgonGas", 18, 39.948*g/mole, densityArGas, kStateGas, labTemperature);
@@ -82,12 +104,9 @@ G4VPhysicalVolume* ATTPCDetectorConstruction::Construct()
     matGas = new G4Material("mat4He", densityGas, 1, kStateGas, labTemperature);
     matGas -> AddMaterial(HeGas, 100 *perCent);
   }
-  /*
-  G4double densityGas = .9*densityArGas + .1*densityMethane;
-  matGas = new G4Material("matP10", densityGas, 2, kStateGas, labTemperature);
-  matGas -> AddMaterial(ArGas, 90 *perCent);
-  matGas -> AddMaterial(MethaneGas, 10 *perCent);
-  */
+
+  G4Material *Vacuum = new G4Material("Vacuum", densityVacuum, 1, kStateGas, labTemperature);
+  Vacuum -> AddMaterial(HeGas, 100 *perCent);
   //-----------------------------------------------------------------
 
 
@@ -95,8 +114,8 @@ G4VPhysicalVolume* ATTPCDetectorConstruction::Construct()
   //-----------------------World definition -------------------------
   
   G4Box *solidWorld = new G4Box("World", worldX *mm, worldY *mm, worldZ *mm);
-  G4LogicalVolume *logicWorld = new G4LogicalVolume(solidWorld, matGas, "World");
-  G4PVPlacement *physWorld = new G4PVPlacement(0, G4ThreeVector(0,0,0), logicWorld, "World", 0, false, -1, true);
+  G4LogicalVolume *logicWorld = new G4LogicalVolume(solidWorld, Vacuum, "World");
+  G4PVPlacement *physWorld = new G4PVPlacement(0, G4ThreeVector(0,0,0), logicWorld, "World", 0, false, 0, true);
   
   //-----------------------------------------------------------------
 
@@ -105,13 +124,13 @@ G4VPhysicalVolume* ATTPCDetectorConstruction::Construct()
   //----------------------Drift chamber definition----------------------
 
   G4Box* solidTPC = new G4Box("TPC", tpcX *mm, tpcY *mm, tpcZ *mm);
-  G4LogicalVolume* logicTPC = new G4LogicalVolume(solidTPC, matGas, "TPC");
+  G4LogicalVolume* logicTPC = new G4LogicalVolume(solidTPC, matGas, "Detector");
   {
     G4VisAttributes* attTPC = new G4VisAttributes(G4Colour(G4Colour::Gray()));
     attTPC -> SetForceWireframe(true);
     logicTPC -> SetVisAttributes(attTPC);
   }
-  auto pvp = new G4PVPlacement(0, G4ThreeVector(tpcX,tpcY,tpcZ), logicTPC, "TPC", logicWorld, false, 0, true);
+  auto pvp = new G4PVPlacement(0, G4ThreeVector(tpcX-PadWidth/2-PadGap/2,tpcY-PadHeight/2-PadGap/2,tpcZ), logicTPC, "TPC", logicWorld, false, 1, true);
   runManager -> SetSensitiveDetector(pvp);
 
   //------------------------------------------------------------------

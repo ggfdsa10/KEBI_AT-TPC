@@ -18,7 +18,6 @@ class KBPSATask : public KBTask
     void Exec(Option_t*);
 
     void SetPSA(KBPSA *psa);
-
     void SetHitPersistency(bool persistence);
 
   private:
@@ -28,7 +27,6 @@ class KBPSATask : public KBTask
     bool fPersistency;
 
     KBTpc *fTpc;
-
     Int_t fNPlanes;
     Int_t fTbStart;
     Int_t fNTbs;

@@ -33,7 +33,7 @@ class KBHelixTrack : public KBTracklet, public KBGeoHelix
 
   private:
     Int_t    fGenfitID;        ///< GENFIT Track ID
-    Double_t fGenfitMomentum;  ///< Momentum reconstructed by GENFIT
+    TVector3 fGenfitMomentum;  ///< Momentum reconstructed by GENFIT
 
     KBFitStatus fFitStatus;  ///< One of kBad, kHelix and kLine.
 
@@ -135,8 +135,8 @@ class KBHelixTrack : public KBTracklet, public KBGeoHelix
     void SetGenfitID(Int_t idx);
     Int_t GetGenfitID() const;
 
-    void SetGenfitMomentum(Double_t p);
-    Double_t GetGenfitMomentum() const;    /// Momentum reconstructed by genfit (if is set)
+    void SetGenfitMomentum(TVector3 p);
+    TVector3 GetGenfitMomentum() const;    /// Momentum reconstructed by genfit (if is set)
 
     /*
      */

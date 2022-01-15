@@ -7,7 +7,10 @@ ATTPCPhysicsList::ATTPCPhysicsList() : G4VModularPhysicsList()
   defaultCutValue = 0. *CLHEP::nm;
   QGSP_BERT_HP* physics = new QGSP_BERT_HP;
 
-  for(G4int i =0;;++i) {
+  G4VPhysicsConstructor* EM_4 = new G4EmStandardPhysics_option4();
+  RegisterPhysics(EM_4);
+
+  for(G4int i =1;;++i) {
     G4VPhysicsConstructor* elem = const_cast<G4VPhysicsConstructor*>(physics->GetPhysics(i));
 
     if (elem == NULL) break;
@@ -37,11 +40,14 @@ void ATTPCPhysicsList::AddParameters()
     
     G4PAIModel* pai = new G4PAIModel(particle, "PAIModel");
     G4PAIPhotModel* paiphot = new G4PAIPhotModel(particle, "G4PAIModel");
+    G4BraggIonModel* BraggIon = new G4BraggIonModel(particle, "BraggionModel");
+    G4BetheBlochModel* Bethe = new G4BetheBlochModel(particle, "BetheModel");
+    G4IonFluctuations* IonFluc = new G4IonFluctuations();
     
-    //config -> SetExtraEmModel("alpha", "ionIoni", pai, "regionTPC", 10 *eV, 100 *TeV, pai);
+    config -> SetExtraEmModel("alpha", "ionIoni", BraggIon, "regionworld", 0 *eV, 2*MeV, IonFluc);
+    config -> SetExtraEmModel("alpha", "ionIoni", Bethe, "regionworld", 2 *MeV, 100 *GeV, IonFluc);
     config -> SetExtraEmModel("mu-", "muIoni",pai,"regionTPC",10 *eV, 100 *TeV, pai);
     config -> SetExtraEmModel("proton", "hIoni", pai, "regionTPC", 10 *eV, 100 *TeV, pai);
-    //config -> SetExtraEmModel("e-", "eIoni", pai, "regionTPC", 26 *eV, 100 *TeV, pai);
   }
   
 }

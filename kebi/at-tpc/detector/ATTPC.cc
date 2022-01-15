@@ -1,10 +1,11 @@
 #include "ATTPC.hh"
-#include "ATTPCPadPlane.hh"
+#include "ATTPCRectnglePad.hh"
+#include "ATTPCHoneyCombPad.hh"
 
 ClassImp(ATTPC)
 
 ATTPC::ATTPC()
-:KBTpc("AP-TPC","Active Target - Time Projection Chamber")
+:KBTpc("AT-TPC","Active Target - Time Projection Chamber")
 {
 }
 
@@ -41,19 +42,51 @@ KBPadPlane *ATTPC::GetDriftPlane(TVector3 pos)
 
 bool ATTPC::BuildGeometry()
 {
+
+
   if (fGeoManager == nullptr) {
     new TGeoManager();
     fGeoManager = gGeoManager;
     fGeoManager -> SetVerboseLevel(0);
     fGeoManager -> SetNameTitle("AT-TPC", "AT-TPC Geometry");
   }
+  auto worldX = fPar -> GetParDouble("worldX");
+  auto worldY = fPar -> GetParDouble("worldY");
+  auto worldZ = fPar -> GetParDouble("worldZ");
 
   auto tpcX = fPar -> GetParDouble("tpcX");
   auto tpcY = fPar -> GetParDouble("tpcY");
   auto tpcZ = fPar -> GetParDouble("tpcZ");
+
+  Double_t PadWidth;
+  Double_t PadHeight;
+  Double_t PadGap;
+
+  auto PadPlaneType = fPar -> GetParString("PadPlaneType");
+  
+  if(PadPlaneType == "RectanglePad"){
+    ATTPCRectnglePad *fPadPlane = new ATTPCRectnglePad(); 
+    PadWidth = fPadPlane ->GetPadWidth();
+    PadHeight = fPadPlane ->GetPadHeight();
+    PadGap = fPadPlane ->GetPadGap();
+  }
+  else if(PadPlaneType == "RectanglePad"){
+    ATTPCHoneyCombPad *fPadPlane = new ATTPCHoneyCombPad(); 
+    PadWidth = fPadPlane ->GetPadWidth();
+    PadHeight = fPadPlane ->GetPadHeight();
+    PadGap = fPadPlane ->GetPadGap();
+  }
+
+  auto triggerDistance = fPar -> GetParDouble("TriggerDistance");
+  auto triggerSizeX = fPar -> GetParDouble("WindowSize",0);
+  auto triggerSizeZ = fPar -> GetParDouble("WindowSize",1);
+  auto triggerHeight = fPar -> GetParDouble("WindowHeight");
+  auto triggerShift = fPar -> GetParDouble("WindowShift");
+
   TString detMatName = fPar -> GetParString("detMatName");
 
   TGeoMedium *Gas = new TGeoMedium("p10", 1, new TGeoMaterial("p10"));
+  TGeoMedium *Vacuum = new TGeoMedium("Vacuum", 1, new TGeoMaterial("Vacuum"));
 
   auto top = new TGeoVolumeAssembly("TOP");
   fGeoManager -> SetTopVolume(top);
@@ -61,16 +94,44 @@ bool ATTPC::BuildGeometry()
 
   TGeoVolume *tpc = new TGeoVolumeAssembly("AT-TPC");
   
-  TGeoTranslation *offset = new TGeoTranslation("offset", tpcX, tpcY, tpcZ);
+  TGeoTranslation *TPC_offset = new TGeoTranslation("TPC_offset", tpcX-PadWidth/2-PadGap/2, tpcY-PadHeight/2-PadGap/2, tpcZ);
+  TGeoTranslation *World_offset = new TGeoTranslation("World_offset", -tpcX+PadWidth/2, -tpcY-PadHeight/2, -tpcZ);
+  TGeoTranslation *trigger_offset1 = new TGeoTranslation("Trigger_offset1", -triggerShift, -triggerDistance+4, triggerHeight);
+  TGeoTranslation *trigger_offset2 = new TGeoTranslation("Trigger_offset2", -triggerShift, triggerDistance+4, triggerHeight);
+  TGeoTranslation *Pad_offset = new TGeoTranslation("Pad_offset", 0., 0., -tpcZ);
 
-  TGeoVolume *tpc_volume = fGeoManager -> MakeBox("tpc_volume", Gas ,tpcX, tpcY, tpcZ);
-  tpc_volume -> SetVisibility(true);
-  tpc_volume -> SetLineColor(kBlue-10);
-  tpc_volume -> SetTransparency(90);
+  TGeoVolume *TPC_volume = fGeoManager -> MakeBox("TPC_volume", Gas ,tpcX, tpcY, tpcZ);
+  TPC_volume -> SetVisibility(true);
+  TPC_volume -> SetLineColor(kBlue-2);
+  TPC_volume -> SetTransparency(90);
+
+  TGeoVolume *Pad_volume = fGeoManager -> MakeBox("Pad_volume", Gas ,tpcX, tpcY, 0.1);
+  Pad_volume -> SetVisibility(true);
+  Pad_volume -> SetLineColor(kBlack);
  
+  TGeoVolume *World_volume = fGeoManager -> MakeBox("World_volume", Vacuum ,worldX, worldY, worldZ);
+  World_volume -> SetVisibility(true);
+  World_volume -> SetLineColor(kBlue-10);
+  World_volume -> SetTransparency(99);
 
-  top -> AddNode(tpc, 1, offset);
-  tpc -> AddNode(tpc_volume, 1);
+  TGeoVolume *Trigger_volume1 = fGeoManager -> MakeBox("Trigger_volume1", Vacuum ,triggerSizeX/2, 1, triggerSizeZ/2);
+  Trigger_volume1 -> SetVisibility(true);
+  Trigger_volume1 -> SetLineColor(kRed);
+  Trigger_volume1 -> SetTransparency(70);
+
+  TGeoVolume *Trigger_volume2 = fGeoManager -> MakeBox("Trigger_volume2", Vacuum ,triggerSizeX/2, 1, triggerSizeZ/2);
+  Trigger_volume2 -> SetVisibility(true);
+  Trigger_volume2 -> SetLineColor(kRed);
+  Trigger_volume2 -> SetTransparency(70);
+
+
+
+  top -> AddNode(tpc, 1, TPC_offset);
+  tpc -> AddNode(TPC_volume, 1);
+  tpc -> AddNode(Pad_volume, 2, Pad_offset);
+  tpc -> AddNode(World_volume, 3, World_offset);
+  tpc -> AddNode(Trigger_volume1, 4, trigger_offset1);
+  tpc -> AddNode(Trigger_volume2, 5, trigger_offset2);
 
   FinishGeometry();
 
@@ -83,13 +144,15 @@ bool ATTPC::BuildDetectorPlane()
   KBPadPlane *padplane = nullptr;
 
   if (fPar->CheckPar("PadPlaneType")){
-    if (fPar -> GetParString("PadPlaneType") == "ATTPCPadPlane"){
-      padplane = new ATTPCPadPlane();
+    if (fPar -> GetParString("PadPlaneType") == "RectanglePad"){
+      padplane = new ATTPCRectnglePad();
     }  
-    
+    else if(fPar -> GetParString("PadPlaneType") == "HoneyCombPad"){
+      padplane = new ATTPCHoneyCombPad();
+    }
   }
   else
-    padplane = new ATTPCPadPlane();
+    padplane = new ATTPCRectnglePad();
   
      
   padplane -> SetParameterContainer(fPar);

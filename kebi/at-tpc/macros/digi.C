@@ -1,5 +1,6 @@
 void digi(TString name = "ATTPC")
 {
+
   auto run = KBRun::GetRun();
   run -> SetIOFile(name+".mc", name+".digi");
   run -> AddDetector(new ATTPC());

@@ -47,6 +47,15 @@ void KBHitArray::SortByY(bool sortEarlierIfSmaller)
   Sort();
 }
 
+void KBHitArray::SortByR(bool sortEarlierIfSmaller)
+{
+  TIter next(this);
+  KBHit *hit;
+  while ((hit = (KBHit *) next()))
+    hit -> SetSortByR(sortEarlierIfSmaller);
+  Sort();
+}
+
 void KBHitArray::SortByZ(bool sortEarlierIfSmaller)
 {
   TIter next(this);

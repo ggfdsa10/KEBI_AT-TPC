@@ -32,5 +32,7 @@ void KBTrackingAction::PreUserTrackingAction(const G4Track* track)
     processName = process -> GetProcessName();
   G4int processID = fProcessTable -> GetParInt(processName);
 
-  fRunManager -> AddMCTrack(track -> GetTrackID(), track -> GetParentID(), track -> GetDefinition() -> GetPDGEncoding(), momentum.x(), momentum.y(), momentum.z(), volumeID, position.x(), position.y(), position.z(), kenergy, processID);
+  Double_t edep1 =0.;
+  Double_t edep2 =0.;
+  fRunManager -> AddMCTrack(track -> GetTrackID(), track -> GetParentID(), track -> GetDefinition() -> GetPDGEncoding(), momentum.x(), momentum.y(), momentum.z(), volumeID, position.x(), position.y(), position.z(), kenergy, edep1, edep2, processID);
 }

@@ -21,7 +21,6 @@ class ATTPCElectronics : public KBTask
   private:
     TClonesArray* fPadArray;
 
-    TRandom3 *fRandom = nullptr;  
     Int_t fNPlanes;
     Int_t fNTbs;
     Double_t fEChargeToADC;

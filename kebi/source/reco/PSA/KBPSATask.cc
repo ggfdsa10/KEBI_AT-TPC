@@ -57,10 +57,10 @@ void KBPSATask::Exec(Option_t*)
     Double_t kPlane = fPadPlane[pad->GetPlaneID()] -> GetPlaneK();
 
     auto bufferOut = pad -> GetBufferOut();
-
+ 
     vector<KBChannelHit> hitArray;
     fPSA -> AnalyzeChannel(bufferOut, &hitArray);
-
+  
     auto idArray = pad -> GetMCIDArray();
     auto tbArray = pad -> GetMCTbArray();
 
@@ -101,7 +101,6 @@ void KBPSATask::Exec(Option_t*)
       idx++;
     }
   }
-
   kb_info << "Number of found hits: " << idx << endl;
 }
 

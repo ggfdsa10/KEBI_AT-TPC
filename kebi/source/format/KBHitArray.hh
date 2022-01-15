@@ -47,6 +47,7 @@ class KBHitArray : public TObjArray
 
     void SortByX(bool sortEarlierIfSmaller=true);
     void SortByY(bool sortEarlierIfSmaller=true);
+    void SortByR(bool sortEarlierIfSmaller=true);
     void SortByZ(bool sortEarlierIfSmaller=true);
     void SortByCharge(bool sortEarlierIfSmaller=true);
     void SortByDistanceTo(TVector3 point, bool sortEarlierIfCloser=true);

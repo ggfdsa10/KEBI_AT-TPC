@@ -5,6 +5,7 @@
 #pragma link off all functions;
 
 #pragma link C++ class ATTPC+;
-#pragma link C++ class ATTPCPadPlane+;
+#pragma link C++ class ATTPCRectnglePad+;
+#pragma link C++ class ATTPCHoneyCombPad+;
 
 #endif

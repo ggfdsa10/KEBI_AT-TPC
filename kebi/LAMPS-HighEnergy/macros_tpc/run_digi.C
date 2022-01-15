@@ -1,4 +1,4 @@
-void run_digi(TString name = "iqmd_test")
+void run_digi(TString name = "single_proton")
 {
   auto run = KBRun::GetRun();
   run -> SetIOFile(name+".mc", name+".digi");

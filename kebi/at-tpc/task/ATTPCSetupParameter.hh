@@ -37,10 +37,12 @@ class ATTPCSetupParameter : public KBTask
     Double_t fVelocityExB = 0;
     Double_t fLDiff = 0;
     Double_t fTDiff = 0;
+    Double_t fBAt0Coef2 =0;
     Double_t fTownsend = 0;
     Double_t fAttachment = 0;
     Double_t fLorentzAngle = 0;
-    Double_t GasWvalue = 0;
+    Double_t fGasWvalue = 0;
+    Double_t fFanoFactor =0;
   
 
   ClassDef(ATTPCSetupParameter, 1)

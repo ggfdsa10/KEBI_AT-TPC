@@ -13,7 +13,7 @@ using namespace std;
 #include "G4RunManager.hh"
 #include "G4VPhysicalVolume.hh"
 #include "TString.h"
-//#include "globals.hh"
+#include "globals.hh"
 
 #include "TFile.h"
 #include "TTree.h"
@@ -48,7 +48,7 @@ class KBG4RunManager : public G4RunManager, public KBGear
 
     void AddMCTrack(Int_t trackID, Int_t parentID, Int_t pdg,
         Double_t px, Double_t py, Double_t pz,
-		    Int_t dID, Double_t vx, Double_t vy, Double_t vz, Double_t ke,Int_t pcID);
+		    Int_t dID, Double_t vx, Double_t vy, Double_t vz, Double_t ke, Double_t edep1, Double_t edep2, Int_t pcID);
 
     void AddTrackVertex(Double_t px, Double_t py, Double_t pz,
         Int_t dID, Double_t vx, Double_t vy, Double_t vz);

@@ -41,7 +41,7 @@ KBPSAFastFit::AnalyzeChannel(Double_t *buffer, vector<KBChannelHit> *hitArray)
   // Previous hit information
   Double_t tbHitPre = fTbStart;
   Double_t amplitudePre = 0;
-
+  
   while (FindPeak(adc, /*get->*/tbPointer, tbStartOfPulse)) {
     if (tbStartOfPulse > fTbStartCut - 1) // if the pulse distribution is too short
       break;
@@ -103,8 +103,8 @@ KBPSAFastFit::FindPeak(Double_t *adc,
       tbStartOfPulse = tbPointer - countAscending;
       while (adc[tbStartOfPulse] < adc[tbPointer] * 0.05)
         tbStartOfPulse++;
-
       return true;
+
     }
   }
 

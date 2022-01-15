@@ -102,6 +102,11 @@ void KBHit::SetSortByY(bool sortEarlierIfSmaller) {
   else                      fSortValue = -fY;
 }
 
+void KBHit::SetSortByR(bool sortEarlierIfSmaller) {
+  if (sortEarlierIfSmaller) fSortValue =  sqrt(fX*fX+fY*fY);
+  else                      fSortValue = -sqrt(fX*fX+fY*fY);
+}
+
 void KBHit::SetSortByZ(bool sortEarlierIfSmaller) {
   if (sortEarlierIfSmaller) fSortValue =  fZ;
   else                      fSortValue = -fZ;

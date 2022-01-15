@@ -320,7 +320,7 @@ KBParameterContainer *KBG4RunManager::GetProcessTable()       { return fProcessT
 
 
 
-void KBG4RunManager::AddMCTrack(Int_t trackID, Int_t parentID, Int_t pdg, Double_t px, Double_t py, Double_t pz, Int_t detectorID, Double_t vx, Double_t vy, Double_t vz, Double_t ke, Int_t processID)
+void KBG4RunManager::AddMCTrack(Int_t trackID, Int_t parentID, Int_t pdg, Double_t px, Double_t py, Double_t pz, Int_t detectorID, Double_t vx, Double_t vy, Double_t vz, Double_t ke, Double_t edep1, Double_t edep2, Int_t processID)
 {
   if (parentID != 0 && !fSecondaryPersistency) {
     fCurrentTrack = nullptr;
@@ -329,7 +329,7 @@ void KBG4RunManager::AddMCTrack(Int_t trackID, Int_t parentID, Int_t pdg, Double
 
   fTrackID = trackID;
   fCurrentTrack = (KBMCTrack *) fTrackArray -> ConstructedAt(fTrackArray -> GetEntriesFast());
-  fCurrentTrack -> SetMCTrack(trackID, parentID, pdg, px, py, pz, detectorID, vx, vy, vz, ke, processID);
+  fCurrentTrack -> SetMCTrack(trackID, parentID, pdg, px, py, pz, detectorID, vx, vy, vz, ke, edep1, edep2, processID);
 }
 
 void KBG4RunManager::AddTrackVertex(Double_t px, Double_t py, Double_t pz, Int_t detectorID, Double_t vx, Double_t vy, Double_t vz)

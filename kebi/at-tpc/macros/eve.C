@@ -6,6 +6,15 @@ void nx(Int_t eventID = -1) {
   cout << "Event " << fEventID << endl;
 }
 
+void AllEventSave(){  
+  Long64_t eventNum = KBRun::GetRun() -> GetNumEvents();
+
+  for(int event =0; event <eventNum; event++){
+    KBRun::GetRun() -> RunEve(event);
+    KBRun::GetRun() -> WriteCvsDetectorPlanes("png");
+  }
+}
+
 void eve(TString input = "ATTPC")
 {
   auto run = new KBRun();
@@ -19,4 +28,5 @@ void eve(TString input = "ATTPC")
   run -> SetGeoTransparency(80);
   run -> Print();
   run -> RunEve(fEventID);
+  run -> WriteCvsDetectorPlanes("png");
 }

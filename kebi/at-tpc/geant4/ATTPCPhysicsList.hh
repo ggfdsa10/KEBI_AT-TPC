@@ -4,8 +4,12 @@
 #include "G4VModularPhysicsList.hh"
 #include "KBG4RunManager.hh"
 #include "QGSP_BERT_HP.hh"
+#include "G4EmStandardPhysics_option4.hh"
 #include "G4PAIPhotModel.hh"
 #include "G4PAIModel.hh"
+#include "G4BraggIonModel.hh"
+#include "G4BetheBlochModel.hh"
+#include "G4IonFluctuations.hh"
 #include "G4EmParameters.hh"
 #include "G4EmConfigurator.hh"
 #include "G4LossTableManager.hh"
@@ -18,12 +22,6 @@
 #include "G4SystemOfUnits.hh"
 #include "G4UnitsTable.hh"
 #include "globals.hh"
-
-#include "G4ParticleDefinition.hh"
-#include "G4MuonMinus.hh"
-#include "G4GenericIon.hh"
-#include "G4Electron.hh"
-#include "G4Proton.hh"
 
 class ATTPCPhysicsList : public G4VModularPhysicsList
 {

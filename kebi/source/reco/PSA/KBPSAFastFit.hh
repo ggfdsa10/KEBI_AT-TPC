@@ -64,7 +64,6 @@ class KBPSAFastFit : public KBPSA
     Double_t fThresholdOneTbStep;
 
     Int_t fTbStartCut;
-
     /**
      * Maximum number of iteration alowed for fitting parameter tbStart.
      * Where, tbStart is "staring time-bucket of the pulse"

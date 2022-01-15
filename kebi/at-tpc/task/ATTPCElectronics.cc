@@ -1,6 +1,5 @@
 #include "KBRun.hh"
 #include "ATTPCElectronics.hh"
-#include <iostream>
 
 using namespace std;
 
@@ -30,14 +29,13 @@ bool ATTPCElectronics::Init()
   KBPulseGenerator *pulseGen = new KBPulseGenerator();
   fPulseFunction = pulseGen -> GetPulseFunction();
   fPulseFunction -> SetParameters(fEChargeToADC,0);
-
-  fRandom = new TRandom3(time(0));
    
   return true;
 }
 
 void ATTPCElectronics::Exec(Option_t*)
 {
+  gRandom -> SetSeed(0);
   Int_t nPads = fPadArray -> GetEntries();
 
   for (Int_t iPad = 0; iPad < nPads; iPad++) {
@@ -98,7 +96,7 @@ void ATTPCElectronics::Exec(Option_t*)
 
     if(fNoiseOn == true){
       for (Int_t i = 0; i< 512; i++){
-	      Double_t noise = fRandom -> Gaus(434,42);
+	      Double_t noise = gRandom -> Gaus(434,42);
 	      out[i] += noise;
       }
     }

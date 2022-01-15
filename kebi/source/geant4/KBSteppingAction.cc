@@ -35,6 +35,7 @@ void KBSteppingAction::UserSteppingAction(const G4Step* step)
   if (edep <= 0)
     return;
 
+  G4double length = step -> GetTrack() -> GetTrackLength();
   G4double time = step -> GetPreStepPoint() -> GetGlobalTime();
   G4ThreeVector stepPos = .5 * (step -> GetPreStepPoint() -> GetPosition() + step -> GetPostStepPoint() -> GetPosition());
   fRunManager -> AddMCStep(preNo, stepPos.x(), stepPos.y(), stepPos.z(), time, edep);

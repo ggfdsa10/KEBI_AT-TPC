@@ -158,7 +158,7 @@ void KBPadPlane::FillDataToHist(Option_t *option)
     }
   }
   else if (optionString == "out") {
-    fH2Plane -> SetTitle("pad calibrated output distribution");
+    // fH2Plane -> SetTitle("pad calibrated output distribution");
     while ((pad = (KBPad *) iterPads.Next())) {
       auto buffer = pad -> GetBufferOut();
       Double_t val = *max_element(buffer,buffer+512);
@@ -397,17 +397,20 @@ bool KBPadPlane::PadPositionChecker(bool checkCorners)
       ++countM1;
       continue;
     }
+
     auto center0 = pad -> GetPosition();
     auto padID0 = pad -> GetPadID();
     auto padID1 = FindPadID(center0.I(),center0.J());
 
     if (padID1 != padID0) {
+      
       auto pad1 = (KBPad *) fChannelArray -> At(padID1);
       auto center1 = pad1 -> GetPosition();
       kb_warning << "Bad! Pad:" << padID0 << "(" << center0.I() << "," << center0.J() << "|" << pad -> GetSection() << "," << pad -> GetRow() << "," << pad -> GetLayer() << ")"
                  << " --> Pad:" << padID1 << "(" << center1.I() << "," << center1.J() << "|" << pad1-> GetSection() << "," << pad1-> GetRow() << "," << pad1-> GetLayer() << ")" << endl;
       ++countBad;
     }
+
     if (checkCorners) {
       for (auto corner : *(pad->GetPadCorners())) {
         auto pos = 0.1*TVector2(center0.I(),center0.J()) + 0.9*corner;

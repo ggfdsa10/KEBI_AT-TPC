@@ -32,7 +32,7 @@ void KBHelixTrack::Clear(Option_t *option)
   fFitStatus = kBad;
 
   fGenfitID = -999;
-  fGenfitMomentum = -999.;
+  fGenfitMomentum = TVector3(-999.,-999.,-999.);
 
   fA = KBVector3::kZ;
   fI = -999.;
@@ -89,7 +89,7 @@ void KBHelixTrack::Print(Option_t *option) const
       kr_info(0) << setw(13) << "Momentum"     << " : " << Momentum().Mag() << " [MeV]" << endl;;
 
       if (fFitStatus == KBHelixTrack::kGenfitTrack) {
-        kr_info(0) << setw(13) << "GF-Momentum"  << " : " << fGenfitMomentum << " [MeV]" << endl;;
+        kr_info(0) << setw(13) << "GF-Momentum"  << " : " << fGenfitMomentum.Mag() << " [MeV]" << endl;;
         kr_info(0) << setw(13) << "dEdx (70 %)"  << " : " << GetdEdxWithCut(0, 0.7) << " [ADC/mm]" << endl;;
       }
     }
@@ -424,8 +424,8 @@ Bool_t KBHelixTrack::IsPositiveChargeParticle()  const { return fIsPositiveCharg
  void KBHelixTrack::SetGenfitID(Int_t idx) { fGenfitID = idx; }
 Int_t KBHelixTrack::GetGenfitID() const { return fGenfitID; }
 
-void KBHelixTrack::SetGenfitMomentum(Double_t p) { fGenfitMomentum = p; }
-Double_t KBHelixTrack::GetGenfitMomentum() const { return fGenfitMomentum; }
+void KBHelixTrack::SetGenfitMomentum(TVector3 p) { fGenfitMomentum = p; }
+TVector3 KBHelixTrack::GetGenfitMomentum() const { return fGenfitMomentum; }
 
 void KBHelixTrack::DetermineParticleCharge(TVector3 vertex)
 {
