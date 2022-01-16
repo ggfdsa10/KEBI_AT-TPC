@@ -8,8 +8,9 @@
 #include "KBHitArray.hh"
 
 #include "TClonesArray.h"
+#include "TFile.h"
 
-// #include "LHSpacepointMeasurement.hh"
+#include "LHSpacepointMeasurement.hh"
 #include "genfit2/AbsKalmanFitter.h"
 #include "genfit2/Track.h"
 #include "genfit2/RKTrackRep.h"
@@ -42,7 +43,7 @@ class LHGenfitTask : public KBTask
     Int_t fDetectorID = 0;
 
     genfit::AbsKalmanFitter *fKalmanFitter;
-    // genfit::MeasurementProducer<KBHit, genfit::LHSpacepointMeasurement> *fMeasurementProducer;
+    genfit::MeasurementProducer<KBHit, genfit::LHSpacepointMeasurement> *fMeasurementProducer;
     genfit::MeasurementFactory<genfit::AbsMeasurement> *fMeasurementFactory;
     genfit::SharedPlanePtr fTargetPlane;
 

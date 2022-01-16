@@ -4,7 +4,7 @@
 #pragma link off all classes;
 #pragma link off all functions;
 
-#pragma link C++ class genfit::LHGenfitTask+;
-// #pragma link C++ class genfit::LHSpacepointMeasurement+;
+#pragma link C++ class LHGenfitTask+;
+#pragma link C++ class genfit::LHSpacepointMeasurement+;
 
 #endif

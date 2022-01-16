@@ -54,9 +54,9 @@ bool LHGenfitTask::Init()
   fKalmanFitter -> setMaxIterations(20);
 	//fKalmanFitter -> setDebugLvl(10);
 
-//   fMeasurementProducer = new genfit::MeasurementProducer<KBHit, genfit::LHSpacepointMeasurement>(fGFTrackHitClusterArray);
+  fMeasurementProducer = new genfit::MeasurementProducer<KBHit, genfit::LHSpacepointMeasurement>(fGFTrackHitClusterArray);
   fMeasurementFactory = new genfit::MeasurementFactory<genfit::AbsMeasurement>();
-//   fMeasurementFactory -> addProducer(fDetectorID, fMeasurementProducer);
+  fMeasurementFactory -> addProducer(fDetectorID, fMeasurementProducer);
   genfit::FieldManager::getInstance() -> init(new genfit::ConstField(bfieldx, bfieldy, 10*bfieldz)); //T -> kGauss
 	cout << "LHGenfitTask::genfit::FieldManager init " << bfieldx << ", " << bfieldy << ", " <<bfieldz << endl;
 

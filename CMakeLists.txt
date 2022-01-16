@@ -66,16 +66,19 @@ list(APPEND CMAKE_PREFIX_PATH $ENV{ROOTSYS})
 #---libs: Core RIO Net Hist Graf Graf3d Gpad Tree Rint Postscript Matrix Physics MathCore Thread MultiProc pthread
 #---evelibs: Eve EG TreePlayer Geom Ged RGL Gui Core RIO Net Hist Graf Graf3d Gpad Tree Rint Postscript Matrix Physics MathCore Thread MultiProc pthread
 if(ACTIVATE_EVE)
+  # find_package(ROOT REQUIRED)
   find_package(ROOT REQUIRED COMPONENTS RIO Net Eve EG RGL Geom Gui Graf Graf3d Ged Matrix MathCore)
 else(ACTIVATE_EVE)
+  # find_package(ROOT REQUIRED)
   find_package(ROOT REQUIRED COMPONENTS RIO Net Geom Gui Graf Graf3d Ged Matrix MathCore)
-endif(ACTIVATE_EVE)
 
+endif(ACTIVATE_EVE)
 include(${ROOT_USE_FILE})
 
 set(TOOLS_LIBRARIES_LIST ${ROOT_LIBRARIES} CACHE INTERNAL "")
 
-Set(LD_LIBRARY_PATH ${LD_LIBRARY_PATH})
+find_package(Boost   REQUIRED)
+Set(LD_LIBRARY_PATH ${LD_LIBRARY_PATH} ${Boost_LIBRARY_DIR})
 
 find_package(Eigen3  REQUIRED)
 find_package(Rave    REQUIRED)
@@ -109,8 +112,8 @@ foreach(_directory ${KEBI_SOURCE_DIRECTORY_LIST})
   list(APPEND KEBI_SOURCE_NAME_LIST ${_name})
   set(KEBI_${_name}_G_NAME G__${_name}Dict)
   file(GLOB KEBI_${_name}_LINKDEF_FILE ${_directory}/LinkDef.h)
-  file(GLOB KEBI_${_name}_SOURCE_FILES ${_directory}/*cc)
-  file(GLOB KEBI_${_name}_HEADER_FILES ${_directory}/*hh)
+  file(GLOB KEBI_${_name}_SOURCE_FILES ${_directory}/*.cc)
+  file(GLOB KEBI_${_name}_HEADER_FILES ${_directory}/*.hh)
 endforeach(_directory)
 
 include_directories(${CMAKE_SOURCE_DIR}/log)
