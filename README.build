@@ -13,6 +13,7 @@ echo 'Rint.Logon: $(KEBIPATH)/macros/rootlogon.C' >> ~/.rootrc
 ### Do it as follows.
 
 cd ${KEBIPATH}/GenFit/
+mkdir install
 mkdir build
 cd build
 cmake .. -DCMAKE_INSTALL_PREFIX=./install
