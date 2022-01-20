@@ -1,0 +1,12 @@
+#G4VisFile    s  $KEBIPATH/newTPC/macros/input/vis.mac
+G4InputFile   s  $KEBIPATH/newTPC/macros/generate/CosmicMuon.gen
+G4OutputFile  s  $KEBIPATH/data/NewTPC.mc.root
+
+tpcPar f $KEBIPATH/newTPC/macros/input/par_NewTPC.conf
+
+#SensitiveDetectors s NewTPC
+
+MCSetEdepSumTree b 0
+MCStepPersistency b 1
+MCSecondaryPersistency b 1
+MCTrackVertexPersistency b 1
