@@ -94,8 +94,8 @@ root example_read_track.C
 
 ## LAMPS AT-TPC Simulation
 
-Default execution directory is [kebi/at-tpc/macros](https://github.com/ggfdsa10/KEBI_AT-TPC/tree/main/kebi/at-tpc/macros)
-Default parameter file is [attpc.par](https://github.com/ggfdsa10/KEBI_AT-TPC/tree/main/kebi/at-tpc/macros)
+Default execution directory is [kebi/at-tpc/macros](https://github.com/ggfdsa10/KEBI_AT-TPC/blob/main/at-tpc/macros)
+Default parameter file is [attpc.par](https://github.com/ggfdsa10/KEBI_AT-TPC/blob/main/at-tpc/macros/attpc.par)
 
 ### 0. Set simulation parameters
 
