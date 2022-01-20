@@ -101,7 +101,7 @@ Default parameter file is [attpc.par](https://github.com/ggfdsa10/KEBI_AT-TPC/tr
 
 Before execution AT-TPC Simulation, you have to set parameters.
 
-Parameter file [kebi/at-tpc/macros/input/par_at-tpc.conf](https://github.com/ggfdsa10/KEBI_AT-TPC/tree/main/kebi/at-tpc/macros/input/par_at-tpc.conf)
+Parameter file [kebi/at-tpc/macros/input/par_at-tpc.conf](https://github.com/ggfdsa10/KEBI_AT-TPC/blob/main/at-tpc/macros/input/par_at-tpc.conf)
 
 
 ### 1. Geant4 simulation
@@ -120,19 +120,19 @@ root digi.C
 root eve.C
 nx()
 ```
-The eve parameter file [input/par_at-tpc_eve.conf](https://github.com/ggfdsa10/KEBI_AT-TPC/tree/main/kebi/at-tpc/macros/input)
+The eve parameter file [kebi/at-tpc/macros/input/par_at-tpc_eve.conf](https://github.com/ggfdsa10/KEBI_AT-TPC/blob/main/at-tpc/macros/input/par_at-tpc_eve.conf)
 
 ### 4. ADC data (ADC data simulation)
 ```bash
 root ADC_Analysis.C
 ```
-Output File [kebi/at-tpc/output_data/](https://github.com/ggfdsa10/KEBI_AT-TPC/tree/main/kebi/at-tpc/output_data)
+Output File [kebi/at-tpc/output_data/](https://github.com/ggfdsa10/KEBI_AT-TPC/tree/main/at-tpc/output_data)
 
 ### 5. MC true track data
 ```bash
 root Particle_tracking.C
 ```
-Output File [kebi/at-tpc/output_data/](https://github.com/ggfdsa10/KEBI_AT-TPC/tree/main/kebi/at-tpc/output_data)
+Output File [kebi/at-tpc/output_data/](https://github.com/ggfdsa10/KEBI_AT-TPC/tree/main/at-tpc/output_data)
 
 ## Links
  - [KEBI Github repository](https://github.com/LAMPS-Collaboration/kebi)
