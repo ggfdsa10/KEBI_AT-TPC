@@ -1,5 +1,9 @@
 #include "ATTPC.hh"
+<<<<<<< HEAD
 #include "ATTPCRectanglePad.hh"
+=======
+#include "ATTPCRectnglePad.hh"
+>>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
 #include "ATTPCHoneyCombPad.hh"
 
 ClassImp(ATTPC)
@@ -65,7 +69,11 @@ bool ATTPC::BuildGeometry()
   auto PadPlaneType = fPar -> GetParString("PadPlaneType");
   
   if(PadPlaneType == "RectanglePad"){
+<<<<<<< HEAD
     ATTPCRectanglePad *fPadPlane = new ATTPCRectanglePad(); 
+=======
+    ATTPCRectnglePad *fPadPlane = new ATTPCRectnglePad(); 
+>>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
     PadWidth = fPadPlane ->GetPadWidth();
     PadHeight = fPadPlane ->GetPadHeight();
     PadGap = fPadPlane ->GetPadGap();
@@ -145,14 +153,22 @@ bool ATTPC::BuildDetectorPlane()
 
   if (fPar->CheckPar("PadPlaneType")){
     if (fPar -> GetParString("PadPlaneType") == "RectanglePad"){
+<<<<<<< HEAD
       padplane = new ATTPCRectanglePad();
+=======
+      padplane = new ATTPCRectnglePad();
+>>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
     }  
     else if(fPar -> GetParString("PadPlaneType") == "HoneyCombPad"){
       padplane = new ATTPCHoneyCombPad();
     }
   }
   else
+<<<<<<< HEAD
     padplane = new ATTPCRectanglePad();
+=======
+    padplane = new ATTPCRectnglePad();
+>>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
   
      
   padplane -> SetParameterContainer(fPar);

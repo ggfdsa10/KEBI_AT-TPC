@@ -1,5 +1,10 @@
+<<<<<<< HEAD
 #ifndef ATTPCRECTANGLEPAD_HH
 #define ATTPCRECTANGLEPAD_HH
+=======
+#ifndef ATTPCRECTNGLEPAD_HH
+#define ATTPCRECTNGLEPAD_HH
+>>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
 
 #include "KBPadPlane.hh"
 #include "KBTpcHit.hh"
@@ -9,11 +14,19 @@
 
 typedef vector<KBTpcHit*> KBTpcHits;
 
+<<<<<<< HEAD
 class ATTPCRectanglePad : public KBPadPlane
 {
   public:
     ATTPCRectanglePad();
     virtual ~ATTPCRectanglePad() {}
+=======
+class ATTPCRectnglePad : public KBPadPlane
+{
+  public:
+    ATTPCRectnglePad();
+    virtual ~ATTPCRectnglePad() {}
+>>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
 
     virtual void Draw(Option_t *option = "colz");
   
@@ -53,7 +66,11 @@ class ATTPCRectanglePad : public KBPadPlane
     Int_t fNPadsTotal = 0;
 
   
+<<<<<<< HEAD
   ClassDef(ATTPCRectanglePad, 1)
+=======
+  ClassDef(ATTPCRectnglePad, 1)
+>>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
 };
 
 #endif

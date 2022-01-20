@@ -42,15 +42,21 @@ void ATTPCTrackingAction::PreUserTrackingAction(const G4Track* track)
     fVolumeID = track -> GetVolume() -> GetCopyNo();
 
     const G4VProcess *process = track -> GetCreatorProcess();
+<<<<<<< HEAD
     Double_t edep1 = 0.;
     Double_t edep2 = 0.;
+=======
+>>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
 
     G4String processName = "Primary";
     if (process != nullptr)
       processName = process -> GetProcessName();
     fProcessID = fProcessTable -> GetParInt(processName);
+<<<<<<< HEAD
     fRunManager -> AddMCTrack(track -> GetTrackID(), track -> GetParentID(), track -> GetDefinition() -> GetPDGEncoding(), fMomentum.x(), fMomentum.y(), fMomentum.z(), fVolumeID, fPosition.x(), fPosition.y(), fPosition.z(), fKEnergy, edep1, edep2, fProcessID);
 
+=======
+>>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
 
   }
 }
@@ -60,7 +66,11 @@ void ATTPCTrackingAction::PostUserTrackingAction(const G4Track* track)
   G4int parentID = track -> GetParentID();
   G4int PDG = track -> GetDefinition() -> GetPDGEncoding();
 
+<<<<<<< HEAD
   if (parentID == 0  || (parentID <= fNumberOfPrimary && PDG == 11)) {
+=======
+  if (parentID == 0 || (parentID <= fNumberOfPrimary && PDG == 11)) {
+>>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
     Double_t edep1 = 0.;
     Double_t edep2 = 0.;
 
@@ -80,7 +90,12 @@ void ATTPCTrackingAction::PostUserTrackingAction(const G4Track* track)
       edep1 = fTrackEdep[indexEPoint1];
       edep2 = fTrackEdep[indexEPoint2];
     }
+<<<<<<< HEAD
     // fRunManager -> AddMCTrack(track -> GetTrackID(), track -> GetParentID(), track -> GetDefinition() -> GetPDGEncoding(), fMomentum.x(), fMomentum.y(), fMomentum.z(), fVolumeID, fPosition.x(), fPosition.y(), fPosition.z(), fKEnergy, edep1, edep2, fProcessID);
+=======
+
+    fRunManager -> AddMCTrack(track -> GetTrackID(), track -> GetParentID(), track -> GetDefinition() -> GetPDGEncoding(), fMomentum.x(), fMomentum.y(), fMomentum.z(), fVolumeID, fPosition.x(), fPosition.y(), fPosition.z(), fKEnergy, edep1, edep2, fProcessID);
+>>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
   }
 
 }

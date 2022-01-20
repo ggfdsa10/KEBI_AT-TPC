@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-#include "ATTPCRectanglePad.hh"
-=======
-#include "ATTPCRectnglePad.hh"
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
+#include "ATTPCPadPlane.hh"
 #include "TCanvas.h"
 #include "TMath.h"
 #include "TH2Poly.h"
@@ -12,26 +8,15 @@
 using namespace std;
 using namespace TMath;
 
-<<<<<<< HEAD
-ClassImp(ATTPCRectanglePad)
+ClassImp(ATTPCPadPlane)
 
-ATTPCRectanglePad::ATTPCRectanglePad()
-:KBPadPlane("RectanglePad", "Rectangle Pad")
-=======
-ClassImp(ATTPCRectnglePad)
-
-ATTPCRectnglePad::ATTPCRectnglePad()
-:KBPadPlane("RectnglePad", "Rectngle Pad")
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
-{    
+ATTPCPadPlane::ATTPCPadPlane()
+:KBPadPlane("ATTPCPad1", "Rectngle Pad")
+{
 }
 
 
-<<<<<<< HEAD
-void ATTPCRectanglePad::Draw(Option_t *option)
-=======
-void ATTPCRectnglePad::Draw(Option_t *option)
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
+void ATTPCPadPlane::Draw(Option_t *option)
 {
   GetCanvas();
   GetHist() -> Draw(option);
@@ -39,17 +24,12 @@ void ATTPCRectnglePad::Draw(Option_t *option)
 }
 
 
-<<<<<<< HEAD
-bool ATTPCRectanglePad::Init()
-=======
-bool ATTPCRectnglePad::Init()
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
+bool ATTPCPadPlane::Init()
 {
   TObjArray *fInPadArray = new TObjArray();
 
   fAxis1 = fPar -> GetParAxis("padRefAxis", 0);
   fAxis2 = fPar -> GetParAxis("padRefAxis", 1);
-
   
   for(Int_t iLayer = 0; iLayer < ColumnNum; iLayer++) {
     fNRowsInLayer[0].push_back(RowNum);
@@ -60,16 +40,17 @@ bool ATTPCRectnglePad::Init()
   Int_t agetID = 0;
   Int_t asadID = 0;
   Int_t nLayers = fNRowsInLayer[0].size();
-
+  
   for (Int_t layer = 0; layer < nLayers; layer++) {
     
     for(Int_t row = 0; row < RowNum; row++) {
 
       KBPad *pad = new KBPad();
-      Double_t posI = row*(fPadWidth + fPadGap);
-      Double_t posJ =  layer*(fPadHeight + fPadGap);
+      Double_t posI = fBasePadPos -fPadGap/2 -fPadWidth/2 - row*(fPadWidth + fPadGap);
+      Double_t posJ = fBasePadPos -fPadGap/2 -fPadHeight/2 - layer*(fPadHeight + fPadGap);
+;
 
-      KBVector3 posPad(fAxis1%fAxis2, posI, posJ, 0.);
+      KBVector3 posPad(fAxis1%fAxis2, posI, posJ, 0);
 
       pad -> SetPlaneID(fPlaneID);
       pad -> SetPadID(padID);
@@ -103,11 +84,7 @@ bool ATTPCRectnglePad::Init()
   return true;
 }
 
-<<<<<<< HEAD
-Int_t ATTPCRectanglePad::FindPadID(Int_t section, Int_t row, Int_t layer)
-=======
-Int_t ATTPCRectnglePad::FindPadID(Int_t section, Int_t row, Int_t layer)
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
+Int_t ATTPCPadPlane::FindPadID(Int_t section, Int_t row, Int_t layer)
 {
   if (section < 0 || section >= fNumSections)
     return -1;
@@ -130,11 +107,7 @@ Int_t ATTPCRectnglePad::FindPadID(Int_t section, Int_t row, Int_t layer)
 }
 
 
-<<<<<<< HEAD
-Int_t ATTPCRectanglePad::FindPadID(Double_t i, Double_t j)
-=======
-Int_t ATTPCRectnglePad::FindPadID(Double_t i, Double_t j)
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
+Int_t ATTPCPadPlane::FindPadID(Double_t i, Double_t j)
 {
   Int_t section = FindSection(i, j);
   if (section == -1)
@@ -142,17 +115,14 @@ Int_t ATTPCRectnglePad::FindPadID(Double_t i, Double_t j)
   
   KBVector3 posInput(fAxis1%fAxis2, i, j, 0);
   
-  Int_t layer = (posInput.J()+fPadHeight/2)/(fPadGap + fPadHeight) ;
-  if(layer < 0) layer = 0;
+  Int_t layer = (-posInput.J() + fBasePadPos)/(fPadGap + fPadHeight);
   Int_t nLayers = fNRowsInLayer[section].size();
-
+  
   if (layer < 0 || layer >= nLayers){
     return -1;
   }
-  Int_t Row = (posInput.I()+fPadWidth/2)/(fPadGap + fPadWidth);
-  if(Row < 0) Row = 0;
+  Int_t Row = (-posInput.I() + fBasePadPos)/(fPadGap + fPadWidth);
   Int_t nRows = fNRowsInLayer[section][layer];
-
   if(Row < 0 || Row >= nRows){
     return -1;
   }
@@ -168,11 +138,7 @@ Int_t ATTPCRectnglePad::FindPadID(Double_t i, Double_t j)
 }
 
 
-<<<<<<< HEAD
-Double_t ATTPCRectanglePad::PadDisplacement() const
-=======
-Double_t ATTPCRectnglePad::PadDisplacement() const
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
+Double_t ATTPCPadPlane::PadDisplacement() const
 {
   Int_t max = 0;
   if (max < fPadHeight)
@@ -185,23 +151,15 @@ Double_t ATTPCRectnglePad::PadDisplacement() const
 }
 
 
-<<<<<<< HEAD
-bool ATTPCRectanglePad::IsInBoundary(Double_t i, Double_t j)
-=======
-bool ATTPCRectnglePad::IsInBoundary(Double_t i, Double_t j)
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
+bool ATTPCPadPlane::IsInBoundary(Double_t i, Double_t j)
 {
-  if ( (i <= fBasePadPos-(fPadWidth/2+fPadGap/2) && i >= -(fPadWidth/2+fPadGap/2))&& (j <= fBasePadPos-(fPadWidth/2+fPadGap/2) && j >= -(fPadHeight/2+fPadGap/2)))
+  if ( i <= fBasePadPos+0.125 && j <= fBasePadPos+0.125)
     return true;
     
   return false;
 }
 
-<<<<<<< HEAD
-TH2* ATTPCRectanglePad::GetHist(Option_t *option)
-=======
-TH2* ATTPCRectnglePad::GetHist(Option_t *option)
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
+TH2* ATTPCPadPlane::GetHist(Option_t *option)
 {
   if (fH2Plane != nullptr)
     return fH2Plane;
@@ -240,19 +198,27 @@ TH2* ATTPCRectnglePad::GetHist(Option_t *option)
   return fH2Plane;
 }
 
-<<<<<<< HEAD
-void ATTPCRectanglePad::DrawFrame(Option_t *option)
+void ATTPCPadPlane::DrawFrame(Option_t *option)
 {
+  Color_t lineColor = kBlack;
+
+  TLine* line1 = new TLine(fBasePadPos +0.125, 0., fBasePadPos +0.125, fBasePadPos +0.125);
+  TLine* line2 = new TLine(0., 0., fBasePadPos +0.125, 0.);
+  TLine* line3 = new TLine(0., 0., 0., fBasePadPos +0.125);
+  TLine* line4 = new TLine(0., fBasePadPos +0.125, fBasePadPos +0.125, fBasePadPos +0.125);
+
+  line1 -> SetLineColor(lineColor);
+  line2 -> SetLineColor(lineColor);
+  line3 -> SetLineColor(lineColor);
+  line4 -> SetLineColor(lineColor);
+
+  line1 -> Draw("samel");
+  line2 -> Draw("samel");
+  line3 -> Draw("samel");
+  line4 -> Draw("samel");
 }
 
-TCanvas *ATTPCRectanglePad::GetCanvas(Option_t *option)
-=======
-void ATTPCRectnglePad::DrawFrame(Option_t *option)
-{
-}
-
-TCanvas *ATTPCRectnglePad::GetCanvas(Option_t *option)
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
+TCanvas *ATTPCPadPlane::GetCanvas(Option_t *option)
 {
   if (fCanvas == nullptr)
     fCanvas = new TCanvas(fName+Form("%d",fPlaneID),fName,1300,700);
@@ -262,15 +228,11 @@ TCanvas *ATTPCRectnglePad::GetCanvas(Option_t *option)
 }
 
 
-<<<<<<< HEAD
-Int_t ATTPCRectanglePad::FindSection(Double_t i, Double_t j)
-=======
-Int_t ATTPCRectnglePad::FindSection(Double_t i, Double_t j)
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
+Int_t ATTPCPadPlane::FindSection(Double_t i, Double_t j)
 {
-  if ((i <= fBasePadPos-(fPadWidth/2+fPadGap/2) && i >= -(fPadWidth/2+fPadGap/2)) && (j <= fBasePadPos-(fPadWidth/2+fPadGap/2) && j >= -(fPadHeight/2+fPadGap/2)))
-  {
-    return 0;
-  }
+  if ((i <= fBasePadPos +0.125 || i >= 0) && (j <= fBasePadPos +0.125 || j >= 0))
+    {
+      return 0;
+    }
   else return -1;
 }

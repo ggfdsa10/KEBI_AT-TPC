@@ -11,10 +11,17 @@ void write()
   KBRun::GetRun() -> WriteCvsDetectorPlanes("pdf");
 }
 
+<<<<<<< HEAD
 void run_eve(TString name = "iqmd_test")
 {
   auto run = new KBRun();
   run -> SetInputFile(name+".reco");
+=======
+void run_eve(TString name = "single_proton")
+{
+  auto run = new KBRun();
+  // run -> SetInputFile(name+".reco");
+>>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
   run -> AddFriend(name+".digi");
   run -> SetInputFile(name+".mc");
   run -> AddFriend(name+".mc");
