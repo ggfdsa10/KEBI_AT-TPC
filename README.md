@@ -128,6 +128,11 @@ root ADC_Analysis.C
 ```
 Output File [kebi/at-tpc/output_data/](https://github.com/ggfdsa10/KEBI_AT-TPC/tree/main/kebi/at-tpc/output_data)
 
+### 5. MC true track data
+```bash
+root Particle_tracking.C
+```
+Output File [kebi/at-tpc/output_data/](https://github.com/ggfdsa10/KEBI_AT-TPC/tree/main/kebi/at-tpc/output_data)
 
 ## Links
  - [KEBI Github repository](https://github.com/LAMPS-Collaboration/kebi)
