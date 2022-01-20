@@ -1,8 +1,4 @@
-<<<<<<< HEAD
 #include "ATTPCRectanglePad.hh"
-=======
-#include "ATTPCRectnglePad.hh"
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
 #include "TCanvas.h"
 #include "TMath.h"
 #include "TH2Poly.h"
@@ -12,26 +8,15 @@
 using namespace std;
 using namespace TMath;
 
-<<<<<<< HEAD
 ClassImp(ATTPCRectanglePad)
 
 ATTPCRectanglePad::ATTPCRectanglePad()
 :KBPadPlane("RectanglePad", "Rectangle Pad")
-=======
-ClassImp(ATTPCRectnglePad)
-
-ATTPCRectnglePad::ATTPCRectnglePad()
-:KBPadPlane("RectnglePad", "Rectngle Pad")
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
 {    
 }
 
 
-<<<<<<< HEAD
 void ATTPCRectanglePad::Draw(Option_t *option)
-=======
-void ATTPCRectnglePad::Draw(Option_t *option)
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
 {
   GetCanvas();
   GetHist() -> Draw(option);
@@ -39,11 +24,7 @@ void ATTPCRectnglePad::Draw(Option_t *option)
 }
 
 
-<<<<<<< HEAD
 bool ATTPCRectanglePad::Init()
-=======
-bool ATTPCRectnglePad::Init()
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
 {
   TObjArray *fInPadArray = new TObjArray();
 
@@ -103,11 +84,7 @@ bool ATTPCRectnglePad::Init()
   return true;
 }
 
-<<<<<<< HEAD
 Int_t ATTPCRectanglePad::FindPadID(Int_t section, Int_t row, Int_t layer)
-=======
-Int_t ATTPCRectnglePad::FindPadID(Int_t section, Int_t row, Int_t layer)
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
 {
   if (section < 0 || section >= fNumSections)
     return -1;
@@ -130,11 +107,7 @@ Int_t ATTPCRectnglePad::FindPadID(Int_t section, Int_t row, Int_t layer)
 }
 
 
-<<<<<<< HEAD
 Int_t ATTPCRectanglePad::FindPadID(Double_t i, Double_t j)
-=======
-Int_t ATTPCRectnglePad::FindPadID(Double_t i, Double_t j)
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
 {
   Int_t section = FindSection(i, j);
   if (section == -1)
@@ -168,11 +141,7 @@ Int_t ATTPCRectnglePad::FindPadID(Double_t i, Double_t j)
 }
 
 
-<<<<<<< HEAD
 Double_t ATTPCRectanglePad::PadDisplacement() const
-=======
-Double_t ATTPCRectnglePad::PadDisplacement() const
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
 {
   Int_t max = 0;
   if (max < fPadHeight)
@@ -185,11 +154,7 @@ Double_t ATTPCRectnglePad::PadDisplacement() const
 }
 
 
-<<<<<<< HEAD
 bool ATTPCRectanglePad::IsInBoundary(Double_t i, Double_t j)
-=======
-bool ATTPCRectnglePad::IsInBoundary(Double_t i, Double_t j)
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
 {
   if ( (i <= fBasePadPos-(fPadWidth/2+fPadGap/2) && i >= -(fPadWidth/2+fPadGap/2))&& (j <= fBasePadPos-(fPadWidth/2+fPadGap/2) && j >= -(fPadHeight/2+fPadGap/2)))
     return true;
@@ -197,11 +162,7 @@ bool ATTPCRectnglePad::IsInBoundary(Double_t i, Double_t j)
   return false;
 }
 
-<<<<<<< HEAD
 TH2* ATTPCRectanglePad::GetHist(Option_t *option)
-=======
-TH2* ATTPCRectnglePad::GetHist(Option_t *option)
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
 {
   if (fH2Plane != nullptr)
     return fH2Plane;
@@ -240,19 +201,11 @@ TH2* ATTPCRectnglePad::GetHist(Option_t *option)
   return fH2Plane;
 }
 
-<<<<<<< HEAD
 void ATTPCRectanglePad::DrawFrame(Option_t *option)
 {
 }
 
 TCanvas *ATTPCRectanglePad::GetCanvas(Option_t *option)
-=======
-void ATTPCRectnglePad::DrawFrame(Option_t *option)
-{
-}
-
-TCanvas *ATTPCRectnglePad::GetCanvas(Option_t *option)
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
 {
   if (fCanvas == nullptr)
     fCanvas = new TCanvas(fName+Form("%d",fPlaneID),fName,1300,700);
@@ -262,11 +215,7 @@ TCanvas *ATTPCRectnglePad::GetCanvas(Option_t *option)
 }
 
 
-<<<<<<< HEAD
 Int_t ATTPCRectanglePad::FindSection(Double_t i, Double_t j)
-=======
-Int_t ATTPCRectnglePad::FindSection(Double_t i, Double_t j)
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
 {
   if ((i <= fBasePadPos-(fPadWidth/2+fPadGap/2) && i >= -(fPadWidth/2+fPadGap/2)) && (j <= fBasePadPos-(fPadWidth/2+fPadGap/2) && j >= -(fPadHeight/2+fPadGap/2)))
   {

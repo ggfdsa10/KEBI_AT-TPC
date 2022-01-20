@@ -7,11 +7,7 @@
 #include "G4Step.hh"
 #include "globals.hh"
 #include "ATTPCTrackingAction.hh"
-<<<<<<< HEAD
 #include "ATTPCRectanglePad.hh"
-=======
-#include "ATTPCRectnglePad.hh"
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
 #include "ATTPCHoneyCombPad.hh"
 
 class ATTPCSteppingAction : public G4UserSteppingAction

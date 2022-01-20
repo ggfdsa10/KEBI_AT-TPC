@@ -1,9 +1,5 @@
 #include "ATTPCDetectorConstruction.hh"
-<<<<<<< HEAD
 #include "ATTPCRectanglePad.hh"
-=======
-#include "ATTPCRectnglePad.hh"
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
 #include "ATTPCHoneyCombPad.hh"
 
 #include "KBG4RunManager.hh"
@@ -54,11 +50,7 @@ G4VPhysicalVolume* ATTPCDetectorConstruction::Construct()
   G4double PadGap;  
 
   if(PadPlaneType == "RectanglePad"){
-<<<<<<< HEAD
     ATTPCRectanglePad *fPadPlane = new ATTPCRectanglePad(); 
-=======
-    ATTPCRectnglePad *fPadPlane = new ATTPCRectnglePad(); 
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
     PadWidth = fPadPlane ->GetPadWidth();
     PadHeight = fPadPlane ->GetPadHeight();
     PadGap = fPadPlane ->GetPadGap();

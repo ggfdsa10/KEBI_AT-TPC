@@ -61,12 +61,7 @@ void ATTPCDriftElectron::Exec(Option_t*)
     Int_t parentID = track -> GetParentID();
     Double_t KEnergy = (track -> GetKE())*1000000; //[ev]
 
-<<<<<<< HEAD
 
-=======
-    if(PDG != 11)
-      continue;
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
 
     KBVector3 posMC(track -> GetVX(), track -> GetVY(), track -> GetVZ());
     
@@ -88,12 +83,8 @@ void ATTPCDriftElectron::Exec(Option_t*)
     Double_t Wvalue = WvalueDistribution();
     Int_t SecondaryNum = KEnergy/Wvalue;
     if(SecondaryNum < 1){ SecondaryNum = 1;}
-<<<<<<< HEAD
     if(PDG != 11)
       continue;
-=======
-
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
     for (Int_t iElectron = 0; iElectron < SecondaryNum; iElectron++) {
       Double_t dr    = gRandom -> Gaus(0, sigmaTD);
       Double_t angle = gRandom -> Uniform(2*TMath::Pi());

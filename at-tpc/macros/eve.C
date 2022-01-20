@@ -28,8 +28,4 @@ void eve(TString input = "ATTPC")
   run -> SetGeoTransparency(80);
   run -> Print();
   run -> RunEve(fEventID);
-<<<<<<< HEAD
-=======
-  run -> WriteCvsDetectorPlanes("png");
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
 }

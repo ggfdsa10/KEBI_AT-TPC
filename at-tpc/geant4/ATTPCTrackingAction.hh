@@ -7,11 +7,7 @@
 #include "G4Track.hh"
 #include "globals.hh"
 #include "ATTPCRandomPrimaryGenerate.hh"
-<<<<<<< HEAD
 #include "ATTPCRectanglePad.hh"
-=======
-#include "ATTPCRectnglePad.hh"
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
 #include "ATTPCHoneyCombPad.hh"
 
 class ATTPCTrackingAction : public G4UserTrackingAction

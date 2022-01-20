@@ -1,9 +1,5 @@
 #include "ATTPCRandomPrimaryGenerate.hh"
-<<<<<<< HEAD
 #include "ATTPCRectanglePad.hh"
-=======
-#include "ATTPCRectnglePad.hh"
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
 #include "ATTPCHoneyCombPad.hh"
 
 using namespace std;
@@ -80,11 +76,7 @@ void ATTPCRandomPrimaryGenerate::GeneratePrimaries(G4Event* anEvent)
   // ParticleEnergy = gRandom -> Uniform(500, 100000000);
 
   int event = gRandom -> Uniform(5,10);
-<<<<<<< HEAD
   for(int i=0; i<1; i++){
-=======
-  for(int i=0; i<event; i++){
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
     TriggerFunction();
     fParticleGun -> SetParticleDefinition(particle);
     fParticleGun -> SetParticleMomentumDirection(G4ThreeVector(DirectionX, DirectionY, DirectionZ));
@@ -118,11 +110,7 @@ void ATTPCRandomPrimaryGenerate::TriggerFunction()
   G4double PadGap;
 
   if(PadPlaneType == "RectanglePad"){
-<<<<<<< HEAD
     ATTPCRectanglePad *fPadPlane = new ATTPCRectanglePad(); 
-=======
-    ATTPCRectnglePad *fPadPlane = new ATTPCRectnglePad(); 
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
     PadWidth = fPadPlane ->GetPadWidth();
     PadHeight = fPadPlane ->GetPadHeight();
     PadGap = fPadPlane ->GetPadGap();
@@ -171,11 +159,7 @@ void ATTPCRandomPrimaryGenerate::SingleProtonBeam()
   G4double PadGap;
 
   if(PadPlaneType == "RectanglePad"){
-<<<<<<< HEAD
     ATTPCRectanglePad *fPadPlane = new ATTPCRectanglePad(); 
-=======
-    ATTPCRectnglePad *fPadPlane = new ATTPCRectnglePad(); 
->>>>>>> 2079b1e984042cd756ba71efe7768120e39f4343
     PadWidth = fPadPlane ->GetPadWidth();
     PadHeight = fPadPlane ->GetPadHeight();
     PadGap = fPadPlane ->GetPadGap();
