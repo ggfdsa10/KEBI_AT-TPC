@@ -5,6 +5,10 @@
 export LD_LIBRARY_PATH=/usr/local/clhep/lib/:$LD_LIBRARY_PATH
 export KEBIPATH=(/path/to)/kebi
 
+### Add rootlogon.C to .rootrc
+
+echo 'Rint.Logon: $(KEBIPATH)/macros/rootlogon.C' >> ~/.rootrc
+
 ### 1. install the GenFit and KEBI
 ### Do it as follows.
 
