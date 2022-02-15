@@ -15,7 +15,7 @@ bool NewTPCElectronics::Init()
   KBRun *run = KBRun::GetRun();
 
   KBParameterContainer *par = run -> GetParameterContainer();
-  LHTpc *det = (LHTpc *) (run -> GetDetectorSystem() -> GetTpc());
+  NewTPC *det = (NewTPC *) (run -> GetDetectorSystem() -> GetTpc());
 
   fNPlanes = det -> GetNumPlanes();
   fNTbs = par -> GetParInt("NTbs");

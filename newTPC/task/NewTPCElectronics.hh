@@ -3,7 +3,7 @@
 
 #include <time.h>
 #include "KBTask.hh"
-#include "LHTpc.hh"
+#include "NewTPC.hh"
 #include "KBPulseGenerator.hh"
 #include "TF1.h"
 #include "TClonesArray.h"

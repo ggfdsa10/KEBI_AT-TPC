@@ -24,10 +24,9 @@ class ATTPCSetupParameter : public KBTask
     KBParameterContainer *par = run -> GetParameterContainer();
   
     void GetGasParameters();
-    void GEMGain();
-
+    void GetHe4_iC4H10Parameters();
+    int GetNearestIndex();
     bool fPersistency = false;
-    std::vector<double> GasPar[11];
 
     Double_t fEfield =0;
     Double_t fBfield = 0;
@@ -43,7 +42,20 @@ class ATTPCSetupParameter : public KBTask
     Double_t fLorentzAngle = 0;
     Double_t fGasWvalue = 0;
     Double_t fFanoFactor =0;
-  
+    Double_t fElectronNumRef = 0;
+
+    Double_t fiC4H10Ratio = 0.;
+    Double_t fpressure = 0.;
+    Double_t bfieldx = 0.;
+    Double_t bfieldy = 0.;
+    Double_t bfieldz = 0.;
+
+    double fVEarray[8][7][7];
+    double fTDarray[8][7][6][8];
+    double fLDarray[8][7][8];
+    int fIndexRatio;
+    int fIndexPressure;
+    int fIndexMagnet;
 
   ClassDef(ATTPCSetupParameter, 1)
 

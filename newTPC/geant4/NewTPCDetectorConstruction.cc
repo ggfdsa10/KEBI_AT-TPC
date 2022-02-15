@@ -12,6 +12,7 @@
 #include "G4UniformMagField.hh"
 #include "G4GlobalMagFieldMessenger.hh"
 #include "G4VisAttributes.hh"
+#include "G4UserLimits.hh"
 
 
 NewTPCDetectorConstruction::NewTPCDetectorConstruction()
@@ -43,48 +44,58 @@ G4VPhysicalVolume* NewTPCDetectorConstruction::Construct()
   G4double bfieldY = par -> GetParDouble("bfieldY");
   G4double bfieldZ = par -> GetParDouble("bfieldZ");
 
-  G4double Pressure = par -> GetParDouble("pressure");
   G4double Temperature = par -> GetParDouble("temperature");
   G4double STPTemperature = 273.15;
-  G4double labTemperature = STPTemperature + Temperature *kelvin;
-
+  G4double labTemperature = (STPTemperature + Temperature)*kelvin;
+  G4double Pressure = par -> GetParDouble("pressure");
   TString detMatName = par -> GetParString("detMatName");
+  G4double iC4H10Ratio = par -> GetParDouble("iC4H10Ratio");
 
   //-----------------------gas definition----------------------------------
   
   G4double densityArGas = 0.001782 *g/cm3*STPTemperature/labTemperature;
   G4double densityMethane = 0.000717 *g/cm3*STPTemperature/labTemperature;
   G4double densityHeGas = 0.000179 *g/cm3*STPTemperature/labTemperature;
-  G4double densityVacuum = 1e-15;
+  G4double densityIsobutaneGas = 0.0026756 *g/cm3*STPTemperature/labTemperature;
+  G4double densityVacuum = 1e-15*g/cm3;
  
+  G4Element *element_C  = new G4Element("Carbon",   "C",  6,  12.011*g/mole);
+  G4Element *element_H  = new G4Element("Hydrogen", "H",  1,  1.00794*g/mole);
   
   G4Material *ArGas = new G4Material("ArgonGas", 18, 39.948*g/mole, densityArGas, kStateGas, labTemperature);
-
   G4Material* methane = nist -> FindOrBuildMaterial("G4_METHANE");
   G4Material *MethaneGas = new G4Material("MethaneGas", densityMethane, methane, kStateGas, labTemperature);
-
   G4Material* HeGas = nist -> FindOrBuildMaterial("G4_He");
-
+  G4Material *IsobutaneGas = new G4Material("iC4H10", densityIsobutaneGas, 2, kStateGas, labTemperature);
+  IsobutaneGas -> AddElement(element_C, 4);
+  IsobutaneGas -> AddElement(element_H, 10);
 
   G4Material *matGas = nullptr;
   
-  if (detMatName == "p10") {
-    G4double densityGas = .9*densityArGas + .1*densityMethane;
+  if (detMatName == "p10"){
+    G4double densityGas = (.9*densityArGas + .1*densityMethane)*Pressure/760.;
     matGas = new G4Material("matP10", densityGas, 2, kStateGas, labTemperature);
     matGas -> AddMaterial(ArGas, 90 *perCent);
     matGas -> AddMaterial(MethaneGas, 10 *perCent);
   }
-  else if (detMatName == "p20") {
-    G4double densityGas = .8*densityArGas + .2*densityMethane;
-    matGas = new G4Material("matP20", densityGas, 2, kStateGas, labTemperature);
-    matGas -> AddMaterial(ArGas, 80 *perCent);
-    matGas -> AddMaterial(MethaneGas, 20 *perCent);
-  }
 
-  else if(detMatName == "4He") {
-    G4double densityGas = densityHeGas*(Pressure/760.);
+  else if(detMatName == "4He"){
+    G4double densityGas = densityHeGas*Pressure/760.;
     matGas = new G4Material("mat4He", densityGas, 1, kStateGas, labTemperature);
     matGas -> AddMaterial(HeGas, 100 *perCent);
+  }
+
+  else if(detMatName == "iC4H10"){
+    G4double densityGas = densityIsobutaneGas*Pressure/760.;
+    matGas = new G4Material("matiC4H10", densityGas, 1, kStateGas, labTemperature);
+    matGas -> AddMaterial(IsobutaneGas, 100 *perCent);
+  }
+
+  else if(detMatName == "4He_iC4H10"){
+    G4double densityGas = ((densityIsobutaneGas*iC4H10Ratio*0.01)+(densityHeGas*(100.-iC4H10Ratio)*0.01))*Pressure/760.;
+    matGas = new G4Material("matHe4_iC4H10", densityGas, 2, kStateGas, labTemperature);
+    matGas -> AddMaterial(IsobutaneGas, iC4H10Ratio *perCent);
+    matGas -> AddMaterial(HeGas, (100.-iC4H10Ratio) *perCent);
   }
 
   G4Material *Vacuum = new G4Material("Vacuum", densityVacuum, 1, kStateGas, labTemperature);
@@ -112,6 +123,7 @@ G4VPhysicalVolume* NewTPCDetectorConstruction::Construct()
     newTPC -> SetForceWireframe(true);
     logicTPC -> SetVisAttributes(newTPC);
   }
+  logicTPC -> SetUserLimits(new G4UserLimits(0.1*nm, 0.1*nm));   
   auto pvp = new G4PVPlacement(0, G4ThreeVector(0,0,tpcLength), logicTPC, "TPC", logicWorld, false, 1, true);
   runManager -> SetSensitiveDetector(pvp);
 

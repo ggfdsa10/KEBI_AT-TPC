@@ -2,6 +2,7 @@
 #include "globals.hh"
 #include "Randomize.hh"
 #include "G4StepLimiterPhysics.hh"
+#include "G4FastSimulationPhysics.hh"
 #include "G4UImanager.hh"
 
 #include "KBCompiled.h"
@@ -24,6 +25,9 @@ int main(int argc, char** argv)
   auto runManager = new KBG4RunManager();
 
   G4VModularPhysicsList* physicsList = new NewTPCPhysicsList;
+  G4FastSimulationPhysics* fastsimPhysics = new G4FastSimulationPhysics();
+  fastsimPhysics->ActivateFastSimulation("e-");
+  physicsList->RegisterPhysics(fastsimPhysics);
   physicsList -> RegisterPhysics(new G4StepLimiterPhysics());
 
   runManager -> SetUserInitialization(physicsList);

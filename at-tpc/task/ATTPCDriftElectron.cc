@@ -24,12 +24,18 @@ bool ATTPCDriftElectron::Init()
   par = run -> GetParameterContainer();
 
   fGemVolt = par -> GetParDouble("GemVolt");
+  if(par->GetParBool("fixGainP10")==0){
+    fPressureRatio = 760./par -> GetParDouble("pressure");
+    fElectronNumRef = par -> GetParDouble("ElectronNumRef");
+  }
+  
   fVelocityE =  par -> GetParDouble("VelocityE");
   fLDiff = par -> GetParDouble("LDiff");
   fTDiff = par -> GetParDouble("TDiff");
   fBAt0DiffCoef2 = par -> GetParDouble("BAt0DiffCoef2");
   fWvalue = par -> GetParDouble("GasWvalue");
   fFanoFactor = par -> GetParDouble("FanoFactor");
+
   fNTbs = par -> GetParInt("NTbs");
   fTBtime = par -> GetParDouble("TBtime");
   fNoise = par -> GetParBool("NoiseOn");
@@ -61,8 +67,6 @@ void ATTPCDriftElectron::Exec(Option_t*)
     Int_t parentID = track -> GetParentID();
     Double_t KEnergy = (track -> GetKE())*1000000; //[ev]
 
-
-
     KBVector3 posMC(track -> GetVX(), track -> GetVY(), track -> GetVZ());
     
     posMC.SetReferenceAxis(fTpc -> GetEFieldAxis());
@@ -83,8 +87,10 @@ void ATTPCDriftElectron::Exec(Option_t*)
     Double_t Wvalue = WvalueDistribution();
     Int_t SecondaryNum = KEnergy/Wvalue;
     if(SecondaryNum < 1){ SecondaryNum = 1;}
+
     if(PDG != 11)
       continue;
+
     for (Int_t iElectron = 0; iElectron < SecondaryNum; iElectron++) {
       Double_t dr    = gRandom -> Gaus(0, sigmaTD);
       Double_t angle = gRandom -> Uniform(2*TMath::Pi());
@@ -105,11 +111,11 @@ void ATTPCDriftElectron::Exec(Option_t*)
         continue;
 
       if (fFastCalculate == true){
-        if(fGemVolt <= 300)
-          gainRatio =10;
+        if(gain <= 1e+5)
+          gainRatio =20;
 
-        else if(fGemVolt > 300)
-          gainRatio = fGemVolt-290;
+        else if(gain > 1e+5)
+          gainRatio = 500;
 
         gain = gain/gainRatio;
       }
@@ -150,9 +156,9 @@ Double_t ATTPCDriftElectron::PolyaFunction(Double_t *x, Double_t *Par){
 }
 
 void ATTPCDriftElectron::GainDistribution(){
-  Double_t Electron = 219.1;
-  Double_t GainMean = TMath::Exp(-16.84+0.07451*fGemVolt);
-  Double_t GainVariance = 1/(pow(TMath::Exp(-20.7+0.07985*fGemVolt) / GainMean, 2)*Electron - fFanoFactor);
+  Double_t GainMean = TMath::Exp((-16.84+0.07451*fGemVolt)*fPressureRatio);
+  Double_t GainParMean = TMath::Exp(-16.84+0.07451*fGemVolt);
+  Double_t GainVariance = 1/(pow(TMath::Exp(-20.7+0.07985*fGemVolt)/GainParMean, 2)*fElectronNumRef - fFanoFactor);
 
   fGainFunction = new TF1("GainFunction", this, &ATTPCDriftElectron::PolyaFunction, 0, GainMean/0.05, 3);
   fGainFunction -> SetParameter(0, GainVariance);
@@ -197,8 +203,7 @@ Double_t ATTPCDriftElectron::TransverseDiffusion(Double_t length){
 
   Double_t CorrSigma1 = 0.0128*TMath::Sqrt(length) +1.61;
   Double_t CorrSigma2 = 0.0316*TMath::Sqrt(length) +1.28;
-  Double_t DiffReduceRatio = fTDiff/fBAt0DiffCoef2;
+  Double_t DiffReduceRatio = fTDiff*fTDiff/fBAt0DiffCoef2/fBAt0DiffCoef2;
   Double_t sigmaTD = (CorrSigma1*CorrSigma1)/(CorrSigma2*CorrSigma2)*TMath::Sqrt(fTDiff*fTDiff*length +((CorrSigma1*CorrSigma1)-(CorrSigma2*CorrSigma2))*DiffReduceRatio);
-
   return sigmaTD;
 }

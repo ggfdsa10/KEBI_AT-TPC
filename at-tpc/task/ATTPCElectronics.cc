@@ -15,7 +15,7 @@ bool ATTPCElectronics::Init()
   KBRun *run = KBRun::GetRun();
 
   KBParameterContainer *par = run -> GetParameterContainer();
-  LHTpc *det = (LHTpc *) (run -> GetDetectorSystem() -> GetTpc());
+  ATTPC *det = (ATTPC *) (run -> GetDetectorSystem() -> GetTpc());
 
   fNPlanes = det -> GetNumPlanes();
   fNTbs = par -> GetParInt("NTbs");

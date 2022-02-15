@@ -21,6 +21,7 @@ NewTPCRandomPrimaryGenerate::~NewTPCRandomPrimaryGenerate()
 void NewTPCRandomPrimaryGenerate::GeneratePrimaries(G4Event* anEvent)
 {   
   G4ParticleTable* particleTable = G4ParticleTable::GetParticleTable();
+  G4IonTable* iontable = G4IonTable::GetIonTable();
   G4String particleName;
   G4ParticleDefinition* particle = nullptr;
 
@@ -38,13 +39,17 @@ void NewTPCRandomPrimaryGenerate::GeneratePrimaries(G4Event* anEvent)
     particle = particleTable -> FindParticle(particleName = "proton");
   }
 
-  else if (RandomParticle == "e-"){
-    particle = particleTable -> FindParticle(particleName = "e-");
+  else if (RandomParticle == "alpha"){
+    particle = iontable ->FindIon(2,4,0); //helium
   }
 
-  else if (RandomParticle == "alpha"){
-    G4IonTable* iontable = G4IonTable::GetIonTable();
-    particle = iontable ->FindIon(2,4,0); //helium
+  else if (RandomParticle == "ion"){
+    Int_t IonZ = par -> GetParInt("IonInfo", 0);
+    Int_t IonA = par -> GetParInt("IonInfo", 1);
+    Int_t IonE = par -> GetParInt("IonInfo", 2);
+
+    particle = iontable ->GetIon(IonZ, IonA, IonE);
+    g4_info << " Primary particle : " << iontable ->GetIonName(IonZ, IonA, IonE) << endl;
   }
 
   else if (RandomParticle == "gamma"){
@@ -54,10 +59,13 @@ void NewTPCRandomPrimaryGenerate::GeneratePrimaries(G4Event* anEvent)
   else{
     g4_warning << " Particle name is not valid. " << RandomParticle << endl;
   }
-  g4_info << " Primary particle : " << RandomParticle << endl;
+  if(RandomParticle != "ion")
+    g4_info << " Primary particle : " << RandomParticle << endl;
+
 
   AlphaScattering();
   // Particle();
+
   fParticleGun -> SetParticleDefinition(particle);
   fParticleGun -> SetParticlePosition(G4ThreeVector(AlphaPos1.X() *mm, AlphaPos1.Y() *mm, AlphaPos1.Z() *mm));
   fParticleGun -> SetParticleMomentumDirection(G4ThreeVector(Alpha1_4Vec.X(), Alpha1_4Vec.Y(), Alpha1_4Vec.Z()).unit());

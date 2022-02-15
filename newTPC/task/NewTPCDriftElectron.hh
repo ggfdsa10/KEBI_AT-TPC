@@ -33,22 +33,23 @@ class NewTPCDriftElectron : public KBTask
     KBParameterContainer *par = nullptr;
 
     Int_t fNPlanes = 0;
-    Double_t fGemVolt =0;
+    Double_t fGemVolt = 0;
+    Double_t fPressureRatio = 1;
     Double_t fVelocityE = 0;
     Double_t fVelocityExB = 0;
     Double_t fLDiff = 0;
     Double_t fTDiff = 0;
-    Double_t fBAt0DiffCoef2 =0;
+    Double_t fBAt0DiffCoef2 = 0;
     Double_t fWvalue = 0;
-    Double_t fFanoFactor =0;
+    Double_t fFanoFactor = 0;
+    Double_t fElectronNumRef = 219.1;
     Int_t fNTbs = 0;
     Double_t fTBtime = 0;
-    Double_t fGEMLayerTerm =0;
+    Double_t fGEMLayerTerm = 0;
     
     bool fNoise = false;
     bool fFastCalculate = false;
 
-    TRandom3 *fRandom = nullptr;
     TF1 *fGainFunction = nullptr;
   
   ClassDef(NewTPCDriftElectron, 1)
