@@ -37,11 +37,6 @@ KBPulseGenerator::KBPulseGenerator(TString fileName)
 
 bool KBPulseGenerator::Initialize(TString fileName)
 {
-  if (fileName=="deltaFunction") {
-    fIsDeltaFunction = true;
-    return true;
-  }
-
   if (fileName.IsNull())
     fileName = "pulser_464ns.dat";
   TString fileNameConfigured = KBRun::ConfigureDataPath(fileName,true,"$(KEBIPATH)/input/",false);
@@ -117,22 +112,6 @@ bool KBPulseGenerator::Initialize(TString fileName)
 Double_t 
 KBPulseGenerator::Pulse(Double_t x, Double_t amp, Double_t tb0)
 {
-  if (fIsDeltaFunction)
-  {
-    if (x>=tb0-1 && x<tb0) {
-      auto val = amp * (x - tb0 + 1);
-      //return val;
-      return amp;
-    }
-    else if (x>=tb0 && x<tb0+1) {
-      auto val = - amp * (x - tb0 - 1);
-      //return val;
-      return amp;
-    }
-    else
-      return 0;
-  }
-
   Double_t tb = x - tb0;
   if (tb < 0) 
     return 0;
@@ -150,22 +129,6 @@ KBPulseGenerator::Pulse(Double_t x, Double_t amp, Double_t tb0)
 Double_t 
 KBPulseGenerator::PulseF1(Double_t *x, Double_t *par)
 {
-  if (fIsDeltaFunction)
-  {
-    if (x[0]>=par[1]-1 && x[0]<par[1]) {
-      auto val = par[0] * (x[0] - par[1] + 1);
-      //return val;
-      return par[0];
-    }
-    else if (x[0]>=par[1] && x[0]<par[1]+1) {
-      auto val = - par[0] * (x[0] - par[1] - 1);
-      //return val;
-      return par[0];
-    }
-    else
-      return 0;
-  }
-
   Double_t tb = x[0] - par[1];
   if (tb < 0) 
     return 0;
@@ -185,15 +148,6 @@ KBPulseGenerator::GetPulseFunction(TString name)
 {
   if (name.IsNull()) 
     name = Form("STPulse_%d", fNumF1++);
-
-  if (fIsDeltaFunction)
-  {
-    //TF1* f1 = new TF1(name, "(x>=[1]-1 && x<[1])*[0]*(x-[1]+1) + (x>=[1] && x<[1]+1)*(-[0])*(x-[1]-1)", 0, 512);
-    TF1* f1 = new TF1(name, "(x>=[1]-1 && x<[1])*[0] + (x>=[1] && x<[1]+1)*(-[0])", 0, 512);
-    f1 -> SetNpx(512);
-    return f1;
-  }
-
   TF1* f1 = new TF1(name, this, &KBPulseGenerator::PulseF1, 0, 512, 2, "KBPulseGenerator", "PulseF1");
   return f1;
 }
@@ -213,11 +167,6 @@ KBSamplePoint **KBPulseGenerator::GetPulseData()  { return &fPulseData; }
 void
 KBPulseGenerator::Print()
 {
-  if (fIsDeltaFunction) {
-    KBLog("KBPulseGenerator","Print",0,2) << "[KBPulseGenerator INFO] DeltaFunction" << endl;
-    return;
-  }
-
   KBLog("KBPulseGenerator","Print",0,2) << "[KBPulseGenerator INFO]" << endl;
   KBLog("KBPulseGenerator","Print",0,2) << " == Shaping time : " << fShapingTime << " ns" << endl;
   KBLog("KBPulseGenerator","Print",0,2) << " == Number of data points : " << fNumDataPoints << endl;

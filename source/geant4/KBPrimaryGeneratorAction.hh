@@ -16,6 +16,9 @@ class KBPrimaryGeneratorAction : public G4VUserPrimaryGeneratorAction
 
     // method from the base class
     virtual void GeneratePrimaries(G4Event*);         
+
+		void GeneratePrimariesMode0(G4Event*);         
+		void GeneratePrimariesMode1(G4Event*);         
   
     // method to access particle gun
     const G4ParticleGun* GetParticleGun() const { return fParticleGun; }

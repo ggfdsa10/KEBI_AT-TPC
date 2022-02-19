@@ -25,8 +25,8 @@ bool LHPadPlane::Init()
 
   fFuncXRightBound = new TF1("RightBound","1/(TMath::Tan(TMath::Pi()*3/8))*x",10,55);
 
-  fRMin = fPar -> GetParDouble("rMinTPC");
-  fRMax = fPar -> GetParDouble("rMaxTPC");
+	fRMin = fPar -> GetParDouble("TPCrMin");
+	fRMax = fPar -> GetParDouble("TPCrMax");
 
   fNLayerDivision = fPar -> GetParInt("ppNLayerDivision");
 

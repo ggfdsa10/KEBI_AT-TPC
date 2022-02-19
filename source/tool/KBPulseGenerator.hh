@@ -101,8 +101,6 @@ class KBPulseGenerator
      */
     Int_t fNDFTbs;
 
-    bool fIsDeltaFunction = false;
-
   private:
     TF1 *fTailFunction = nullptr;
 

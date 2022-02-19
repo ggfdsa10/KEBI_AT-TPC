@@ -20,7 +20,6 @@ using namespace std;
 
 #include "genfit2/GFRaveVertex.h"
 
-
 #include "TRandom.h"
 
 ClassImp(LHGenfitTask)

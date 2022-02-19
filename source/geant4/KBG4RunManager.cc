@@ -21,6 +21,9 @@ KBG4RunManager::KBG4RunManager()
 {
   new KBG4RunMessenger(this);
 
+  fGeom = new KBParameterContainer();
+  fGeom -> SetName("Geom");
+
   fVolumes = new KBParameterContainer();
   fVolumes -> SetName("Volumes");
 
@@ -59,13 +62,22 @@ void KBG4RunManager::Initialize()
   G4RunManager::Initialize();
 
   SetOutputFile(fPar->GetParString("G4OutputFile").Data());
-  SetGeneratorFile(fPar->GetParString("G4InputFile").Data());
+	if ( fPar->GetParInt("G4InputMode")==1 )
+	{
+		SetGeneratorFile(fPar->GetParString("G4InputFile").Data());
+	}
 
   auto procNames = G4ProcessTable::GetProcessTable() -> GetNameList();
   Int_t idx = 0;
+	G4cout << "####################" << G4endl;
+	G4cout << "Create Process Table" << G4endl;
   fProcessTable -> SetPar("Primary", idx++);
-  for (auto name : *procNames)
-    fProcessTable -> SetPar(name, idx++);
+	G4cout << idx-1 << " " << "Primary" << G4endl;
+  for (auto name : *procNames){
+		fProcessTable -> SetPar(name, idx++);
+		G4cout << idx-1 << " " << name << G4endl;
+	}
+	G4cout << "####################" << G4endl;
 
   if (fPar->CheckPar("G4ExportGDML"))
   {
@@ -138,14 +150,14 @@ void KBG4RunManager::Run(G4int argc, char **argv, const G4String &type)
     auto fileName = fPar -> GetParString("G4MacroFile");
     g4_info << "Initializing Geant4 run with macro " << fileName << endl;
     uiManager -> ApplyCommand(command+fileName);
-
   }
+
 
   WriteToFile(fProcessTable);
   WriteToFile(fSensitiveDetectors);
   WriteToFile(fVolumes);
+  WriteToFile(fGeom);
   EndOfRun();
- 
 }
 
 void KBG4RunManager::BeamOnAll()
@@ -194,16 +206,20 @@ void KBG4RunManager::SetOutputFile(TString name)
 {
   fPar -> ReplaceEnvironmentVariable(name);
 
-  fSetEdepSumTree         = fPar->GetParBool("MCSetEdepSumTree");;
-  fStepPersistency        = fPar->GetParBool("MCStepPersistency");;
+  fMCTrack 				        = fPar->GetParBool("MCTrack");
+  fMCPostTrack		        = fPar->GetParBool("MCPostTrack");
+  fSetEdepSumTree         = fPar->GetParBool("MCSetEdepSumTree");
+  fStepPersistency        = fPar->GetParBool("MCStepPersistency");
   fSecondaryPersistency   = fPar->GetParBool("MCSecondaryPersistency");
   fTrackVertexPersistency = fPar->GetParBool("MCTrackVertexPersistency");
 
   fFile = new TFile(name,"recreate");
   fTree = new TTree("event", name);
 
-  fTrackArray = new TClonesArray("KBMCTrack", 100);
+	fTrackArray = new TClonesArray("KBMCTrack", 100);
+	fPostTrackArray = new TClonesArray("KBMCTrack", 100);
   fTree -> Branch("MCTrack", &fTrackArray);
+  fTree -> Branch("MCPostTrack", &fPostTrackArray);
 
   fStepArrayList = new TObjArray();
 
@@ -314,22 +330,36 @@ void KBG4RunManager::SetSensitiveDetector(G4VPhysicalVolume *physicalVolume, TSt
   }
 }
 
+KBParameterContainer *KBG4RunManager::GetGeom() { return fGeom; }
 KBParameterContainer *KBG4RunManager::GetVolumes() { return fVolumes; }
 KBParameterContainer *KBG4RunManager::GetSensitiveDetectors() { return fSensitiveDetectors; }
 KBParameterContainer *KBG4RunManager::GetProcessTable()       { return fProcessTable; }
 
 
 
-void KBG4RunManager::AddMCTrack(Int_t trackID, Int_t parentID, Int_t pdg, Double_t px, Double_t py, Double_t pz, Int_t detectorID, Double_t vx, Double_t vy, Double_t vz, Double_t ke, Double_t edep1, Double_t edep2, Int_t processID)
+void KBG4RunManager::AddMCTrack(Int_t opt, Int_t trackID, Int_t parentID, Int_t pdg, Double_t px, Double_t py, Double_t pz, Int_t detectorID, Double_t vx, Double_t vy, Double_t vz, Double_t ke, Double_t edep1, Double_t edep2, Int_t processID)
 {
-  if (parentID != 0 && !fSecondaryPersistency) {
+  if (opt==0 && parentID != 0 && !fSecondaryPersistency) {
     fCurrentTrack = nullptr;
     return;
   }
 
+	if (opt==0 && !fMCTrack) {
+		fCurrentTrack = nullptr;
+		return;
+	}else if (opt==1 && !fMCPostTrack) {
+		fCurrentTrack = nullptr;
+		return;
+	}
+
   fTrackID = trackID;
-  fCurrentTrack = (KBMCTrack *) fTrackArray -> ConstructedAt(fTrackArray -> GetEntriesFast());
-  fCurrentTrack -> SetMCTrack(trackID, parentID, pdg, px, py, pz, detectorID, vx, vy, vz, ke, edep1, edep2, processID);
+	if ( opt==0 ){
+		fCurrentTrack = (KBMCTrack *) fTrackArray -> ConstructedAt(fTrackArray -> GetEntriesFast());
+	}else if ( opt==1 ){
+		fCurrentTrack = (KBMCTrack *) fPostTrackArray -> ConstructedAt(fPostTrackArray -> GetEntriesFast());
+	}
+
+	fCurrentTrack -> SetMCTrack(trackID, parentID, pdg, px, py, pz, detectorID, vx, vy, vz, ke, edep1, edep2, processID);
 }
 
 void KBG4RunManager::AddTrackVertex(Double_t px, Double_t py, Double_t pz, Int_t detectorID, Double_t vx, Double_t vy, Double_t vz)
@@ -342,7 +372,9 @@ void KBG4RunManager::AddTrackVertex(Double_t px, Double_t py, Double_t pz, Int_t
 
 void KBG4RunManager::AddMCStep(Int_t detectorID, Double_t x, Double_t y, Double_t z, Double_t t, Double_t e)
 {
-  auto idx = fIdxOfCopyNo[detectorID];
+	Int_t motherID = (detectorID/1000)*10;
+	Int_t moduleID = detectorID>1000 ? detectorID%1000 : 0;
+	auto idx = fIdxOfCopyNo[motherID];
 
   if (fSetEdepSumTree)
     fEdepSumArray[idx] = fEdepSumArray[idx] + e;
@@ -355,7 +387,7 @@ void KBG4RunManager::AddMCStep(Int_t detectorID, Double_t x, Double_t y, Double_
       return;
 
     KBMCStep *step = (KBMCStep *) stepArray -> ConstructedAt(stepArray -> GetEntriesFast());
-    step -> SetMCStep(fTrackID, x, y, z, t, e);
+    step -> SetMCStep(fTrackID, moduleID, x, y, z, t, e);
   }
 }
 
@@ -366,10 +398,13 @@ void KBG4RunManager::SetNumEvents(Int_t numEvents)
 
 void KBG4RunManager::NextEvent()
 {
-  g4_info << "End of Event " << fTree -> GetEntries() << endl;
+	if ( fTree -> GetEntries()%1000==0 ){
+		g4_info << "End of Event " << fTree -> GetEntries() << endl;
+	}
   fTree -> Fill();
 
   fTrackArray -> Clear("C");
+  fPostTrackArray -> Clear("C");
   TIter it(fStepArrayList);
 
   if (fStepPersistency) {

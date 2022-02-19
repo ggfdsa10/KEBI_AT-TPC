@@ -1,4 +1,4 @@
-void run_select(TString name = "single_proton", int mcid = 175)
+void run_select(TString name = "iqmd_test", int mcid = 175)
 {
   auto run = KBRun::GetRun();
   run -> SetIOFile(name+".mc", name+".select");

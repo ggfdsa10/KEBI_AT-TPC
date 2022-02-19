@@ -15,6 +15,7 @@ class KBTrackingAction : public G4UserTrackingAction
     virtual ~KBTrackingAction() {}
 
     virtual void PreUserTrackingAction(const G4Track* track);
+    virtual void PostUserTrackingAction(const G4Track* track);
 
   private:
     KBParameterContainer *fProcessTable;

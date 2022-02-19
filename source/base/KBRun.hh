@@ -114,7 +114,6 @@ class KBRun : public KBTask
     TGeoManager *GetGeoManager() const;
     void SetGeoTransparency(Int_t transparency); ///< Set transparency of geometry. Will show in eve.
     void SetEntries(Long64_t num); ///< Set total number of entries. Use only input do not exist.
-    void SetNumEvents(Long64_t num);
     Long64_t GetEntries() const; ///< Get total number of entries
     Long64_t GetNumEvents() const;
     Int_t GetEntry(Long64_t entry = 0, Int_t getall = 0); ///< GetEntry from input tree

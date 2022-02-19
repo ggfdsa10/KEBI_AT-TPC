@@ -87,7 +87,7 @@ void ATTPCDriftElectron::Exec(Option_t*)
     Double_t Wvalue = WvalueDistribution();
     Int_t SecondaryNum = KEnergy/Wvalue;
     if(SecondaryNum < 1){ SecondaryNum = 1;}
-
+    
     if(PDG != 11)
       continue;
 

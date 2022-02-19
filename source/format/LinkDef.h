@@ -15,6 +15,7 @@
 #pragma link C++ class KBHit+;
 #pragma link C++ class KBBoxHit+;
 #pragma link C++ class KBTpcHit+;
+#pragma link C++ class KBNDHit+;
 #pragma link C++ class KBHitArray+;
 
 #pragma link C++ class KBVertex+;

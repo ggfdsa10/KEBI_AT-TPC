@@ -34,7 +34,7 @@ bool LHHelixTrackFindingTask::Init()
   fTrackWCutHL = fPar -> GetParDouble("LHTF_trackWCutHL");
   fTrackHCutLL = fPar -> GetParDouble("LHTF_trackHCutLL");
   fTrackHCutHL = fPar -> GetParDouble("LHTF_trackHCutHL");
-  fReferenceAxis = fPar -> GetParAxis("tpcBFieldAxis");
+  fReferenceAxis = fPar -> GetParAxis("LHTF_refAxis");
 
   fNextStep = StepNo::kStepInitArray;
 

@@ -790,7 +790,6 @@ void KBRun::SetGeoTransparency(Int_t transparency)
 }
 
 void KBRun::SetEntries(Long64_t num) { fNumEntries = num; }
-void KBRun::SetNumEvents(Long64_t num) { fNumEntries = num; }
 Long64_t KBRun::GetEntries() const { return fNumEntries; }
 Long64_t KBRun::GetNumEvents() const { return fNumEntries; }
 
@@ -1224,8 +1223,7 @@ void KBRun::DrawDetectorPlanes()
     histPlane -> Reset();
 
     auto cvs = (TCanvas *) fCvsDetectorPlaneArray -> At(iPlane);
-    cvs -> SetWindowSize(930,830);
-    cvs -> SetCanvasSize(900,800);
+
     if (plane -> InheritsFrom("KBPadPlane"))
     {
       auto padplane = (KBPadPlane *) plane;
@@ -1258,24 +1256,22 @@ void KBRun::DrawDetectorPlanes()
         continue;
       }
 
-      padplane -> Clear();
-      if (exist_hit) padplane -> SetHitArray(hitArray);
-      if (exist_pad) padplane -> SetPadArray(padArray);
-
-      if (fPar -> CheckPar("evePPFillOption"))
-      {
-        auto fillOption = fPar -> GetParString("evePPFillOption");
-        kb_info << "Filling " << fillOption << " to PadPlane" << endl;
-        padplane -> FillDataToHist(fillOption);
-      }
-      else if (exist_hit)
+      if (exist_hit)
       {
         kb_info << "Filling Hits to PadPlane" << endl;
-        padplane -> FillDataToHist("hit");
+        padplane -> Clear();
+        padplane -> SetHitArray(hitArray);
+        if (!exist_pad)
+          padplane -> FillDataToHist("hit");
       }
-      else if (exist_pad)
+
+      if (exist_pad)
       {
         kb_info << "Filling Pads to PadPlane" << endl;
+        if (!exist_hit)
+          padplane -> Clear();
+        padplane -> SetPadArray(padArray);
+        padplane -> FillDataToHist("raw");
         padplane -> FillDataToHist("out");
       }
     }

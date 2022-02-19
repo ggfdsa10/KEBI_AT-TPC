@@ -13,7 +13,7 @@ using namespace std;
 #include "G4RunManager.hh"
 #include "G4VPhysicalVolume.hh"
 #include "TString.h"
-#include "globals.hh"
+//#include "globals.hh"
 
 #include "TFile.h"
 #include "TTree.h"
@@ -42,11 +42,12 @@ class KBG4RunManager : public G4RunManager, public KBGear
     void SetSensitiveDetector(G4VPhysicalVolume *physicalVolume, TString assemblyName="");
     void SetVolume(G4VPhysicalVolume *physicalVolume);
 
+    KBParameterContainer *GetGeom();
     KBParameterContainer *GetVolumes();
     KBParameterContainer *GetSensitiveDetectors();
     KBParameterContainer *GetProcessTable();
 
-    void AddMCTrack(Int_t trackID, Int_t parentID, Int_t pdg,
+    void AddMCTrack(Int_t opt, Int_t trackID, Int_t parentID, Int_t pdg,
         Double_t px, Double_t py, Double_t pz,
 		    Int_t dID, Double_t vx, Double_t vy, Double_t vz, Double_t ke, Double_t edep1, Double_t edep2, Int_t pcID);
 
@@ -70,6 +71,7 @@ class KBG4RunManager : public G4RunManager, public KBGear
     TFile* fFile;
     TTree* fTree;
     TClonesArray *fTrackArray;
+		TClonesArray *fPostTrackArray;
     TObjArray *fStepArrayList;
 
     Double_t fEdepSumArray[200] = {0};
@@ -77,11 +79,14 @@ class KBG4RunManager : public G4RunManager, public KBGear
     std::map<Int_t, Int_t> fIdxOfCopyNo;
     Int_t fNumActiveVolumes = 0;
 
+    bool fMCTrack = false;
+    bool fMCPostTrack = false;
     bool fSetEdepSumTree = false;
     bool fStepPersistency = false;
     bool fSecondaryPersistency = false;
     bool fTrackVertexPersistency = false;
 
+    KBParameterContainer *fGeom;
     KBParameterContainer *fVolumes;
     KBParameterContainer *fSensitiveDetectors;
     KBParameterContainer *fProcessTable;

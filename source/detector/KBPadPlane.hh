@@ -56,8 +56,8 @@ class KBPadPlane : public KBDetectorPlane
     KBPad *GetPadFast(Int_t padID);
     KBPad *GetPad(Int_t padID);
 
-    KBPad *GetPad(Double_t i, Double_t j);
-    KBPad *GetPad(Int_t section, Int_t row, Int_t layer);
+    KBPad *GetPad(Double_t i, Double_t j)                { return GetPad(FindPadID(i,j)); }
+    KBPad *GetPad(Int_t section, Int_t row, Int_t layer) { return GetPad(FindPadID(section, row, layer));  }
 
     //KBPad *GetPadByPadID(Int_t padID);
 
@@ -66,7 +66,6 @@ class KBPadPlane : public KBDetectorPlane
     Int_t GetNumPads();
 
     void FillBufferIn(Double_t i, Double_t j, Double_t tb, Double_t val, Int_t trackID = -1);
-    /// options: hit, in, raw, out, section, row, layer, padid, nhit
     void FillDataToHist(Option_t *option = "out");
 
     void SetPlaneK(Double_t k);

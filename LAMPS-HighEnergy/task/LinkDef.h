@@ -16,5 +16,7 @@
 #pragma link C++ class LHSelectHitsBelongToMCIDTask+;
 
 #pragma link C++ class LHScintDigiTask+;
+#pragma link C++ class LHNDFastDigiTask+;
+#pragma link C++ class LHForwardTrackerFastDigiTask+;
 
 #endif

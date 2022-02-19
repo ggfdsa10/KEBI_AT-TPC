@@ -19,6 +19,8 @@ class LHDriftElectronTask : public KBTask
 
     void SetPadPersistency(bool persistence);
 
+		void SetDetID(Int_t id){ fDetID = id; }
+
   private:
     TClonesArray* fMCStepArray;
     TClonesArray* fPadArray;
@@ -43,6 +45,8 @@ class LHDriftElectronTask : public KBTask
     Double_t fTbTime;
 
     Double_t fSelectedTrackID = -1;
+
+		Int_t fDetID = 10;
 
   ClassDef(LHDriftElectronTask, 1)
 };

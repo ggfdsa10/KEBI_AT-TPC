@@ -16,7 +16,7 @@ bool KBSingleHelixTask::Init()
   KBRun *run = KBRun::GetRun();
 
   fHitArray = (TClonesArray *) run -> GetBranch("Hit");
-  fReferenceAxis = run -> GetParameterContainer() -> GetParAxis("tpcBFieldAxis");
+  fReferenceAxis = run -> GetParameterContainer() -> GetParAxis("LHTF_refAxis");
 
   fTrackArray = new TClonesArray("KBHelixTrack");
   run -> RegisterBranch("Tracklet", fTrackArray, fPersistency);

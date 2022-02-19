@@ -18,26 +18,33 @@ class KBPSATask : public KBTask
     void Exec(Option_t*);
 
     void SetPSA(KBPSA *psa);
+
+		void SetInputBranchName(TString name) { fInputBranchName = name; }
+		void SetOutputBranchName(TString name) { fOutputBranchName = name; }
+
     void SetHitPersistency(bool persistence);
 
   private:
     TClonesArray* fPadArray;
     TClonesArray* fHitArray;
 
+		TString fInputBranchName = "Pad";
+		TString fOutputBranchName = "Hit";
+
     bool fPersistency;
 
     KBTpc *fTpc;
+
     Int_t fNPlanes;
     Int_t fTbStart;
     Int_t fNTbs;
     Double_t fDriftVelocity;
     Double_t fTbTime;
     Double_t fADCThreshold;
-    Double_t fTbLengthOffset = 0;
 
     KBPadPlane *fPadPlane[2];
 
-    KBPSA *fPSA = nullptr;
+    KBPSA *fPSA;
 
   ClassDef(KBPSATask, 1)
 };

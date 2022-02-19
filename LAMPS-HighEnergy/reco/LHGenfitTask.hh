@@ -8,7 +8,6 @@
 #include "KBHitArray.hh"
 
 #include "TClonesArray.h"
-#include "TFile.h"
 
 #include "LHSpacepointMeasurement.hh"
 #include "genfit2/AbsKalmanFitter.h"

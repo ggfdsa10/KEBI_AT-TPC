@@ -70,7 +70,7 @@ void run_tf_debug(TString name = "iqmd_test")
   //run -> SetInputFile(name+".reco");
   run -> SetInputFile(name+".hit");
   //run -> AddFriend(name+".reco");
-  run -> AddFriend(name+".mc");
+  //run -> AddFriend(name+".mc");
   //run -> SelectEveBranches("CandHit:GoodHit:BadHit:TrackHit:Tracklet:Hit_MC116");
   //run -> SelectEveBranches("CandHit:GoodHit:BadHit:Tracklet:Hit");
 
