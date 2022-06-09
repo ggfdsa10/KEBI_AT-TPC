@@ -15,9 +15,6 @@
 #pragma link C++ class ATTPCHelixTrackFindingTask+;
 #pragma link C++ class ATTPCVertexFindingTask+;
 
-#pragma link C++ class ATTPCGenfitTask+;
-#pragma link C++ class genfit::ATTPCSpacepointMeasurement+;
-
 #pragma link C++ class ATTPCDecoderTask+;
 
 
