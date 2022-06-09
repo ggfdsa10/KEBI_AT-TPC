@@ -22,23 +22,29 @@ void KBSteppingAction::UserSteppingAction(const G4Step* step)
   G4ThreeVector mom = step -> GetTrack() -> GetMomentum();
   G4int preNo = step -> GetPreStepPoint() -> GetPhysicalVolume() -> GetCopyNo();
 
-	if ( preNo<=0 ) return;
+	// if ( preNo<=-1 ) return;
+    G4double edep = step -> GetTotalEnergyDeposit(); 
+
+    G4int parentID = step -> GetTrack() -> GetParentID(); 
+    G4double time = step -> GetPreStepPoint() -> GetGlobalTime();
+    //G4ThreeVector stepPos = .5 * (step -> GetPreStepPoint() -> GetPosition() + step -> GetPostStepPoint() -> GetPosition());
+	G4ThreeVector stepPos = step -> GetPreStepPoint() -> GetPosition();
+//   if(parentID ==0){
+    fRunManager -> AddMCStep(preNo, stepPos.x(), stepPos.y(), stepPos.z(), time, edep);
+//   }
 
   if (stat == fWorldBoundary) {
     fRunManager -> AddTrackVertex(mom.x(),mom.y(),mom.z(),preNo,pos.x(),pos.y(),pos.z());
     return;
   }
 
+
   G4int postNo = step -> GetPostStepPoint() -> GetPhysicalVolume() -> GetCopyNo();
   if (preNo != postNo || step -> GetNumberOfSecondariesInCurrentStep() > 0)
     fRunManager -> AddTrackVertex(mom.x(),mom.y(),mom.z(),preNo,pos.x(),pos.y(),pos.z());
 
-  G4double edep = step -> GetTotalEnergyDeposit(); 
-  if (edep <= 1e-10)
-    return;
 
-  G4double time = step -> GetPreStepPoint() -> GetGlobalTime();
-  //G4ThreeVector stepPos = .5 * (step -> GetPreStepPoint() -> GetPosition() + step -> GetPostStepPoint() -> GetPosition());
-	G4ThreeVector stepPos = step -> GetPreStepPoint() -> GetPosition();
-  fRunManager -> AddMCStep(preNo, stepPos.x(), stepPos.y(), stepPos.z(), time, edep);
+
+
+
 }

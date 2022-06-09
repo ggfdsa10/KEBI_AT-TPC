@@ -18,8 +18,9 @@ void AllEventSave(){
 void eve(TString input = "NewTPC")
 {
   auto run = new KBRun();
-  run -> SetInputFile(input+".mc");
-  run -> AddFriend(input+".digi");
+  // run -> SetInputFile(input+".mc_test");
+  run -> SetInputFile(input+".digi_two");
+  run -> AddFriend(input+".reco_two");
 
   run -> AddDetector(new NewTPC());
   run -> SetTag("eve");

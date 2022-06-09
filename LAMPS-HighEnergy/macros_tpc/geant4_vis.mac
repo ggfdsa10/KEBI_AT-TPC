@@ -1,44 +1,37 @@
 /vis/open OGL 600x600-0+0
 /vis/drawVolume
 
-# Visualization filter
-/vis/filtering/trajectories/create/particleFilter
-/vis/filtering/trajectories/particleFilter-0/add e-
-/vis/filtering/trajectories/particleFilter-0/invert true # invert = mask out
+/run/setCutForAGivenParticle e- 100. mm
 
-#/vis/scene/add/axes 0 0 0 500 mm
-/vis/scene/add/eventID
-/vis/scene/add/frame
+/vis/scene/add/axes 0 0 0 500 mm
+/vis/viewer/flush
+
+/vis/viewer/set/lightsVector -1 0 0
+/vis/viewer/set/style wireframe
+/vis/viewer/set/auxiliaryEdge true
+/vis/viewer/set/lineSegmentsPerCircle 100
+
 /vis/scene/add/trajectories smooth
-
-/vis/geometry/set/visibility World 0 false
-#/vis/geometry/set/colour YOURDETECTOR 1 0.8 0.8 1 0.3
-
 /vis/modeling/trajectories/create/drawByCharge
 /vis/modeling/trajectories/drawByCharge-0/default/setDrawStepPts true
 /vis/modeling/trajectories/drawByCharge-0/default/setStepPtsSize 2
 
-/vis/ogl/set/transparency true
+/vis/scene/endOfEventAction accumulate
+
+/vis/scene/add/eventID
+/vis/scene/add/frame
 /vis/set/colour
 /vis/set/lineWidth
 
-/vis/viewer/set/autoRefresh true
-/vis/viewer/set/auxiliaryEdge true
-/vis/viewer/set/hiddenMarker true
-/vis/viewer/set/lightsVector -1 0 0
-/vis/viewer/set/lineSegmentsPerCircle 100
+/vis/geometry/set/visibility World 0 false
+#/vis/geometry/set/colour YOURDETECTOR 1 0.8 0.8 1 0.3
+
 /vis/viewer/set/style surface
-/vis/viewer/set/style wireframe
-/vis/viewer/set/viewpointThetaPhi 110 150 # Birdseye
-#/vis/viewer/set/viewpointThetaPhi 180 0  # Beam
-#/vis/viewer/set/viewpointThetaPhi 90 180 # Side
-#/vis/viewer/set/viewpointThetaPhi 90. 90. # Top
-/vis/verbose warnings
-/vis/viewer/zoom 1.25
+/vis/viewer/set/hiddenMarker true
+/vis/viewer/set/viewpointThetaPhi 100 160
+/vis/viewer/set/autoRefresh true
 
 /tracking/verbose 1
-/run/setCutForAGivenParticle e- 100. mm
+/vis/verbose warnings
 
-/vis/scene/endOfEventAction accumulate 100 # accumulate up to 100 events
-/vis/viewer/flush
-#/run/beamOn 1
+/run/beamOn 1

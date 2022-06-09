@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-//#define DEBUG_STEP
+#define DEBUG_STEP
 
 ClassImp(LHHelixTrackFindingTask)
 
@@ -34,7 +34,7 @@ bool LHHelixTrackFindingTask::Init()
   fTrackWCutHL = fPar -> GetParDouble("LHTF_trackWCutHL");
   fTrackHCutLL = fPar -> GetParDouble("LHTF_trackHCutLL");
   fTrackHCutHL = fPar -> GetParDouble("LHTF_trackHCutHL");
-  fReferenceAxis = fPar -> GetParAxis("LHTF_refAxis");
+  fReferenceAxis = fPar -> GetParAxis("tpcBFieldAxis");
 
   fNextStep = StepNo::kStepInitArray;
 

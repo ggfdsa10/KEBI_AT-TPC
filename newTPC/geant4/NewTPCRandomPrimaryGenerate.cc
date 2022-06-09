@@ -72,17 +72,17 @@ void NewTPCRandomPrimaryGenerate::GeneratePrimaries(G4Event* anEvent)
   fParticleGun -> SetParticleMomentum(G4ThreeVector(Alpha1_4Vec.X(), Alpha1_4Vec.Y(), Alpha1_4Vec.Z()).mag() *MeV);
   fParticleGun -> GeneratePrimaryVertex(anEvent);
 
-  fParticleGun -> SetParticleDefinition(particle);
-  fParticleGun -> SetParticlePosition(G4ThreeVector(AlphaPos2.X() *mm, AlphaPos2.Y() *mm, AlphaPos2.Z() *mm));
-  fParticleGun -> SetParticleMomentumDirection(G4ThreeVector(Alpha2_4Vec.X(), Alpha2_4Vec.Y(), Alpha2_4Vec.Z()).unit());
-  fParticleGun -> SetParticleMomentum(G4ThreeVector(Alpha2_4Vec.X(), Alpha2_4Vec.Y(), Alpha2_4Vec.Z()).mag() *MeV);
-  fParticleGun -> GeneratePrimaryVertex(anEvent);
+  // fParticleGun -> SetParticleDefinition(particle);
+  // fParticleGun -> SetParticlePosition(G4ThreeVector(AlphaPos2.X() *mm, AlphaPos2.Y() *mm, AlphaPos2.Z() *mm));
+  // fParticleGun -> SetParticleMomentumDirection(G4ThreeVector(Alpha2_4Vec.X(), Alpha2_4Vec.Y(), Alpha2_4Vec.Z()).unit());
+  // fParticleGun -> SetParticleMomentum(G4ThreeVector(Alpha2_4Vec.X(), Alpha2_4Vec.Y(), Alpha2_4Vec.Z()).mag() *MeV);
+  // fParticleGun -> GeneratePrimaryVertex(anEvent);
 
-  fParticleGun -> SetParticleDefinition(particle);
-  fParticleGun -> SetParticlePosition(G4ThreeVector(AlphaPos3.X() *mm, AlphaPos3.Y() *mm, AlphaPos3.Z() *mm));
-  fParticleGun -> SetParticleMomentumDirection(G4ThreeVector(Alpha3_4Vec.X(), Alpha3_4Vec.Y(), Alpha3_4Vec.Z()).unit());
-  fParticleGun -> SetParticleMomentum(G4ThreeVector(Alpha3_4Vec.X(), Alpha3_4Vec.Y(), Alpha3_4Vec.Z()) *MeV);
-  fParticleGun -> GeneratePrimaryVertex(anEvent);
+  // fParticleGun -> SetParticleDefinition(particle);
+  // fParticleGun -> SetParticlePosition(G4ThreeVector(AlphaPos3.X() *mm, AlphaPos3.Y() *mm, AlphaPos3.Z() *mm));
+  // fParticleGun -> SetParticleMomentumDirection(G4ThreeVector(Alpha3_4Vec.X(), Alpha3_4Vec.Y(), Alpha3_4Vec.Z()).unit());
+  // fParticleGun -> SetParticleMomentum(G4ThreeVector(Alpha3_4Vec.X(), Alpha3_4Vec.Y(), Alpha3_4Vec.Z()) *MeV);
+  // fParticleGun -> GeneratePrimaryVertex(anEvent);
   
 }
 
@@ -100,7 +100,7 @@ void NewTPCRandomPrimaryGenerate::AlphaScattering()
   Double_t PlaneAnglePsi = par -> GetParDouble("PlaneAnglePsi");
   Double_t angleTheta = par -> GetParDouble("angleTheta");
   Double_t anglePai = par -> GetParDouble("anglePai");
-
+  ParticleEnergy = fRandom->Uniform(5,20);
   Double_t Atomic_Mass = 931.5016;
   Double_t Corbon_KE = ParticleEnergy;
   Double_t Corbon_hoyle = 7.65;

@@ -1,7 +1,7 @@
-void run_digi(TString name = "iqmd_test")
+void run_digi(TString name = "LHmulti")
 {
   auto run = KBRun::GetRun();
-  run -> SetIOFile(name+".mc", name+".digi");
+  run -> SetIOFile(name+".mcSingle", name+".digiSingle");
   run -> AddDetector(new LHTpc());
 
   auto drift = new LHDriftElectronTask();

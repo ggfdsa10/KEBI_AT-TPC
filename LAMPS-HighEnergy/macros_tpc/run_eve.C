@@ -11,13 +11,13 @@ void write()
   KBRun::GetRun() -> WriteCvsDetectorPlanes("pdf");
 }
 
-void run_eve(TString name = "iqmd_test")
+void run_eve(TString name = "LHmulti")
 {
   auto run = new KBRun();
-  run -> SetInputFile(name+".reco");
-  //run -> AddFriend(name+".digi");
-  //run -> SetInputFile(name+".mc");
-  //run -> AddFriend(name+".mc");
+  run -> SetInputFile(name+".recoSingle");
+  // run -> AddFriend(name+".");
+//   run -> SetInputFile(name+".mc");
+  run -> AddFriend(name+".mcSingle");
 
   run -> AddDetector(new LHTpc());
   run -> SetTag("eve");

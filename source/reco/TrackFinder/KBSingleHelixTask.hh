@@ -25,9 +25,11 @@ class KBSingleHelixTask : public KBTask
     bool fPersistency = true;
 
     TTree *fTree = nullptr;
+    TTree *fTreeByHits = nullptr;
     Int_t fNumHits;
     Double_t fLength;
     Double_t fRMS, fRMSR, fRMST;
+    Double_t RMSW1, RMSW2,RMSH;
 
     KBVector3::Axis fReferenceAxis;
 

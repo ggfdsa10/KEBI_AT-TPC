@@ -1,6 +1,8 @@
 #include "ATTPC.hh"
 #include "ATTPCRectanglePad.hh"
 #include "ATTPCHoneyCombPad.hh"
+#include "ATTPC20RectanglePad.hh"
+#include "ATTPCStripPad.hh"
 
 ClassImp(ATTPC)
 
@@ -70,9 +72,21 @@ bool ATTPC::BuildGeometry()
     PadHeight = fPadPlane ->GetPadHeight();
     PadGap = fPadPlane ->GetPadGap();
   }
-  else if(PadPlaneType == "RectanglePad"){
+  else if(PadPlaneType == "HoneyCombPad"){
     ATTPCHoneyCombPad *fPadPlane = new ATTPCHoneyCombPad(); 
     PadWidth = fPadPlane ->GetPadWidth();
+    PadHeight = fPadPlane ->GetPadHeight();
+    PadGap = fPadPlane ->GetPadGap();
+  }
+  else if(PadPlaneType == "20RectanglePad"){
+    ATTPC20RectanglePad *fPadPlane = new ATTPC20RectanglePad(); 
+    PadWidth = fPadPlane ->GetPadWidth();
+    PadHeight = fPadPlane ->GetPadHeight();
+    PadGap = fPadPlane ->GetPadGap();
+  }
+  else if(PadPlaneType == "StripPad"){
+    ATTPCStripPad *fPadPlane = new ATTPCStripPad(); 
+    PadWidth = fPadPlane ->GetPadWidth() +50.;
     PadHeight = fPadPlane ->GetPadHeight();
     PadGap = fPadPlane ->GetPadGap();
   }
@@ -149,6 +163,12 @@ bool ATTPC::BuildDetectorPlane()
     }  
     else if(fPar -> GetParString("PadPlaneType") == "HoneyCombPad"){
       padplane = new ATTPCHoneyCombPad();
+    }
+    else if(fPar -> GetParString("PadPlaneType") == "20RectanglePad"){
+      padplane = new ATTPC20RectanglePad();
+    }
+    else if(fPar -> GetParString("PadPlaneType") == "StripPad"){
+      padplane = new ATTPCStripPad();
     }
   }
   else

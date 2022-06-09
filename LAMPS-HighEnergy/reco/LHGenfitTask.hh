@@ -53,9 +53,9 @@ class LHGenfitTask : public KBTask
     TVector3 fCurrentMomTargetPlane;
     TVector3 fCurrentPosTargetPlane;
 
-		genfit::GFRaveVertexFactory* fVertexFinder;
+    genfit::GFRaveVertexFactory* fVertexFinder;
 
-		bool fPersistency = true;
+    bool fPersistency = true;
 
   ClassDef(LHGenfitTask, 1)
 };

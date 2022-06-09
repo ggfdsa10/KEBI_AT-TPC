@@ -51,7 +51,7 @@ class KBHelixTrack : public KBTracklet, public KBGeoHelix
 
     std::vector<Double_t> fdEdxArray;  ///< dE/dx array;
 
-    //KBHitArray fHitArray; //!
+    KBHitArray fHitArray; //!
     vector<Int_t> fHitIDArray;
 
   public:

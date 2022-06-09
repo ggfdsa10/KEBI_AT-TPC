@@ -30,7 +30,7 @@ bool LHVertexFindingTask::Init()
   fTrackArray2 = new TClonesArray("KBHelixTrack");
   run -> RegisterBranch("VertexTrack", fTrackArray2, fPersistency);
 
-  TString  axis = run -> GetParameterContainer() -> GetParString("LHTF_refAxis");
+  TString  axis = run -> GetParameterContainer() -> GetParString("tpcBFieldAxis");
        if (axis == "x") fReferenceAxis = KBVector3::kX;
   else if (axis == "y") fReferenceAxis = KBVector3::kY;
   else if (axis == "z") fReferenceAxis = KBVector3::kZ;

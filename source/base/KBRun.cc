@@ -1278,9 +1278,11 @@ void KBRun::DrawDetectorPlanes()
 
     cvs -> Clear();
     cvs -> cd();
+
     histPlane -> DrawClone("colz");
     histPlane -> Reset();
     histPlane -> Draw("same");
+
     plane -> DrawFrame();
 
     KBVector3::Axis axis1 = plane -> GetAxis1();

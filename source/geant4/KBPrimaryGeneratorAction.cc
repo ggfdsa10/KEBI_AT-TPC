@@ -10,6 +10,7 @@
 #include <G4strstreambuf.hh>
 
 #include <cmath>
+#include <random>
 
 KBPrimaryGeneratorAction::KBPrimaryGeneratorAction()
 {
@@ -54,7 +55,19 @@ void KBPrimaryGeneratorAction::GeneratePrimariesMode0(G4Event* anEvent)
 	auto runManager = (KBG4RunManager *) G4RunManager::GetRunManager();
 	auto par = runManager -> GetParameterContainer();
 
+	//Random numner, ckim
+	std::random_device RD;
+	std::mt19937_64 RDGen(RD()); //Mersenne Twister 19937 generator (64 bit)
+
+	//Beam energy and unceretainty (ckim)
 	G4double energy = par->GetParDouble("G4InputEnergy");
+	G4double energyErr = 0.;
+	if (par->CheckPar("G4InputEnergyError") == true)
+	{
+		G4double energyErrFac = par->GetParDouble("G4InputEnergyError");
+		std::uniform_real_distribution<> RDdistEnergyErr(-energy * energyErrFac, energy * energyErrFac);
+		energyErr = RDdistEnergyErr(RDGen);
+	}
 	G4double charge = par->GetParDouble("G4InputCharge");
 
 	G4strstreambuf* oldBuffer = dynamic_cast<G4strstreambuf*>(G4cout.rdbuf(0));
@@ -67,14 +80,14 @@ void KBPrimaryGeneratorAction::GeneratePrimariesMode0(G4Event* anEvent)
 	{
 		G4ParticleDefinition* particle = G4IonTable::GetIonTable()->GetIon(par->GetParInt("G4InputIonId"));
 		fParticleGun->SetParticleDefinition(particle);
-		fParticleGun->SetParticleEnergy(energy*MeV);
+		fParticleGun->SetParticleEnergy((energy + energyErr) * MeV);
 		fParticleGun->SetParticleCharge(charge);
 	}
 	else
 	{
 		G4ParticleDefinition* particle = particleTable->FindParticle(particleName.Data());
 		fParticleGun->SetParticleDefinition(particle);
-		fParticleGun->SetParticleEnergy(energy*MeV);
+		fParticleGun->SetParticleEnergy((energy + energyErr) * MeV);
 	}
 
 	G4int NperEvent = par->GetParInt("G4InputNumberPerEvent"); 
@@ -88,7 +101,7 @@ void KBPrimaryGeneratorAction::GeneratePrimariesMode0(G4Event* anEvent)
 	{
 		G4double vzUser = par->GetParDouble("G4InputPosZ");
 		if (fabs(vzUser) <= par->GetParDouble("worlddZ")) vz = vzUser;
-		else cout <<"WARNING: beam insertion point located out of the world! Set default...\n";
+		else cout <<"WARNING: beam insertion point located out of the world! Set default (-worlddZ\n";
 	}
 
 	//Beam shape, ckim
@@ -98,11 +111,12 @@ void KBPrimaryGeneratorAction::GeneratePrimariesMode0(G4Event* anEvent)
 		{
 			G4double beam_dr_max = par->GetParDouble("G4InputRadius");
 
+			std::uniform_real_distribution<> RDdistR(-beam_dr_max, beam_dr_max);
 			G4double vr = 999.;
 			while (vr > beam_dr_max)
 			{
-				vx = G4RandFlat::shoot(-beam_dr_max, beam_dr_max);
-				vy = G4RandFlat::shoot(-beam_dr_max, beam_dr_max);
+				vx = RDdistR(RDGen);
+				vy = RDdistR(RDGen);
 				vr = std::sqrt( vx*vx + vy*vy );
 			}
 		}
@@ -111,8 +125,10 @@ void KBPrimaryGeneratorAction::GeneratePrimariesMode0(G4Event* anEvent)
 			G4double beamdx = par->GetParDouble("G4InputWidthX");
 			G4double beamdy = par->GetParDouble("G4InputWidthY");
 
-			vx = (G4UniformRand()-0.5) * beamdx;
-			vy = (G4UniformRand()-0.5) * beamdy;
+			std::uniform_real_distribution<> RDdistX(-beamdx, beamdx); //ckim
+			std::uniform_real_distribution<> RDdistY(-beamdy, beamdy);
+			vx = RDdistX(RDGen); //(G4UniformRand()-0.5) * beamdx;
+			vy = RDdistY(RDGen); //(G4UniformRand()-0.5) * beamdy;
 		}
 
 		fParticleGun -> SetParticlePosition(G4ThreeVector(vx,vy,vz));

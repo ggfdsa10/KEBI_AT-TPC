@@ -29,6 +29,12 @@ bool KBSingleHelixTask::Init()
     fTree -> Branch("rms",&fRMS);
     fTree -> Branch("rmst",&fRMST);
     fTree -> Branch("rmsr",&fRMSR);
+
+
+    fTreeByHits = new TTree("trackByHits","");
+    fTreeByHits -> Branch("rmsW1", &RMSW1);
+    fTreeByHits -> Branch("rmsW2", &RMSW2);
+    fTreeByHits -> Branch("rmsH", &RMSH);
   }
 
   return true;
@@ -50,6 +56,32 @@ void KBSingleHelixTask::Exec(Option_t*)
   track -> Fit();
   track -> FinalizeHits();
 
+  // sort by tpc beam point.(track head is nearest beam point than track tail)
+  if(track->PositionAtHead().y() > track->PositionAtTail().y()){
+    kb_info << "Head and Tail of the track are reversed!! " << endl;
+    kb_info << " Transformation head to tail. " << endl;
+    Double_t fHeadA = track -> GetH();
+    Double_t fTailA = track -> GetT();
+
+    track -> SetH(fTailA);
+    track -> SetT(fHeadA);
+  }
+
+  if(track->PositionAtHead().y() > track->PositionAtTail().y()){
+    kb_error << " not transfer head and tail !!! " << endl;
+  }
+
+  for(auto iHit=0; iHit<numHits; ++iHit) {
+    auto hit = (KBTpcHit *) fHitArray -> At(iHit);
+    auto hitPos = hit->GetPosition();
+    TVector3 hitm = track -> Map(hitPos);
+    RMSW1 = hitm.x();
+    RMSW2 = hitm.y();
+    RMSH = hitm.z();
+    fTreeByHits -> Fill();
+  }
+
+
   fNumHits = track -> GetNumHits();
   fLength = track -> TrackLength();
   fRMS = track -> GetRMS();
@@ -66,6 +98,7 @@ bool KBSingleHelixTask::EndOfRun()
 {
   KBRun::GetRun() -> GetOutputFile() -> cd();
   fTree -> Write();
+  fTreeByHits -> Write();
 
   return true;
 }

@@ -175,8 +175,8 @@ TH2* NewTPCRectnglePad::GetHist(Option_t *option)
   Int_t xSign[5] = {-1, -1, 1, 1, -1};
   Int_t ySign[5] = {-1, 1, 1, -1, -1};
   
-  Double_t dH = fPadHeight/2;
-  Double_t dW = fPadWidth/2;
+  Double_t dH = fPadHeight/2.;
+  Double_t dW = fPadWidth/2.;
 
   KBPad *pad;
   TIter iterPads(fChannelArray);
@@ -223,3 +223,5 @@ Int_t NewTPCRectnglePad::FindSection(Double_t i, Double_t j)
   }
   else return -1;
 }
+
+

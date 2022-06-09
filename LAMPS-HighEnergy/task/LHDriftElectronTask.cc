@@ -21,7 +21,7 @@ bool LHDriftElectronTask::Init()
 {
   KBRun *run = KBRun::GetRun();
 
-  fMCStepArray = (TClonesArray *) run -> GetBranch(Form("MCStep%d",fDetID));
+  fMCStepArray = (TClonesArray *) run -> GetBranch("MCStep0");
   fTpc = (LHTpc *) run -> GetDetectorSystem() -> GetTpc();
 
   fNPlanes = fTpc -> GetNumPlanes();
@@ -40,14 +40,14 @@ bool LHDriftElectronTask::Init()
   fGainZeroRatio = (((TObjString *) ((TList *) gemFile -> GetListOfKeys()) -> At(2)) -> GetString()).Atof();
   fDiffusionFunction = (TH2D*) ((TCanvas*) gemFile -> Get("diffusion")) -> FindObject("distHist");
 
-  fNTbs = par -> GetParInt("TPCnTbs");
-  fTbTime = par -> GetParDouble("TPCtbTime");
+  fNTbs = par -> GetParInt("nTbs");
+  fTbTime = par -> GetParDouble("tbTime");
 
   if (par -> CheckPar("selectMCTrack"))
     fSelectedTrackID = par -> GetParInt("selectMCTrack");
 
   fPadArray = new TClonesArray("KBPad");
-  run -> RegisterBranch("TPCPad", fPadArray, fPersistency);
+  run -> RegisterBranch("Pad", fPadArray, fPersistency);
 
   return true;
 }
@@ -61,8 +61,9 @@ void LHDriftElectronTask::Exec(Option_t*)
   Long64_t nMCSteps = fMCStepArray -> GetEntries();
   for (Long64_t iStep = 0; iStep < nMCSteps; ++iStep) {
     KBMCStep* step = (KBMCStep*) fMCStepArray -> At(iStep);
-    if (fSelectedTrackID != -1 && fSelectedTrackID != step -> GetTrackID())
-      continue;
+
+    // if (fSelectedTrackID != -1 && fSelectedTrackID != step -> GetTrackID())
+    //   continue;
 
     Int_t trackID = step -> GetTrackID();
     Double_t edep = step -> GetEdep();

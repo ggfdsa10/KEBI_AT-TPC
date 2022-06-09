@@ -15,6 +15,7 @@ bool ATTPCElectronics::Init()
   KBRun *run = KBRun::GetRun();
 
   KBParameterContainer *par = run -> GetParameterContainer();
+  
   ATTPC *det = (ATTPC *) (run -> GetDetectorSystem() -> GetTpc());
 
   fNPlanes = det -> GetNumPlanes();
@@ -22,6 +23,10 @@ bool ATTPCElectronics::Init()
   fDynamicRange = par -> GetParDouble("DynamicRange");
   fNoiseOn = par -> GetParBool("NoiseOn");
 
+  if(fPar -> GetParString("PadPlaneType") == "StripPad"){
+    fStripPad = (ATTPCStripPad *) det -> GetPadPlane();
+    fStripView = true;
+  }
   fEChargeToADC = fElectronCharge/(fDynamicRange *1.0e-15)*fADCMaxAmp;
 
   fPadArray = (TClonesArray *) run -> GetBranch("Pad");
@@ -100,9 +105,46 @@ void ATTPCElectronics::Exec(Option_t*)
 	      out[i] += noise;
       }
     }
+    pad -> SetBufferIn(out);
     pad -> SetBufferOut(out);
   }
-  
+
+  if(fStripPad != nullptr){
+    if(fStripView){
+      auto stripPadCh0 = fStripPad->GetPadByChan(0);
+      auto stripPadCh1 = fStripPad->GetPadByChan(1);
+      auto stripPadCh2 = fStripPad->GetPadByChan(2);
+
+      for(int channal = 0; channal < 3; channal++){
+        auto stripPadArray = stripPadCh0;
+        if(channal ==1){stripPadArray = stripPadCh1;}
+        if(channal ==2){stripPadArray = stripPadCh2;}
+
+        int layerNum = stripPadArray.size();
+        for(int layer = 0; layer < layerNum; layer++){
+          int rowNum = stripPadArray.at(layer).size();
+          Double_t outByStrip[512] = {0};
+
+          for(int row = 0; row < rowNum; row++){
+            int padIndex = get<0>(stripPadArray.at(layer).at(row));
+            KBPad *pad = (KBPad *) fPadArray -> At(padIndex);
+            auto bufferOut = pad -> GetBufferIn();
+
+            for (Int_t tb = 0; tb < 512; ++tb) {
+              outByStrip[tb] += bufferOut[tb];
+            }
+          }
+          for(int row = 0; row < rowNum; row++){
+            int padIndex = get<0>(stripPadArray.at(layer).at(row));
+            KBPad *pad = (KBPad *) fPadArray -> At(padIndex);
+
+            pad -> SetBufferOut(outByStrip);
+          }
+        }
+      }
+    }
+  }
+
   kb_info << endl;
   
   return;

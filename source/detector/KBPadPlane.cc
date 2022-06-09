@@ -140,7 +140,8 @@ void KBPadPlane::FillDataToHist(Option_t *option)
     }
   }
   else if (optionString == "out") {
-    fH2Plane -> SetTitle("pad calibrated output distribution");
+    // fH2Plane -> SetTitle("pad calibrated output distribution");
+    fH2Plane -> SetTitle("");
     while ((pad = (KBPad *) iterPads.Next())) {
       auto buffer = pad -> GetBufferOut();
       Double_t val = *max_element(buffer,buffer+512);

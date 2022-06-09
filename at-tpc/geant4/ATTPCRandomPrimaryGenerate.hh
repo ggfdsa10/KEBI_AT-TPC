@@ -29,7 +29,8 @@ class ATTPCRandomPrimaryGenerate : public G4VUserPrimaryGeneratorAction
   
   private:
     void TriggerFunction();
-    void SingleProtonBeam();
+    void ProtonBeam(int eventID, int trackNum);
+    void AlphaScattering(int eventID, int trackNum);
     G4ParticleGun*  fParticleGun;
     G4double ParticleEnergy = 0.;
     G4double PositionX = 0.;
@@ -38,6 +39,7 @@ class ATTPCRandomPrimaryGenerate : public G4VUserPrimaryGeneratorAction
     G4double DirectionX = 0.;
     G4double DirectionY = 0.;
     G4double DirectionZ = 0.;
+    G4double PaiAngle, ThetaAngle;
 
     G4int fNumberOfPrimary = 0;
 };

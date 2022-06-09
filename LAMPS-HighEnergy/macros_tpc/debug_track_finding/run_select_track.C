@@ -1,15 +1,15 @@
-void run_select_track(TString name = "iqmd_test")
+void run_select_track(TString name = "LHmulti")
 {
   auto run = KBRun::GetRun();
-  run -> SetIOFile(name+".digi", name+".hit");
+  run -> SetIOFile(name+".digiSingle", name+".hit");
   run -> AddDetector(new LHTpc());
 
   auto psa = new KBPSATask();
   psa -> SetPSA(new KBPSAFastFit());
-  psa -> SetHitPersistency(false);
+  psa -> SetHitPersistency(true);
   run -> Add(psa);
 
-  run -> Add(new LHSelectHitsBelongToMCIDTask(116));
+  run -> Add(new LHSelectHitsBelongToMCIDTask(1));
 
   run -> Init();
   run -> Run();

@@ -19,11 +19,11 @@ bool LHElectronicsTask::Init()
   LHTpc *det = (LHTpc *) (run -> GetDetectorSystem() -> GetTpc());
 
   fNPlanes = det -> GetNumPlanes();
-  fNTbs = par -> GetParInt("TPCnTbs");
-  feVToADC = par -> GetParDouble("TPCeVToADC");
-  fDynamicRange = par -> GetParDouble("TPCdynamicRange");
+  fNTbs = par -> GetParInt("nTbs");
+  feVToADC = par -> GetParDouble("eVToADC");
+  fDynamicRange = par -> GetParDouble("dynamicRange");
 
-  fPadArray = (TClonesArray *) run -> GetBranch("TPCPad");
+  fPadArray = (TClonesArray *) run -> GetBranch("Pad");
 
   KBPulseGenerator *pulseGen = new KBPulseGenerator();
   fPulseFunction = pulseGen -> GetPulseFunction();

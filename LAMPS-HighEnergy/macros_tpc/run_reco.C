@@ -1,19 +1,24 @@
-void run_reco(TString name = "iqmd_test")
+void run_reco(TString name = "LHmulti")
 {
   auto run = KBRun::GetRun();
-  run -> SetIOFile(name+".digi", name+".reco");
+  run -> SetIOFile(name+".digiSingle", name+".recoSingle");
   run -> AddDetector(new LHTpc());
 
-  auto psa = new KBPSATask();
-  psa -> SetPSA(new KBPSAFastFit());
-  psa -> SetHitPersistency(false);
-  run -> Add(psa);
+    auto psa = new KBPSATask();
+    // psa -> SetInputBranchName("TPCPad");
+    // psa -> SetOutputBranchName("TPCHit");
+    psa -> SetPSA(new KBPSAFastFit());
+    run->Add(psa);
 
-  run -> Add(new LHHelixTrackFindingTask());
-  run -> Add(new LHVertexFindingTask());
+    auto htfTask = new LHHelixTrackFindingTask();
+    // htfTask -> SetHitBranchName("TPCHit");
+    // htfTask -> SetTrackletBranchName("Tracklet");
+    run->Add(htfTask);
 
-  run -> Add(new LHGenfitTask());
+    // auto gfTask = new LHGenfitTask();
+    // gfTask->SetDetID(10); //TPC
+    // run->Add(gfTask);
 
-  run -> Init();
-  run -> Run();
+    run->Init();
+    run->Run();
 }

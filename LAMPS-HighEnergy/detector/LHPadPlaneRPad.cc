@@ -21,20 +21,20 @@ LHPadPlaneRPad::LHPadPlaneRPad()
 
 bool LHPadPlaneRPad::Init()
 {
-  fRMin = fPar -> GetParDouble("TPCrMin");
-  fRMax = fPar -> GetParDouble("TPCrMax");
-  fPadGap = fPar -> GetParDouble("TPCPadGap");
-  fPadWid = fPar -> GetParDouble("TPCPadWidth");
-  fPadHei = fPar -> GetParDouble("TPCPadHeight");
-  fYPPMin = fPar -> GetParDouble("TPCYPPMin");
+  fRMin = fPar -> GetParDouble("rMinTPC");
+  fRMax = fPar -> GetParDouble("rMaxTPC");
+  fPadGap = fPar -> GetParDouble("PadGap");
+  fPadWid = fPar -> GetParDouble("PadWidth");
+  fPadHei = fPar -> GetParDouble("PadHeight");
+  fYPPMin = fPar -> GetParDouble("YPPMin");
   if (fYPPMin+.5*fPadHei > fRMin) {
     kb_error << "'YPPMin' + 'fPadHei'/2 should be larger than 'rMinTPC'!  :  " << fYPPMin+.5*fPadHei << " < " << fRMin << endl;
     return false;
   }
-  fYPPMax = fPar -> GetParDouble("TPCYPPMax");
-  fWPPBot = fPar -> GetParDouble("TPCWPPBottom");
-  fPadAreaLL = fPar -> GetParDouble("TPCPadAreaLL");
-  fRemoveCuttedPad = fPar -> GetParBool("TPCremoveCuttedPad");
+  fYPPMax = fPar -> GetParDouble("YPPMax");
+  fWPPBot = fPar -> GetParDouble("WPPBottom");
+  fPadAreaLL = fPar -> GetParDouble("PadAreaLL");
+  fRemoveCuttedPad = fPar -> GetParBool("removeCuttedPad");
 
   fTanPi1o8 = TMath::Tan(TMath::Pi()*1./8.);
   fTanPi3o8 = TMath::Tan(TMath::Pi()*3./8.);

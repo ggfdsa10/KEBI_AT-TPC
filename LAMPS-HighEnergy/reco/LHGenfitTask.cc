@@ -91,7 +91,8 @@ void LHGenfitTask::Exec(Option_t*)
     KBHelixTrack *track = (KBHelixTrack *) fTrackArray -> At(iTrack);
     auto genfitTrack = FitTrack(track, 2212);
 		track -> SetGenfitMomentum(fCurrentMomTargetPlane);
-
+        auto dedxarray = track-> GetdEdxArray();
+        // kb_debug << fCurrentMomTargetPlane.X() << "  " << fCurrentMomTargetPlane.Y() << " " << fCurrentMomTargetPlane.Z() << endl;
 		if ( genfitTrack )
 		{
 			track -> SetIsGenfitTrack();
@@ -141,7 +142,7 @@ genfit::Track* LHGenfitTask::FitTrack(KBHelixTrack *helixTrack, Int_t pdg)
 	while (KBHit *hit = (KBHit *) next()) {
 		auto idx = fGFTrackHitClusterArray -> GetEntriesFast();
 		auto gfhit = (KBHit *) fGFTrackHitClusterArray -> ConstructedAt(idx);
-    gfhit -> CopyFrom(hit);
+        gfhit -> CopyFrom(hit);
 		trackCand.addHit(fDetectorID, idx);
 	}
 
@@ -159,9 +160,14 @@ genfit::Track* LHGenfitTask::FitTrack(KBHelixTrack *helixTrack, Int_t pdg)
   Double_t dip = helixTrack -> DipAngle();
   TVector3 momSeed = 0.001 * helixTrack -> Momentum(1.0); // MeV -> GeV
   momSeed.SetTheta(dip); /// TODO
-
+    
 	TVector3 posSeed = refHit -> GetPosition();
 	posSeed.SetMag(posSeed.Mag()/10.); // mm -> cm
+    
+    // kb_debug << " posSeed : " << posSeed.X() << " " << posSeed.Y() << " " << posSeed.Z() << endl;
+    // kb_debug << " momSeed : " << momSeed.X()*1000 << " " << momSeed.Y()*1000 << " " << momSeed.Z()*1000 << endl;
+    // kb_debug << " refCharge : " << KBRun::GetRun()->GetParticle(pdg)->Charge()/3. << endl;
+    // kb_debug << " nhits : " << nhits << endl;
 
   trackCand.setCovSeed(covSeed);
   trackCand.setPosMomSeed(posSeed, momSeed, KBRun::GetRun()->GetParticle(pdg)->Charge()/3.); /// TODO

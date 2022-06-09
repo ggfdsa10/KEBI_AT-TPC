@@ -8,7 +8,7 @@ Double_t DVelocity;
 Double_t TimeBucket;
 Double_t Bfield;
 TString PadPlaneType;
-TString DataPath = "$KEBIPATH/data/ATTPC.mc.root";
+TString DataPath = "$KEBIPATH/data/ATTPC.mc2track.2e5c877.root";
 
 void TrackDataTree(){
     TVector3 TrackHead;
@@ -78,7 +78,7 @@ void TrackDataTree(){
     // macros information 
     cout << " Total Event : " << tree -> GetEntries() << endl;
     cout << "=======================================" << endl;
-
+    return 0;
     for(int event = 0; event < tree -> GetEntries(); event++){
         if(event%100 ==0)
             cout << "Event Number : " << event << endl;
@@ -143,7 +143,7 @@ void TrackDataTree(){
 }
 void Particle_tracking(TString input = "ATTPC"){
     auto run = KBRun::GetRun();
-    run -> SetInputFile(input+".digi.2e5c877");
+    run -> SetInputFile(input+".digi2track.2e5c877");
     run -> Init();
     auto par = run -> GetPar();
 
@@ -157,7 +157,7 @@ void Particle_tracking(TString input = "ATTPC"){
     cout << " Pad type : " << PadPlaneType            << endl;
 
     if(PadPlaneType == "RectanglePad"){
-        ATTPCRectnglePad *PadPlane = new ATTPCRectnglePad();
+        ATTPCRectanglePad *PadPlane = new ATTPCRectanglePad();
         PadHeight = PadPlane -> GetPadHeight();
         PadWidth = PadPlane -> GetPadWidth();
         PadGap = PadPlane -> GetPadGap();

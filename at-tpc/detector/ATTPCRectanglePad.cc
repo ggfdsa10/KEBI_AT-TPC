@@ -54,11 +54,19 @@ bool ATTPCRectanglePad::Init()
 
       pad -> SetPlaneID(fPlaneID);
       pad -> SetPadID(padID);
+
       pad -> SetAsAdID(asadID);
       pad -> SetAGETID(agetID);
       pad -> SetChannelID(channelID);
       pad -> SetPosition(posPad);
       pad -> SetSectionRowLayer(0, row, layer);
+
+      auto neighborIndex = PadNeighborIndex(layer, row, padID);
+      for(int index = 0; index<neighborIndex.size(); index++){
+        KBPad *padNeighbor = (KBPad *) fChannelArray -> At(neighborIndex[index]);
+        padNeighbor -> AddNeighborPad(pad);
+        pad -> AddNeighborPad(padNeighbor);
+      }
 
       fChannelArray -> Add(pad);
       
@@ -69,9 +77,13 @@ bool ATTPCRectanglePad::Init()
   }
 
   Int_t nPads = fChannelArray -> GetEntriesFast();
+
   for (Int_t iPad = 0; iPad < nPads; iPad++) {
     KBPad *pad = (KBPad *) fChannelArray -> At(iPad);
     pad -> SetPadID(iPad);
+
+    Int_t layerID = pad -> GetLayer();
+    Int_t rowID = pad -> GetRow();
 
     std::vector<Int_t> key;
     key.push_back(pad -> GetSection());
@@ -80,6 +92,8 @@ bool ATTPCRectanglePad::Init()
 
     fPadMap.insert(std::pair<std::vector<Int_t>, Int_t>(key,iPad));
   }
+
+  
 
   return true;
 }
@@ -208,7 +222,7 @@ void ATTPCRectanglePad::DrawFrame(Option_t *option)
 TCanvas *ATTPCRectanglePad::GetCanvas(Option_t *option)
 {
   if (fCanvas == nullptr)
-    fCanvas = new TCanvas(fName+Form("%d",fPlaneID),fName,1300,700);
+    fCanvas = new TCanvas(fName+Form("%d",fPlaneID),fName,800,800);
   fCanvas -> SetMargin(0.13,0.13,0.08,0.02);
   
   return fCanvas;
@@ -222,4 +236,32 @@ Int_t ATTPCRectanglePad::FindSection(Double_t i, Double_t j)
     return 0;
   }
   else return -1;
+}
+
+
+std::vector<Int_t> ATTPCRectanglePad::PadNeighborIndex(Int_t layer, Int_t Row, Int_t PadID)
+{
+    // this method returns to the previous set neighbor pad index.
+    // for set the neighbor pad, do register current pad and previous pads each other.
+    std::vector<Int_t> indexArray;
+
+    if(layer==0 && Row==0){return indexArray;}
+
+    else if(layer==0 && Row!=0){
+        indexArray.push_back(PadID-1);
+    }
+    else if(layer!=0 && Row==0){
+        indexArray.push_back(PadID-RowNum);
+        indexArray.push_back(PadID-RowNum+1);
+    }
+    else{
+        indexArray.push_back(PadID-1);
+        indexArray.push_back(PadID-RowNum);
+        indexArray.push_back(PadID-RowNum-1);
+
+        if(Row==RowNum-1){return indexArray;}
+
+        indexArray.push_back(PadID-RowNum+1);
+    }
+    return indexArray;
 }

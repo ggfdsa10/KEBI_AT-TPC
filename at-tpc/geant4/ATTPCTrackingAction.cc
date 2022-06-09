@@ -50,9 +50,12 @@ void ATTPCTrackingAction::PreUserTrackingAction(const G4Track* track)
       processName = process -> GetProcessName();
     fProcessID = fProcessTable -> GetParInt(processName);
     fRunManager -> AddMCTrack(0, track -> GetTrackID(), track -> GetParentID(), track -> GetDefinition() -> GetPDGEncoding(), fMomentum.x(), fMomentum.y(), fMomentum.z(), fVolumeID, fPosition.x(), fPosition.y(), fPosition.z(), fKEnergy, edep1, edep2, fProcessID);
-
-
+    
   }
+
+
+
+  
 }
 
 void ATTPCTrackingAction::PostUserTrackingAction(const G4Track* track)
@@ -82,7 +85,6 @@ void ATTPCTrackingAction::PostUserTrackingAction(const G4Track* track)
     }
     // fRunManager -> AddMCTrack(track -> GetTrackID(), track -> GetParentID(), track -> GetDefinition() -> GetPDGEncoding(), fMomentum.x(), fMomentum.y(), fMomentum.z(), fVolumeID, fPosition.x(), fPosition.y(), fPosition.z(), fKEnergy, edep1, edep2, fProcessID);
   }
-
 }
 
 void ATTPCTrackingAction::SetPrimaryEdep(Double_t length, Double_t edep)

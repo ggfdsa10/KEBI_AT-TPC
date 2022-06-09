@@ -86,7 +86,6 @@ double RKTrackRep::extrapolateToPlane(StateOnPlane& state,
     debugOut << "RKTrackRep::extrapolateToPlane()\n";
   }
 
-
   if (state.getPlane() == plane) {
     if (debugLvl_ > 0) {
       debugOut << "state is already defined at plane. Do nothing! \n";
@@ -113,7 +112,7 @@ double RKTrackRep::extrapolateToPlane(StateOnPlane& state,
   bool isAtBoundary(false);
   double flightTime( 0. );
   double coveredDistance( Extrap(*(state.getPlane()), *plane, getCharge(state), getMass(state), isAtBoundary, state7, flightTime, fillExtrapSteps, covPtr, false, stopAtBoundary) );
-
+    
   if (stopAtBoundary && isAtBoundary) {
     state.setPlane(SharedPlanePtr(new DetPlane(TVector3(state7[0], state7[1], state7[2]),
                                                 TVector3(state7[3], state7[4], state7[5]))));
@@ -2580,7 +2579,7 @@ double RKTrackRep::Extrap(const DetPlane& startPlane,
 
 
 void RKTrackRep::checkCache(const StateOnPlane& state, const SharedPlanePtr* plane) const {
-
+    
   if (state.getRep() != this){
     Exception exc("RKTrackRep::checkCache ==> state is defined wrt. another TrackRep",__LINE__,__FILE__);
     exc.setFatal();

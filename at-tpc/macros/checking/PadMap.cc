@@ -271,6 +271,156 @@ void PadMap::TrianglePad(TH2Poly *poly) {
     }
 }
 
+void PadMap::StripPad(TH2Poly *pad) {
+    // Add the bins
+
+    double fPadActiveSize = 190.; 
+    double fStripNumByCh = 85.;
+    Double_t x[6], y[6];
+
+    // for pad boundary
+    Double_t padGap = 0.1;
+    Double_t fPadBTWLength = fPadActiveSize/(fStripNumByCh-1.);
+    Double_t fPadWidth = (fPadBTWLength-sqrt(3)*padGap)/3.;
+    Double_t fPadHeight = sqrt(3)*fPadWidth;
+    cout << fPadWidth << "  " << fPadHeight/2 << endl;
+    Int_t Row = fPadActiveSize/2.*sqrt(3)/(fPadWidth/2. +fPadHeight/2.);
+    Int_t Col = fPadActiveSize/2./fPadBTWLength;
+
+    Int_t ColumnByLayers = Col;
+    Double_t xCenter = 0, yCenter = 0;
+    Int_t padIndex = 0;
+
+    // 0 channal construct
+    double ch0PosX = 0.;    
+    for (int layer = 0; layer < fStripNumByCh; layer++) {
+          std::vector<std::tuple<Int_t, Double_t, Double_t>> nRowInLayers;
+        for (int row = 0; row < ColumnByLayers; row++) {
+            x[0] = xCenter -fPadWidth/2.;
+            y[0] = yCenter +fPadHeight/2.;
+            x[1] = xCenter +fPadWidth/2.;
+            y[1] = yCenter +fPadHeight/2.;
+            x[2] = xCenter +fPadWidth;
+            y[2] = yCenter;
+            x[3] = xCenter +fPadWidth/2.;
+            y[3] = yCenter -fPadHeight/2.;
+            x[4] = xCenter -fPadWidth/2.;
+            y[4] = yCenter -fPadHeight/2.;
+            x[5] = xCenter -fPadWidth;
+            y[5] = yCenter;
+
+            pad->AddBin(6, x, y);
+            nRowInLayers.push_back(make_tuple(padIndex, xCenter, yCenter));
+            padIndex++;
+            xCenter += fPadBTWLength;
+        }
+        fPadChArray[0].push_back(nRowInLayers);
+
+        if(layer < fStripNumByCh/2){
+            ch0PosX -=(sqrt(3)*padGap/2. +3.*fPadWidth/2.);
+            ColumnByLayers++;
+        }
+        else{
+            ch0PosX +=(sqrt(3)*padGap/2. +3.*fPadWidth/2.);
+            ColumnByLayers--;
+        }
+        xCenter = ch0PosX;
+        yCenter += 3*(padGap/2. + fPadHeight/2.);
+    }
+
+    // // 1 channal construct
+    ColumnByLayers = Col+1;
+    double ch1PosX = (ColumnByLayers-1)*fPadBTWLength - (sqrt(3)*padGap/2. +3.*fPadWidth/2.);
+    double ch1PosY = (padGap/2. + fPadHeight/2.);
+    xCenter = ch1PosX, yCenter = ch1PosY;
+    int testIndex =0;
+    for (int layer = 0; layer < fStripNumByCh; layer++) {
+        std::vector<std::tuple<Int_t, Double_t, Double_t>> nRowInLayers;
+        for (int row = 0; row < ColumnByLayers; row++) {
+
+            x[0] = xCenter -fPadWidth/2.;
+            y[0] = yCenter +fPadHeight/2.;
+            x[1] = xCenter +fPadWidth/2.;
+            y[1] = yCenter +fPadHeight/2.;
+            x[2] = xCenter +fPadWidth;
+            y[2] = yCenter;
+            x[3] = xCenter +fPadWidth/2.;
+            y[3] = yCenter -fPadHeight/2.;
+            x[4] = xCenter -fPadWidth/2.;
+            y[4] = yCenter -fPadHeight/2.;
+            x[5] = xCenter -fPadWidth;
+            y[5] = yCenter;
+
+            pad->AddBin(6, x, y);
+            nRowInLayers.push_back(make_tuple(padIndex, xCenter, yCenter));
+            padIndex++;
+            testIndex++;
+            xCenter += (sqrt(3)*padGap/2. +3.*fPadWidth/2.);
+            yCenter += 3*(padGap/2. + fPadHeight/2.);
+        }
+        fPadChArray[1].push_back(nRowInLayers);
+
+        if(layer < fStripNumByCh/2-1){
+            ch1PosX -=fPadBTWLength;
+            ColumnByLayers++;
+        }
+        else{
+            ch1PosX -=(sqrt(3)*padGap/2. +3.*fPadWidth/2.);
+            ch1PosY += 3*(padGap/2. + fPadHeight/2.);
+            ColumnByLayers--;
+        }
+        xCenter = ch1PosX;
+        yCenter = ch1PosY;
+    }
+
+    // 2 channal construct
+    ColumnByLayers = Col+1;
+    double ch2PosX = (ColumnByLayers-1)*fPadBTWLength - (sqrt(3)*padGap/2. +3.*fPadWidth/2.) +(ColumnByLayers-1)*(sqrt(3)*padGap/2. +3.*fPadWidth/2.) -(sqrt(3)*padGap/2. +3*fPadWidth/2.);
+    double ch2PosY = (padGap/2. + fPadHeight/2.) +(ColumnByLayers-1)*3*(padGap/2. + fPadHeight/2.) +(padGap/2. + fPadHeight/2.);
+    xCenter = ch2PosX, yCenter = ch2PosY;
+
+    for (int layer = 0; layer < fStripNumByCh; layer++) {
+        std::vector<std::tuple<Int_t, Double_t, Double_t>> nRowInLayers;
+        for (int row = 0; row < ColumnByLayers; row++) {
+
+            x[0] = xCenter -fPadWidth/2.;
+            y[0] = yCenter +fPadHeight/2.;
+            x[1] = xCenter +fPadWidth/2.;
+            y[1] = yCenter +fPadHeight/2.;
+            x[2] = xCenter +fPadWidth;
+            y[2] = yCenter;
+            x[3] = xCenter +fPadWidth/2.;
+            y[3] = yCenter -fPadHeight/2.;
+            x[4] = xCenter -fPadWidth/2.;
+            y[4] = yCenter -fPadHeight/2.;
+            x[5] = xCenter -fPadWidth;
+            y[5] = yCenter;
+
+            pad->AddBin(6, x, y);
+
+            nRowInLayers.push_back(make_tuple(padIndex, xCenter, yCenter));
+            padIndex++;
+
+            xCenter -= (sqrt(3)*padGap/2. +3*fPadWidth/2.);
+            yCenter += 3*(padGap/2. + fPadHeight/2.);
+        }
+        fPadChArray[2].push_back(nRowInLayers);
+
+        if(layer < fStripNumByCh/2-1){
+            ch2PosX -= (sqrt(3)*padGap/2. +3.*fPadWidth/2.);
+            ch2PosY -= 3*(padGap/2. + fPadHeight/2.);
+            ColumnByLayers++;
+        }
+        else{
+            ch2PosX -=fPadBTWLength;
+            ColumnByLayers--;
+        }
+        xCenter = ch2PosX;
+        yCenter = ch2PosY;
+    }
+    cout << " pad Number!!!! " << padIndex  << "  test3 "<<  testIndex << "  " << endl;
+}
+
 void PadMap::TransformChannelToPad(int agetID, int channelID, int &colN, int &rowN) {
     if (agetID == 0) {
         switch (channelID) {

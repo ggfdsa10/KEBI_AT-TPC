@@ -2,12 +2,14 @@
 #define ATTPCELECTRONICS_HH
 
 #include <time.h>
+#include <tuple>
 #include "KBTask.hh"
 #include "ATTPC.hh"
 #include "KBPulseGenerator.hh"
 #include "TF1.h"
 #include "TClonesArray.h"
 #include "TRandom3.h"
+#include "ATTPCStripPad.hh"
 
 class ATTPCElectronics : public KBTask
 { 
@@ -20,7 +22,7 @@ class ATTPCElectronics : public KBTask
 
   private:
     TClonesArray* fPadArray;
-
+    ATTPCStripPad* fStripPad;
     Int_t fNPlanes;
     Int_t fNTbs;
     Double_t fEChargeToADC;
@@ -32,6 +34,7 @@ class ATTPCElectronics : public KBTask
 
     Bool_t fUsePointChargeMC = true;
     Bool_t fNoiseOn;
+    Bool_t fStripView = false;
 
   ClassDef(ATTPCElectronics, 1)
 };

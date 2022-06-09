@@ -8,5 +8,10 @@
 #pragma link C++ class NewTPCElectronics+;
 #pragma link C++ class NewTPCSetupParameter+;
 
+#pragma link C++ class NewTPCPSA+;
+#pragma link C++ class NewTPCPSAFastFit+;
+#pragma link C++ class NewTPCPSATask+;
+#pragma link C++ class NewTPCHelixTrackFindingTask+;
+
 
 #endif

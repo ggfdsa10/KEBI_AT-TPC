@@ -3,7 +3,7 @@ prototypeBase file $KEBIPATH/PrototypeTPC/macros/prototype.par
 
 # Run
 ADCThreshold  o double   200
-pathToData    string     /home/lamps/data_KOMAC/ana/
+pathToData    string     $KEBIPATH/PrototypeTPC/macros/data_KOMAC/
 padMap        o string   $KEBIPATH/PrototypeTPC/macros/data_KOMAC/padMap.KOMAC.dat
 pulserData    o string   deltaFunction
 

@@ -1,6 +1,8 @@
 #include "ATTPCDetectorConstruction.hh"
 #include "ATTPCRectanglePad.hh"
 #include "ATTPCHoneyCombPad.hh"
+#include "ATTPC20RectanglePad.hh"
+#include "ATTPCStripPad.hh"
 
 #include "KBG4RunManager.hh"
 #include "G4RunManager.hh"
@@ -60,6 +62,18 @@ G4VPhysicalVolume* ATTPCDetectorConstruction::Construct()
     PadWidth = fPadPlane ->GetPadWidth();
     PadHeight = fPadPlane ->GetPadHeight();
     PadGap = fPadPlane ->GetPadGap();  
+  }
+  if(PadPlaneType == "20RectanglePad"){
+    ATTPC20RectanglePad *fPadPlane = new ATTPC20RectanglePad(); 
+    PadWidth = fPadPlane ->GetPadWidth();
+    PadHeight = fPadPlane ->GetPadHeight();
+    PadGap = fPadPlane ->GetPadGap();
+  }
+  if(PadPlaneType == "StripPad"){
+    ATTPCStripPad *fPadPlane = new ATTPCStripPad(); 
+    PadWidth = fPadPlane ->GetPadWidth() +50.;
+    PadHeight = fPadPlane ->GetPadHeight();
+    PadGap = fPadPlane ->GetPadGap();
   }
 
   G4double Temperature = par -> GetParDouble("temperature");

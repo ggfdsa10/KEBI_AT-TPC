@@ -2,7 +2,7 @@
 ENVFILE="./env.sh"
 if [ -z $GENFIT ]; then
   echo "define the GENFIT env variable before executing this script"
-else
+
   echo "if [ -z \$ROOTSYS ]; then" > $ENVFILE
     echo "echo \"ROOTSYS is not set. Check your ROOT installation.\"" >> $ENVFILE
   echo "else" >> $ENVFILE

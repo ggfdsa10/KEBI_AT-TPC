@@ -86,7 +86,10 @@ bool NewTPCHoneyCombPad::Init()
     }
   }
 
+  PadBoundaryConstruct(fPadBoundary);
+
   Int_t nPads = fChannelArray -> GetEntriesFast();
+  cout << "pad num : " << nPads << endl;
   for (Int_t iPad = 0; iPad < nPads; iPad++) {
     KBPad *pad = (KBPad *) fChannelArray -> At(iPad);
     pad -> SetPadID(iPad);
@@ -97,9 +100,17 @@ bool NewTPCHoneyCombPad::Init()
     key.push_back(pad -> GetLayer());
 
     fPadMap.insert(std::pair<std::vector<Int_t>, Int_t>(key,iPad));
+
+    auto padPos = pad -> GetPosition();
+    auto neighborIndex = PadNeighborIndex(padPos);
+
+    for(int index = 0; index<neighborIndex.size(); index++){
+        KBPad *padNeighbor = (KBPad *) fChannelArray -> At(neighborIndex[index]);
+        padNeighbor -> AddNeighborPad(pad);
+        pad -> AddNeighborPad(padNeighbor);
+    }
   }
   
-  PadBoundaryConstruct(fPadBoundary);
   return true;
 }
 
@@ -135,21 +146,18 @@ Int_t NewTPCHoneyCombPad::FindPadID(Double_t i, Double_t j)
 
   KBVector3 posInput(fAxis1%fAxis2, i, j, 0);
   Int_t PadIndex = PadIndexCheck(posInput.I(), posInput.J());
-
   if (PadIndex < 0 || fNPadsTotal < PadIndex){
     return -1;
   }
 
   Int_t layer = LayerIndexCheck(PadIndex);
   Int_t nLayers = fNRowsInLayer[section].size();
-
   if (layer < 0 || layer >= nLayers){
     return -1;
   }
 
   Int_t Row = RowIndexCheck(PadIndex, layer);
   Int_t nRows = fNRowsInLayer[section][layer];
-
   if(Row < 0 || Row >= nRows){
     return -1;
   }
@@ -247,7 +255,7 @@ void NewTPCHoneyCombPad::DrawFrame(Option_t *option)
 TCanvas *NewTPCHoneyCombPad::GetCanvas(Option_t *option)
 {
   if (fCanvas == nullptr)
-    fCanvas = new TCanvas(fName+Form("%d",fPlaneID),fName,1300,700);
+    fCanvas = new TCanvas(fName+Form("%d",fPlaneID),fName,850,800);
   fCanvas -> SetMargin(0.13,0.13,0.08,0.02);
   
   return fCanvas;
@@ -339,4 +347,28 @@ Int_t NewTPCHoneyCombPad::RowIndexCheck(Int_t padIndex, Int_t LayerIndex){
 
   RowIndex = padIndex-sumIndex;
   return RowIndex;
+}
+
+std::vector<Int_t> NewTPCHoneyCombPad::PadNeighborIndex(KBVector3 posPad)
+{
+    // this method returns to the previous set neighbor pad index.
+    // for set the neighbor pad, do register current pad and previous pads each other.
+    std::vector<Int_t> indexArray;
+
+    for(int i=0; i<3; i++){
+      Double_t thisPadX = posPad.I();
+      Double_t thisPadY = posPad.J();
+
+      Double_t neighborPadX = (thisPadX - fPadWidth) +pow(fPadWidth/2., i);
+      Double_t truefalse = 0;
+      if(i != 0){truefalse = 1.;}
+      Double_t neighborPadY = thisPadY +truefalse*fPadHeight;
+
+      Int_t neighborPadIndex = FindPadID(neighborPadX, neighborPadY);
+      if(neighborPadIndex == -1){continue;}
+
+      indexArray.push_back(neighborPadIndex);
+    }
+    
+    return indexArray;
 }

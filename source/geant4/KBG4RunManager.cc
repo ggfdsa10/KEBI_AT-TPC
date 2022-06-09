@@ -337,6 +337,32 @@ KBParameterContainer *KBG4RunManager::GetProcessTable()       { return fProcessT
 
 
 
+// void KBG4RunManager::AddMCTrack(Int_t opt, Int_t trackID, Int_t parentID, Int_t pdg, Double_t px, Double_t py, Double_t pz, Int_t detectorID, Double_t vx, Double_t vy, Double_t vz, Int_t processID)
+// {
+//   if (opt==0 && parentID != 0 && !fSecondaryPersistency) {
+//     fCurrentTrack = nullptr;
+//     return;
+//   }
+
+// 	if (opt==0 && !fMCTrack) {
+// 		fCurrentTrack = nullptr;
+// 		return;
+// 	}else if (opt==1 && !fMCPostTrack) {
+// 		fCurrentTrack = nullptr;
+// 		return;
+// 	}
+
+//   fTrackID = trackID;
+// 	if ( opt==0 ){
+// 		fCurrentTrack = (KBMCTrack *) fTrackArray -> ConstructedAt(fTrackArray -> GetEntriesFast());
+// 	}else if ( opt==1 ){
+// 		fCurrentTrack = (KBMCTrack *) fPostTrackArray -> ConstructedAt(fPostTrackArray -> GetEntriesFast());
+// 	}
+
+// 	fCurrentTrack -> SetMCTrack(trackID, parentID, pdg, px, py, pz, detectorID, vx, vy, vz, processID);
+// }
+
+
 void KBG4RunManager::AddMCTrack(Int_t opt, Int_t trackID, Int_t parentID, Int_t pdg, Double_t px, Double_t py, Double_t pz, Int_t detectorID, Double_t vx, Double_t vy, Double_t vz, Double_t ke, Double_t edep1, Double_t edep2, Int_t processID)
 {
   if (opt==0 && parentID != 0 && !fSecondaryPersistency) {
@@ -398,9 +424,9 @@ void KBG4RunManager::SetNumEvents(Int_t numEvents)
 
 void KBG4RunManager::NextEvent()
 {
-	if ( fTree -> GetEntries()%1000==0 ){
-		g4_info << "End of Event " << fTree -> GetEntries() << endl;
-	}
+
+    g4_info << "End of Event " << fTree -> GetEntries() << endl;
+
   fTree -> Fill();
 
   fTrackArray -> Clear("C");

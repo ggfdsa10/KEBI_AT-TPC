@@ -40,12 +40,12 @@ class NewTPCHoneyCombPad : public KBPadPlane
     virtual Int_t PadIndexCheck(Double_t i, Double_t j);
     virtual Int_t LayerIndexCheck(Int_t padIndex);
     virtual Int_t RowIndexCheck(Int_t padIndex, Int_t LayerIndex);
-
+    virtual std::vector<Int_t> PadNeighborIndex(KBVector3 posPad);
   private:
     void PadBoundaryConstruct(TH2Poly *pad);
     Int_t FindSection(Double_t i, Double_t j);
 
-  
+
     TH2Poly *fPadBoundary = new TH2Poly();
     Double_t fTpcR0;
     Double_t fTpcR1;
