@@ -1,9 +1,0 @@
-# Refere to KBParameterContainer for the format of parameter file.
-# (http://nuclear.korea.ac.kr/~lamps/kebi/classKBParameterContainer.html)
-
-G4VisFile     s  vis.mac
-#G4MacroFile   s  run_geant4.mac
-G4InputFile   s  dummy.gen
-G4OutputFile  s  $KEBIPATH/data/dummy.mc.root
-MCStepPersistency b true
-#G4ExportGDML  s  dummy.gdml
