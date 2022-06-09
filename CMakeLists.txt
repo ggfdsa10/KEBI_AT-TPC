@@ -77,21 +77,6 @@ include(${ROOT_USE_FILE})
 
 set(TOOLS_LIBRARIES_LIST ${ROOT_LIBRARIES} CACHE INTERNAL "")
 
-find_package(Boost   REQUIRED)
-Set(LD_LIBRARY_PATH ${LD_LIBRARY_PATH} ${Boost_LIBRARY_DIR})
-
-find_package(Eigen3  REQUIRED)
-find_package(Rave    REQUIRED)
-find_package(GENFIT2 REQUIRED)
-
-include_directories(${EIGEN3_INCLUDE_DIR})
-include_directories(${GENFIT2_INCLUDE_DIR})
-
-set(LINK_DIRECTORIES
-  ${ROOT_LIBRARY_DIR}
-  ${RAVE_LIBRARY_DIR}
-  ${GENFIT2_LIBRARY_DIR}
-)
 
 link_directories(${LINK_DIRECTORIES})
 
