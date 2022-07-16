@@ -31,6 +31,8 @@ class ATTPCElectronics : public KBTask
     Double_t fADCMaxAmp = 4095; // Dynamic range maximum ratio
 
     TF1 *fPulseFunction;
+    TTree* noiseTree;
+    double noiseArray[4][512];
 
     Bool_t fUsePointChargeMC = true;
     Bool_t fNoiseOn;

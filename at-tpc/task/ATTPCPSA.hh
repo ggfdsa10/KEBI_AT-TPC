@@ -14,7 +14,7 @@ class ATTPCPSA
     ATTPCPSA() {}
     virtual ~ATTPCPSA() {}
 
-    virtual void AnalyzeChannel(Double_t *buffer, vector<KBChannelHit> *hitArray, vector<vector<pair<double, double>>> *TBArray);
+    virtual void AnalyzeChannel(Double_t *buffer, vector<KBChannelHit> *hitArray);
     void SetTbRange(Int_t tbi, Int_t tbf);
     void SetThreshold(Double_t val);
 

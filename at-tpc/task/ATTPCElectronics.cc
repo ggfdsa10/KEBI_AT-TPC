@@ -31,10 +31,14 @@ bool ATTPCElectronics::Init()
 
   fPadArray = (TClonesArray *) run -> GetBranch("Pad");
 
-  KBPulseGenerator *pulseGen = new KBPulseGenerator();
+  KBPulseGenerator *pulseGen = new KBPulseGenerator("pulserForATTPC.dat");
   fPulseFunction = pulseGen -> GetPulseFunction();
   fPulseFunction -> SetParameters(fEChargeToADC,0);
-   
+
+  auto noiseFile = new TFile("$KEBIPATH/at-tpc/macros/input/noise.root","read");
+  noiseTree = (TTree*)noiseFile -> Get("noise");
+  noiseTree->SetBranchAddress("noiseEvn", &noiseArray);
+  
   return true;
 }
 
@@ -100,9 +104,13 @@ void ATTPCElectronics::Exec(Option_t*)
       out[iTb] = 0;
 
     if(fNoiseOn == true){
+      int noiseEvent = gRandom->Uniform(0, noiseTree->GetEntries());
+      int noiseAget = gRandom->Uniform(0,3);
+
+      noiseTree->GetEntry(noiseEvent);
       for (Int_t i = 0; i< 512; i++){
-	      Double_t noise = gRandom -> Gaus(434,42);
-	      out[i] += noise;
+	      // Double_t noise = gRandom -> Gaus(434,42);
+	      out[i] += noiseArray[noiseAget][i];
       }
     }
     pad -> SetBufferIn(out);
