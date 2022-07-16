@@ -2,7 +2,7 @@
 
 ClassImp(ATTPCPSA)
 
-void ATTPCPSA::AnalyzeChannel(Double_t *buffer, vector<KBChannelHit> *hitArray, vector<vector<pair<double, double>>> *TBArray)
+void ATTPCPSA::AnalyzeChannel(Double_t *buffer, vector<KBChannelHit> *hitArray)
 {
   Double_t valMax = 0;
   Double_t tbAtMax = 0;

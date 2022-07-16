@@ -52,10 +52,6 @@ class ATTPCPSATask : public KBTask
 
     ATTPCPSA *fPSA;
 
-    //root file define
-    TFile *rootfile;
-    TTree *ArrayTree;
-
     Int_t eventIndex =0;
     Int_t padNum = 0;
     

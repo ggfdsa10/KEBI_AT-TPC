@@ -13,22 +13,15 @@ ClassImp(ATTPCPSATask)
 ATTPCPSATask::ATTPCPSATask()
 :KBTask("ATTPCPSATask","")
 {
-    // root file init
-    rootfile = new TFile("$KEBIPATH/at-tpc/codeTest/lowData_reco.root", "recreate");
-    ArrayTree = new TTree("tree","tree");
-    
-    ArrayTree->Branch("eventIndex",&eventIndex, "eventIndex/I");
-    ArrayTree->Branch("mcArray",&mcArray);
-    ArrayTree->Branch("reconArray",&reconArray);
 }
 
-ATTPCPSATask::~ATTPCPSATask(){
+ATTPCPSATask::~ATTPCPSATask()
+{
 }
 
 bool ATTPCPSATask::Init()
 {
   run = KBRun::GetRun();
-    cout << " done..." << endl;
   auto par = run -> GetParameterContainer();
   fTpc = run -> GetDetectorSystem() -> GetTpc();
 
@@ -71,15 +64,9 @@ void ATTPCPSATask::Exec(Option_t*)
     auto bufferOut = pad -> GetBufferOut();
 
     vector<KBChannelHit> hitArray;
-    vector<vector<pair<double, double>>> TBArray;
-    fPSA -> AnalyzeChannel(bufferOut, &hitArray, &TBArray);
 
-    auto idArray = pad -> GetMCIDArray();
-    auto tbArray = pad -> GetMCTbArray();
-
+    fPSA -> AnalyzeChannel(bufferOut, &hitArray);
     padNum = pad -> GetPadID();
-    vector<vector<double>> mcArrayBuffer;
-    vector<vector<double>> reconArrayBuffer;
 
     int index=0;
     for (auto channelHit : hitArray) {
@@ -101,50 +88,33 @@ void ATTPCPSATask::Exec(Option_t*)
       hit -> SetRow(pad -> GetRow());
       hit -> SetLayer(pad -> GetLayer());
 
-      Int_t atMC = 0;
-      Double_t dist = 100.;
-      Int_t numMCs = idArray -> size();
-      for (Int_t iMC = 0; iMC < numMCs; ++iMC) {
-        Double_t dtb = hit -> GetTb() - tbArray -> at(iMC);
-        if (abs(dtb) < abs(dist)) {
-          dist = dtb;
-          atMC = iMC;
+
+      if(fPar->CheckPar("isExpData")==false){
+        auto idArray = pad -> GetMCIDArray();
+        auto tbArray = pad -> GetMCTbArray();
+
+        Int_t atMC = 0;
+        Double_t dist = 100.;
+        Int_t numMCs = idArray -> size();
+        for (Int_t iMC = 0; iMC < numMCs; ++iMC) {
+          Double_t dtb = hit -> GetTb() - tbArray -> at(iMC);
+          if (abs(dtb) < abs(dist)) {
+            dist = dtb;
+            atMC = iMC;
+
+          }
+        }
+
+        if (dist < 100){ //XXX
+          hit -> SetMCTag(idArray -> at(atMC), dist*fTbTime*fDriftVelocity, 1);
+          hit -> SetTrackID(idArray -> at(atMC));
         }
       }
-      if (dist < 100) //XXX
-        hit -> SetMCTag(idArray -> at(atMC), dist*fTbTime*fDriftVelocity, 1);
-        hit -> SetTrackID(idArray -> at(atMC));
-
-        vector<double> mcArrayADC;
-        vector<double> reconArrayADC;
-
-        // // root file macros
-        for(int i=0; i<TBArray[index].size(); i++){
-            double mcADC = TBArray[index][i].first;
-            double reconADC = TBArray[index][i].second;
-
-            mcArrayADC.push_back(mcADC);
-            reconArrayADC.push_back(reconADC);
-        }
-        mcArrayBuffer.push_back(mcArrayADC);
-        reconArrayBuffer.push_back(reconArrayADC);
       idx++;
-      index++;
     }
-
-    mcArray.push_back(mcArrayBuffer);
-    reconArray.push_back(reconArrayBuffer);
   }
 
-    ArrayTree->Fill();
   kb_info << "Number of found hits: " << idx << endl;
-
-  
-  if(run->GetCurrentEventID()==run->GetEndEventID()){
-    rootfile->cd();
-    ArrayTree->Write();
-    rootfile->Close();
-  }
 }
 
 void ATTPCPSATask::SetPSA(ATTPCPSA *psa)

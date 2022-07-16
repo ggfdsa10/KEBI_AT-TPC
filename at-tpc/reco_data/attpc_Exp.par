@@ -1,3 +1,3 @@
-
-
 pathToRawData    string  /home/public/muon2/
+
+tpcPar f $KEBIPATH/at-tpc/reco_data/input/par_Exp_at-tpc.conf

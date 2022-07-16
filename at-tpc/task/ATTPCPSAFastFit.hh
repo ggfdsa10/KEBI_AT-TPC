@@ -25,7 +25,7 @@ class ATTPCPSAFastFit : public ATTPCPSA, public KBPulseGenerator
      *  2. FitPulse(), LSFitPulse()
      *  3. TestPulse()
      */
-    virtual void AnalyzeChannel(Double_t *buffer, vector<KBChannelHit> *hitArray, vector<vector<pair<double, double>>> *TBArray);
+    virtual void AnalyzeChannel(Double_t *buffer, vector<KBChannelHit> *hitArray);
 
     /** 1.
      * Find the first peak from adc time-bucket starting from input tbCurrent
@@ -57,7 +57,7 @@ class ATTPCPSAFastFit : public ATTPCPSA, public KBPulseGenerator
      */
     Bool_t TestPulse(Double_t *adc,
                      Double_t tbHitPre, Double_t amplitudePre,
-                     Double_t tbHit,    Double_t amplitude, vector<pair<double, double>> *TBADCPad);
+                     Double_t tbHit,    Double_t amplitude);
 
   private:
     Double_t fThresholdOneTbStep;
@@ -68,7 +68,7 @@ class ATTPCPSAFastFit : public ATTPCPSA, public KBPulseGenerator
      * Maximum number of iteration alowed for fitting parameter tbStart.
      * Where, tbStart is "staring time-bucket of the pulse"
      */
-    Int_t fIterMax = 40;
+    Int_t fIterMax = 250; //40
 
     /** 
      * Number of time-bucket to subtract fitted pulse from the adc distribution.
