@@ -1,5 +1,5 @@
 set(KEBI_PATH /home/shlee/kebi)
-set(CREATE_GIT_LOG OFF)
+set(CREATE_GIT_LOG ON)
 set(BUILD_DOXYGEN_DOC OFF)
 
 find_package(Git)

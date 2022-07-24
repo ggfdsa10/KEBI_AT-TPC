@@ -68,7 +68,7 @@ void ATTPCSetupParameter::GetGasParameters()
     fFanoFactor = 0.17*0.9 + 0.26*0.1;
     fElectronNumRef = 219.1;
 
-    TFile * Parameters = new TFile("$KEBIPATH/at-tpc/macros/input/P10Parameters.root","read");
+    TFile * Parameters = new TFile("$KEBIPATH/at-tpc/reco_data/input/P10Parameters.root","read");
     TF1* VDrift = (TF1*)Parameters -> Get("pol7");
     TF1* LDiff = (TF1*)Parameters -> Get("lengifit");
 
@@ -166,7 +166,7 @@ void ATTPCSetupParameter::GetGasParameters()
 }
 
 void ATTPCSetupParameter::GetHe4_iC4H10Parameters(){
-  TFile *Parameters = new TFile("$KEBIPATH/at-tpc/macros/input/He4+iC4H10_Parameters.root","read");
+  TFile *Parameters = new TFile("$KEBIPATH/at-tpc/reco_data/input/He4+iC4H10_Parameters.root","read");
   auto treePar = (TTree*)Parameters -> Get("GasParArray");
   treePar -> SetBranchAddress("VEarray", &fVEarray);
   treePar -> SetBranchAddress("TDarray", &fTDarray);

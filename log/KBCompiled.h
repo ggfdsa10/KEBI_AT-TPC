@@ -1,7 +1,7 @@
 #ifndef KEBI_VERSION
 
-#define KEBI_VERSION "master.287.2e5c877"
-#define KEBI_VERSION_SHORT "2e5c877"
+#define KEBI_VERSION "analysis.50.3fddd7a"
+#define KEBI_VERSION_SHORT "3fddd7a"
 #define GETDECODER_VERSION "."
 
 #define KEBI_HOSTNAME "qcd-sejong"

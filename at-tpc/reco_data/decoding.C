@@ -1,4 +1,4 @@
-void decoding(int eventNum = 50, TString ExpName = "MuonTest")
+void decoding(int eventNum = -1, TString ExpName = "MuonTest")
 {
   TString fileName = "ATTPCEXP";
   auto run = new KBRun();

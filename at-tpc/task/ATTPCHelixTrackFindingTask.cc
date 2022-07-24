@@ -36,10 +36,10 @@ bool ATTPCHelixTrackFindingTask::Init()
   fTrackHCutHL = fPar -> GetParDouble("LHTF_trackHCutHL");
   fReferenceAxis = fPar -> GetParAxis("LHTF_refAxis");
 
-  fMinHitsToFitInitTrack = fPar -> GetParDouble("LHTF_MinHitsToFitInit");
-  fCutMinNumHitsInitTrack = fPar -> GetParDouble("LHTF_CutMinNumHitsInit");
-  fCutMaxNumHitsInitTrack = fPar -> GetParDouble("LHTF_CutMaxNumHitsInit");
-  fCutMinNumHitsFinalTrack = fPar -> GetParDouble("LHTF_CutMinNumHitsFinal");
+  fMinHitsToFitInitTrack = fPar -> GetParInt("LHTF_MinHitsToFitInit");
+  fCutMinNumHitsInitTrack = fPar -> GetParInt("LHTF_CutMinNumHitsInit");
+  fCutMaxNumHitsInitTrack = fPar -> GetParInt("LHTF_CutMaxNumHitsInit");
+  fCutMinNumHitsFinalTrack = fPar -> GetParInt("LHTF_CutMinNumHitsFinal");
   fCutMinHelixRadius = fPar -> GetParDouble("LHTF_CutMinHelixRadius");
   fTrackLengthCutScale = fPar -> GetParDouble("LHTF_TrackLengthCutScale");
   fCutdkInExpectedTrackPath = fPar -> GetParDouble("LHTF_CutdkInExpectedTrackPath");

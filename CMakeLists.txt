@@ -4,7 +4,7 @@ project(KEBI)
 
 #---Configuration
 set(ACTIVATE_EVE      OFF CACHE INTERNAL "") # Activate Root Eve package
-set(CREATE_GIT_LOG    OFF CACHE INTERNAL "") # Create Git log
+set(CREATE_GIT_LOG    ON CACHE INTERNAL "") # Create Git log
 set(BUILD_GEANT4_SIM  OFF CACHE INTERNAL "") # Build Geant4 simulation
 set(BUILD_DOXYGEN_DOC OFF CACHE INTERNAL "") # Build Doxygen documentation with HTML
 set(KEBI_PROJECT_LIST     CACHE INTERNAL "") # List of KEBI projects to build

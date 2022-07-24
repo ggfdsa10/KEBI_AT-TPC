@@ -38,7 +38,7 @@ KBPulseGenerator::KBPulseGenerator(TString fileName)
 bool KBPulseGenerator::Initialize(TString fileName)
 {
   if (fileName.IsNull())
-    fileName = "pulser_464ns.dat";
+    fileName = "pulserForATTPC.dat";
   TString fileNameConfigured = KBRun::ConfigureDataPath(fileName,true,"$(KEBIPATH)/input/",false);
   if (fileNameConfigured.IsNull()) {
     KBLog("KBPulseGenerator","Initialize",0,4) << "Input pulser file: " << fileName << " is not found!" << endl; 
