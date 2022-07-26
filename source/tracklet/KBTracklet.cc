@@ -156,6 +156,7 @@ TGraph *KBTracklet::TrajectoryOnPlane(kbaxis_t axis1, kbaxis_t axis2, Double_t s
   if (fTrajectoryOnPlane == nullptr) {
     fTrajectoryOnPlane = new TGraph();
     fTrajectoryOnPlane -> SetLineColor(kRed);
+    fTrajectoryOnPlane -> SetLineWidth(2);
   }
 
   fTrajectoryOnPlane -> Set(0);
@@ -173,6 +174,7 @@ TGraph *KBTracklet::TrajectoryOnPlane(kbaxis_t axis1, kbaxis_t axis2, bool (*fis
   if (fTrajectoryOnPlane == nullptr) {
     fTrajectoryOnPlane = new TGraph();
     fTrajectoryOnPlane -> SetLineColor(kRed);
+    fTrajectoryOnPlane -> SetLineWidth(2);
   }
 
   fTrajectoryOnPlane -> Set(0);

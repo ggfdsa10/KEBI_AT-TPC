@@ -19,6 +19,7 @@
 #pragma link C++ class genfit::ATTPCSpacepointMeasurement+;
 
 #pragma link C++ class ATTPCDecoderTask+;
+#pragma link C++ class ATTPCNoiseSubtractTask+;
 
 
 

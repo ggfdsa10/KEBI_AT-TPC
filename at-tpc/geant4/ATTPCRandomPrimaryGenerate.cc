@@ -69,10 +69,10 @@ void ATTPCRandomPrimaryGenerate::GeneratePrimaries(G4Event* anEvent)
   PaiAngle = (90.+ gRandom->Uniform(-30., 30.))*TMath::Pi()/180.;
   ThetaAngle = (90.+ gRandom->Uniform(-30., 30.))*TMath::Pi()/180.;
 
-  PositionX = 32. + gRandom -> Uniform(-5., 5.);
-  PositionZ = 60. + gRandom -> Uniform(-2., 2.);
+  PositionX = 46. + gRandom -> Uniform(-10., 10.);
+  PositionZ = 60. + gRandom -> Uniform(-10., 10.);
 
-  for(int i=0; i<2; i++){
+  for(int i=0; i<1; i++){
     int eventID = anEvent->GetEventID() - 1;
 
 
@@ -191,7 +191,7 @@ void ATTPCRandomPrimaryGenerate::ProtonBeam(int eventID, int trackNum)
     DirectionY = Sin(ThetaAngle) * Sin(PaiAngle);
     DirectionZ = Cos(ThetaAngle);
 
-    ParticleEnergy = 75.;
+    ParticleEnergy = 4000.;
   }
   if(trackNum==1){
     // double padInDegree = 90.-double(indexPai*5);
