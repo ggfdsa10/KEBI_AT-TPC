@@ -31,7 +31,7 @@ class ATTPCDecoderTask : public KBTask
         void AddData(TString name);
         void LoadMetaData(TString name);
         void SetNumEvents(Long64_t numEvents);
-        void ExcuteOnline(Int_t eventIdx);
+        void ExcuteOnline(Int_t eventIdx, bool skim);
         void PadIDMapping();
         void NewPadIDMapping();
 
@@ -44,6 +44,7 @@ class ATTPCDecoderTask : public KBTask
         pair<Int_t, Int_t> GetPadID(Int_t asadIdx, Int_t agetIdx, Int_t chanIdx); //[PadID, FPN Id by Pad]
         Int_t GetFPNPadID(Int_t asadIdx, Int_t agetIdx, Int_t chanFPNIdx);
 
+        uint64_t SetPreviousEventTime(uint64_t time){fEventTime = time;}
         uint64_t GetEventTime(){return fEventTime;}
         uint64_t GetEventDiffTime(){return fEventDiffTime;}
 
@@ -69,8 +70,9 @@ class ATTPCDecoderTask : public KBTask
         Long64_t fNumEvents = -1;
 
         GETDecoder *fDecoder;
+        GETDecoder *fPreDecoder;
 
-        Int_t fEventIdx = 0;
+        Long64_t fEventIdx = 0;
 
         Int_t fNumAsAds = 1;
         Int_t fNumAGETs = 4;
@@ -98,6 +100,7 @@ class ATTPCDecoderTask : public KBTask
         bool fIsFakeEvent = false;
         bool fIsSparkEvent = false;
         bool fIsOnline = false;
+        bool fSkimToData = false;
 
         map<vector<Int_t>, tuple<Int_t, Int_t, Int_t>> fPadIdxArray;
         map<vector<Int_t>, Int_t> fPadFPNIdxArray;

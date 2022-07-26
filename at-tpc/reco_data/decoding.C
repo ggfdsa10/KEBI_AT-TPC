@@ -1,4 +1,4 @@
-void decoding(int eventNum = 50, TString ExpName = "MuonTest")
+void decoding(int eventNum = -1, TString ExpName = "MuonTest")
 {
   TString fileName = "ATTPCEXP";
   auto run = new KBRun();
@@ -23,9 +23,9 @@ void decoding(int eventNum = 50, TString ExpName = "MuonTest")
 
   run -> Add(parSetup);
   run -> Add(decoder);
-  run -> Add(subtractor);
-  run -> Add(pulseFinder);
-  run -> Add(recontructer);
+  // run -> Add(subtractor);
+  // run -> Add(pulseFinder);
+  // run -> Add(recontructer);
   
   run -> Init();
   // decoder -> GetDate();

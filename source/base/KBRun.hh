@@ -155,6 +155,8 @@ class KBRun : public KBTask
 
     void WriteCvsDetectorPlanes(TString format = "pdf");
 
+    TCanvas *GetCvsDetectorPlanes();
+
     static void ClickSelectedPadPlane();
     void DrawPadByPosition(Double_t x, Double_t y);
 

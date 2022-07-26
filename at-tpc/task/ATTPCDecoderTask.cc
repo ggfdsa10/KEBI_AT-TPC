@@ -15,6 +15,7 @@ ATTPCDecoderTask::ATTPCDecoderTask()
 :KBTask("ATTPCDecoderTask","")
 {
     fDecoder = new GETDecoder();
+    fPreDecoder = new GETDecoder();
     NewPadIDMapping();
 } 
 
@@ -52,17 +53,24 @@ bool ATTPCDecoderTask::Init()
     }
 
     fDecoder -> SetData(0);
+    fPreDecoder -> SetData(0);
 
-    if (fNumEvents == -1){
-        fDecoder -> GoToEnd();
-        fNumEvents = fDecoder -> GetNumFrames();
-    }
-    run -> SetEntries(fNumEvents);
 
     if (fIsOnline){
-        fDecoder -> GoToEnd();
-        fNumEvents = fDecoder -> GetNumFrames();
         run -> SetEntries(1);
+        if(fSkimToData==true){
+            fDecoder -> GoToEnd();
+            fPreDecoder -> GoToEnd();
+            fNumEvents = fDecoder -> GetNumFrames();
+        }
+    }
+    if(fIsOnline==false){
+        if(fNumEvents == -1){
+            fDecoder -> GoToEnd();
+            fPreDecoder -> GoToEnd();
+            fNumEvents = fDecoder -> GetNumFrames();
+        }
+        run -> SetEntries(fNumEvents);
     }
 
     return true;
@@ -73,22 +81,19 @@ void ATTPCDecoderTask::Exec(Option_t*)
     if(fFileToKEBIForm){fPadArray -> Clear("C");}
 
     Long64_t currentEntry = KBRun::GetRun() -> GetCurrentEventID();
+    if(fIsOnline){currentEntry = fEventIdx;}
     Int_t countChannels = 0;
     Int_t idFPNPad = 0;
 
     GETBasicFrame *frame = fDecoder -> GetBasicFrame(currentEntry);
-
-    if(currentEntry==0 || fEventIdx==0){
+    if(currentEntry==0){
         fEventTime = 0;
         fEventDiffTime = 0;
     }
-
-    if(fIsOnline){
-        frame = fDecoder -> GetBasicFrame(fEventIdx);
-        if(fEventIdx!=0){
-            GETBasicFrame *prevFrame = fDecoder -> GetBasicFrame(fEventIdx-1);
-            fEventTime = prevFrame->GetEventTime();
-        }
+    
+    if(currentEntry!=0 && fIsOnline==true){
+        GETBasicFrame *prevFrame = fPreDecoder -> GetBasicFrame(currentEntry-1);
+        fEventTime = prevFrame->GetEventTime();
     }
 
     fEventDiffTime = frame->GetEventTime() - fEventTime;
@@ -96,11 +101,9 @@ void ATTPCDecoderTask::Exec(Option_t*)
 
     RunEventChecker(currentEntry, frame);
     if(IsFakeEvent() || IsSparkEvent()){
-        
         kb_info << "this event is skip! " << "(IsFakeEvent: " << IsFakeEvent() << " / IsSparkEvent: "<< IsSparkEvent()<< ")"<< endl;
         return;
     }
-
 
     for (Int_t iAsAd = 0; iAsAd < fNumAsAds; iAsAd++) {
         Int_t AsAdID = frame -> GetAsadID();
@@ -131,7 +134,7 @@ void ATTPCDecoderTask::Exec(Option_t*)
                     FPNpadSave -> SetAGETID(iAGET);
                     FPNpadSave -> SetChannelID(iChannel);
                     FPNpadSave -> SetPadID(idFPNPad);
-                    FPNpadSave -> SetBufferRaw(copy);
+                    // FPNpadSave -> SetBufferRaw(copy);
                     FPNpadSave -> SetBufferOut(copy2);
                     FPNpadSave -> SetSortValue(idFPNPad);
                     idFPNPad++;
@@ -148,7 +151,7 @@ void ATTPCDecoderTask::Exec(Option_t*)
                     padSave -> SetAGETID(iAGET);
                     padSave -> SetChannelID(iChannel);
                     padSave -> SetPadID(padID);
-                    padSave -> SetBufferRaw(copy);
+                    // padSave -> SetBufferRaw(copy);
                     padSave -> SetBufferOut(copy2);
                     padSave -> SetSortValue(padID);
                     countChannels++;
@@ -226,16 +229,23 @@ void ATTPCDecoderTask::LoadData(TString pathToRawData, TString pathToMetaData)
 void ATTPCDecoderTask::LoadMetaData(TString name)
 {
   fDecoder -> SetData(0);
+  fPreDecoder -> SetData(0);
   fDecoder -> LoadMetaData(name);
+  fPreDecoder -> LoadMetaData(name);
   fNumEvents = fDecoder -> GetNumFrames();
 }
 
-void ATTPCDecoderTask::AddData(TString name) { fDecoder -> AddData(name); }
+void ATTPCDecoderTask::AddData(TString name)
+{
+    fDecoder -> AddData(name); 
+    fPreDecoder -> AddData(name);
+}
 void ATTPCDecoderTask::SetNumEvents(Long64_t numEvents) { fNumEvents = numEvents; }
 
-void ATTPCDecoderTask::ExcuteOnline(Int_t eventIdx){
+void ATTPCDecoderTask::ExcuteOnline(Int_t eventIdx, bool skim){
     fEventIdx = eventIdx;
     fIsOnline = true;
+    fSkimToData = skim;
 }
 
 void ATTPCDecoderTask::RunEventChecker(Long64_t currentEvent, GETBasicFrame *frame) 
@@ -274,7 +284,7 @@ void ATTPCDecoderTask::RunEventChecker(Long64_t currentEvent, GETBasicFrame *fra
     }
 }
 
-void ATTPCDecoderTask::GetDate(){kb_info << " This event date : "<< Form("%i-%i-%i , %ih %im %.3fs.",fYear, fMonth, fDay, fHour, fMinute, fSecond) << endl;}
+void ATTPCDecoderTask::GetDate(){kb_info << "The CoBo file date : "<< Form("%i-%i-%i, %ih %im %.3fs.",fYear, fMonth, fDay, fHour, fMinute, fSecond);}
 
 pair<Int_t, Int_t> ATTPCDecoderTask::GetPadID(Int_t asadIdx, Int_t agetIdx, Int_t chanIdx)
 {
@@ -542,25 +552,34 @@ void ATTPCDecoderTask::NewPadIDMapping(){
                 key.push_back(agetIdx);
                 key.push_back(chanIdx);
 
-                int sign = (chanIdx%2 == 1) ? 1 : -1;
-                xIdx = xIdx + sign*(padSorterIdx);
                 if (IsFPNChannel(chanIdx)) {
                     fPadIdxArray.insert(make_pair(key, make_tuple(-1, -1, -1)));
                     fPadFPNIdxArray.insert(make_pair(key, idFPNPad));
                     idFPNPad++;
-                    if(chanIdx < 33){xIdx = (sign==1) ? xIdx-1 : xIdx+1;}
-                    if(chanIdx > 34){xIdx = (sign==1) ? xIdx+1 : xIdx-1;}
                     continue;
                 }
                 nChanId++;
                 Int_t idxFPN = (nChanId - 1) / 16;
-
-                padSorterIdx = (chanIdx > 33) ? padSorterIdx-1 : padSorterIdx+1;
-                if(chanIdx==33 || chanIdx==34){
-                    if(chanIdx==34){yIdx++;}
-                    fPadIdxArray.insert(make_pair(key, make_tuple(0, yIdx, idxFPN)));
+                if(chanIdx==33 || chanIdx==34 || chanIdx==35){
+                    xIdx=0;
+                    if(chanIdx==34){
+                        xIdx=1;    
+                        yIdx++;
+                        padSorterIdx = 14;
+                    }
+                    fPadIdxArray.insert(make_pair(key, make_tuple(xIdx, yIdx, idxFPN)));
                     continue;
                 }
+
+                int sign = -1;
+                if(nChanId%2 == 0) {
+                    sign = 1;
+                    padSorterIdx++;
+                } else if(chanIdx >= 38) {
+                    padSorterIdx -= 2;
+                }
+                xIdx = 16 + sign*(padSorterIdx);
+
 
                 fPadIdxArray.insert(make_pair(key, make_tuple(xIdx, yIdx, idxFPN)));
             }

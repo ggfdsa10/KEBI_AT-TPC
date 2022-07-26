@@ -17,10 +17,14 @@ void nx(Int_t eventID = -1) {
 
 void AllEventSave(){  
     Long64_t eventNum = KBRun::GetRun() -> GetNumEvents();
+    TString fileName = "ATTPCEXP";
+    TString ExpName = "MuonTest";
+    TString picturePath = "./picture";
 
     for(int event =0; event <eventNum; event++){
-        KBRun::GetRun() -> RunEve(event);
-        KBRun::GetRun() -> WriteCvsDetectorPlanes("png");
+        KBRun::GetRun() -> RunEve(event, "p");
+        auto canvas = KBRun::GetRun() -> GetCvsDetectorPlanes();
+        canvas -> SaveAs(Form("%s/%s_%i.pdf", picturePath.Data(), ExpName.Data(), event));
     }
 }
 
@@ -36,5 +40,4 @@ void eve(TString input = "ATTPCEXP")
     run -> SetGeoTransparency(80);
     run -> Print();
     run -> RunEve(fEventID);
-
 }
