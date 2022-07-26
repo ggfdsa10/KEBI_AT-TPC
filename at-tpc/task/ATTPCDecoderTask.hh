@@ -31,7 +31,7 @@ class ATTPCDecoderTask : public KBTask
         void AddData(TString name);
         void LoadMetaData(TString name);
         void SetNumEvents(Long64_t numEvents);
-        void ExcuteOnline(Int_t eventIdx);
+        void ExcuteOnline(Int_t eventIdx, bool skim);
         void PadIDMapping();
         void NewPadIDMapping();
 
@@ -70,6 +70,7 @@ class ATTPCDecoderTask : public KBTask
         Long64_t fNumEvents = -1;
 
         GETDecoder *fDecoder;
+        GETDecoder *fPreDecoder;
 
         Long64_t fEventIdx = 0;
 
@@ -99,6 +100,7 @@ class ATTPCDecoderTask : public KBTask
         bool fIsFakeEvent = false;
         bool fIsSparkEvent = false;
         bool fIsOnline = false;
+        bool fSkimToData = false;
 
         map<vector<Int_t>, tuple<Int_t, Int_t, Int_t>> fPadIdxArray;
         map<vector<Int_t>, Int_t> fPadFPNIdxArray;

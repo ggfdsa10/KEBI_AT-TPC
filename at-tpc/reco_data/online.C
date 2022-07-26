@@ -1,40 +1,27 @@
- #include <string> 
+#include <string> 
 
-int fNumEvents = 0;
-int fEventIdx = 0;
-bool fEndMacros = 0;
-char key[10];
+#define od NextEvent()
+#define oa PreviousEvent()
+#define os SavePicture()
+#define ow(event) ParticluarEvent(event)
+#define oto AutoEvent()
 
-void InputKey(){
-  cout << " Input the key : ";
+TString fileName = "ATTPCEXP";
+TString ExpName = "MuonTest";
+TString picturePath = "./picture";
 
-  cin.getline(key, 50);
+int fNumEvents = 1;
+int fEventIdx = -1;
+char fKeyStats;
 
-  if(key[0]=='d'){fEventIdx++;}
-  else if(key[0]=='a'){fEventIdx--;}
-  else if(key[0]=='q'){fEndMacros=true;}
-  else if(key[0]=='w'){
-    string keyString = "";
-    for(int i=1; i<10; i++){
-      if(key[i] >= '0' && key[i] <= '9'){keyString += key[i];}
-    }
-    if(keyString==""){InputKey();}
-    fEventIdx = stoi(keyString);
-  }
-
-  else{InputKey();}
-}
-
-    
 bool CheckNullData(){
   auto fHitArray = KBRun::GetRun() -> GetBranchA("Pad");
-  cout <<"********** "  << fHitArray -> GetEntries() << endl;
   if(fHitArray -> GetEntries()==0 || fHitArray==nullptr){
-    cout << "******************* event is null data, so skip. ******************** " << endl;
-    if(key[0]=='d'){
-      fEventIdx++;
+    if(fKeyStats=='d'){
+      if(fEventIdx==fNumEvents){fEventIdx--;}
+      else{fEventIdx++;}
     }
-    if(key[0]=='a'){
+    if(fKeyStats=='a'){
       fEventIdx--;
     }
     return true;
@@ -42,82 +29,94 @@ bool CheckNullData(){
   return false;
 }
 
-// void EventSave(){  
-//   KBRun::GetRun() -> WriteCvsDetectorPlanes("png");
-// }
+bool SkimToData(){
+  if(fEventIdx==0 || fEventIdx==fNumEvents){return true;}
+  else{return false;}
+}
 
-void PrintStats(ATTPCDecoderTask* decoder){
-  fNumEvents = decoder->GetNumEvent();
-  decoder -> GetDate();
-  cout << " event index : " << fEventIdx << " / " << fNumEvents << " (current/total) " << endl;
-  cout << " event time : " << decoder -> GetEventTime() << " ns " << endl;
+void PrintStats(ATTPCDecoderTask *decoder){
+  cout << endl;
+  cout << "  ----------------------------------------- Event stats --------------------------------------- " << endl;
+  cout << " | "; decoder -> GetDate();                                                                                   cout << "         | " << endl;
+  cout << " |                                                                                             | " << endl;
+  cout << " |   Current event number : " << fEventIdx << " / " << fNumEvents << " [current/total]                                          | " << endl;
+  cout << " |   Current event time   : " << decoder -> GetEventTime() << " ns                                                        | " << endl;
+  cout << "  --------------------------------------------------------------------------------------------- " << endl;
+  cout << endl;
 }
 
 void Excute(){
-  
+  if(fEventIdx < 0){fEventIdx = 0;}
+  if(fEventIdx > fNumEvents){fEventIdx = fNumEvents;}
+
+  KBRun *run = new KBRun();
+  run -> SetAutoTermination(false);
+  run -> AddPar("attpc_Exp.par");
+  run -> AddDetector(new ATTPC());
+
+  auto parSetup = new ATTPCSetupParameter();
+
+  auto decoder = new ATTPCDecoderTask();
+  decoder -> ExcuteOnline(fEventIdx, SkimToData());
+  decoder -> SetPadPersistency(true);
+
+  auto subtractor = new ATTPCNoiseSubtractTask();
+
+  auto pulseFinder = new ATTPCPSATask();
+  pulseFinder->SetHitPersistency(true);
+  pulseFinder -> SetPSA(new ATTPCPSAFastFit());
+
+  auto recontructer = new ATTPCHelixTrackFindingTask();
+
+  run -> Add(parSetup);
+  run -> Add(decoder);
+  // run -> Add(subtractor);
+  // run -> Add(pulseFinder);
+  // run -> Add(recontructer);
+
+  run -> Init();
+  run -> Run();
+
+  if(SkimToData()){fNumEvents = decoder->GetNumEvent()-1;}
+  cout << "num events : " << fNumEvents << endl;
+  if(CheckNullData()){Excute();}
+  run -> RunEve(0,"p");
+  PrintStats(decoder);
 }
 
-void online(TString ExpName = "MuonTest")
+
+void NextEvent(){
+  fEventIdx++;
+  fKeyStats = 'd';
+  Excute();
+}
+
+void PreviousEvent(){
+  fEventIdx--;
+  fKeyStats = 'a';
+  Excute();
+}
+
+void ParticluarEvent(int event){
+  fEventIdx = event;
+  fKeyStats = 'd';
+  Excute();
+}
+
+void SavePicture(){
+  auto canvas = KBRun::GetRun() -> GetCvsDetectorPlanes();
+  canvas -> SaveAs(Form("%s/%s_%i.pdf", picturePath.Data(), ExpName.Data(), fEventIdx));
+}
+
+void online()
 {
-  cout << "=========== key macors gauid ===========" << endl;
-  cout << " d : Next event" << endl;
-  cout << " a : Previous event" << endl;
-  cout << " s : Save the event picture " << endl;
-  cout << " q : quit this macors " << endl;
-  cout << " w (int) : show the n th event. Ex) w 150" << endl; 
-  cout << "========================================" << endl;
-
-  TString fileName = "ATTPCEXP";
-
-
-  while(fEndMacros==false){
-    if(fEventIdx < 0){fEventIdx=0;}
-    auto run = new KBRun();
-    run -> SetOutputFile(fileName+Form(".Online%s", ExpName.Data()));
-    run -> SetAutoTermination(false);
-    run -> AddPar("attpc_Exp.par");
-    run -> AddDetector(new ATTPC());
-    auto parSetup = new ATTPCSetupParameter();
-
-    auto decoder = new ATTPCDecoderTask();
-    decoder -> ExcuteOnline(fEventIdx);
-    decoder -> SetPadPersistency(true);
-
-    auto subtractor = new ATTPCNoiseSubtractTask();
-
-    auto pulseFinder = new ATTPCPSATask();
-    pulseFinder->SetHitPersistency(true);
-    pulseFinder -> SetPSA(new ATTPCPSAFastFit());
-
-    auto recontructer = new ATTPCHelixTrackFindingTask();
-
-    run -> Add(parSetup);
-    run -> Add(decoder);
-    run -> Add(subtractor);
-    run -> Add(pulseFinder);
-    run -> Add(recontructer);
-
-    run -> Init();
-
-    run -> Run();
-
-    if(CheckNullData()){continue;}
-    PrintStats(decoder);
-    auto runEve = new KBRun();
-    runEve -> SetInputFile(fileName+Form(".Online%s", ExpName.Data()));
-    runEve -> AddDetector(new ATTPC());
-    runEve -> SetTag("eve");
-    runEve -> Init();
-    runEve -> SetGeoTransparency(80);
-    runEve -> RunEve(1);
-    InputKey();
-    return;
-  }
-
-
-
-
-
-
-  // gApplication -> Terminate();
+  Excute();
+  cout << endl;
+  cout << "                  -------------------- command macors gauid -------------------- " << endl;
+  cout << "                 |   od : Next event                                            | " << endl;
+  cout << "                 |   oa : Previous event                                        | " << endl;
+  cout << "                 |   os : Save the event picture                                | " << endl;
+  cout << "                 |   ow(int) : show the n th event. Ex) ow(150)                 | " << endl; 
+  cout << "                  -------------------------------------------------------------- " << endl;
+  cout << endl;
 }

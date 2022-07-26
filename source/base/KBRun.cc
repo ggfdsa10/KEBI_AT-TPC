@@ -1279,6 +1279,7 @@ void KBRun::DrawDetectorPlanes()
     cvs -> Clear();
     cvs -> cd();
 
+    // histPlane ->SetMaximum(4096);
     histPlane -> DrawClone("colz");
     histPlane -> Reset();
     histPlane -> Draw("same");
@@ -1463,6 +1464,14 @@ void KBRun::WriteCvsDetectorPlanes(TString format)
   TCanvas *cvs;
   while ((cvs = (TCanvas *) next()))
     cvs -> SaveAs(TString(cvs->GetName())+".event"+TString::Itoa(fCurrentEventID,10)+"."+format);
+}
+
+TCanvas *KBRun::GetCvsDetectorPlanes()
+{
+  TIter next(fCvsDetectorPlaneArray);
+  TCanvas *cvs;
+  while ((cvs = (TCanvas *) next()))
+    return cvs;
 }
 
 void KBRun::SetEveScale(Double_t scale) { fEveScale = scale; }
