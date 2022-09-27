@@ -3,6 +3,7 @@
 
 #include "KBGlobal.hh"
 #include "TObjArray.h"
+#include "TObjString.h"
 #include "TNamed.h"
 #include "TParameter.h"
 #include "KBVector3.hh"
