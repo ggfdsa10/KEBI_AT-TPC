@@ -15,6 +15,7 @@
 #include "G4hIonisation.hh"
 #include "G4hPairProduction.hh"
 #include "G4hCoulombScatteringModel.hh"
+#include "G4UniversalFluctuation.hh"
 
 // step and track limiter process
 #include "G4StepLimiter.hh"
