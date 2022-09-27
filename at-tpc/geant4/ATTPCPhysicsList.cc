@@ -1,7 +1,5 @@
 #include "ATTPCPhysicsList.hh"
 
-#include "G4EmProcessOptions.hh"
-
 //general process model
 #include "G4hMultipleScattering.hh"
 #include "G4NuclearStopping.hh"
@@ -174,7 +172,7 @@ void ATTPCPhysicsList::AddProcessParameter()
       G4WentzelVIModel* msc2 = new G4WentzelVIModel();
       msc1->SetHighEnergyLimit(highEnergyLimit);
       msc2->SetLowEnergyLimit(highEnergyLimit);
-      msc->SetRangeFactor(0.01);
+//       msc->SetRangeFactor(0.01); // this function for GEANT4 10.6 version
       msc->AddEmModel(0, msc1);
       msc->AddEmModel(0, msc2);
 
@@ -210,7 +208,7 @@ void ATTPCPhysicsList::AddProcessParameter()
       G4WentzelVIModel* msc2 = new G4WentzelVIModel();
       msc1->SetHighEnergyLimit(highEnergyLimit);
       msc2->SetLowEnergyLimit(highEnergyLimit);
-      msc->SetRangeFactor(0.01);
+//       msc->SetRangeFactor(0.01); // this function for GEANT4 10.6 version
       msc->AddEmModel(0, msc1);
       msc->AddEmModel(0, msc2);
 
@@ -284,8 +282,6 @@ void ATTPCPhysicsList::AddProcessParameter()
       ph->RegisterProcess(ioncsc, particle);
     }
   }
-  G4EmProcessOptions opt;
-  opt.SetVerbose(1);
 }
 
 void ATTPCPhysicsList::AddLimiterProcess()
