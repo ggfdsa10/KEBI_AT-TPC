@@ -149,8 +149,8 @@ void NewTPCRandomPrimaryGenerate::AlphaScattering()
   Alpha3_4Vec.Boost(AlphaBoost);
 
   KEnergy1 = Alpha1_4Vec.E() - Alpha_Mass;
-  KEnergy2 = Alpha1_4Vec.E() - Alpha_Mass;
-  KEnergy3 = Alpha1_4Vec.E() - Alpha_Mass;
+  KEnergy2 = Alpha2_4Vec.E() - Alpha_Mass;
+  KEnergy3 = Alpha3_4Vec.E() - Alpha_Mass;
 
   AlphaPos1.SetXYZ(InitPosX, InitPosY, InitPosZ);
   AlphaPos2.SetXYZ(InitPosX, InitPosY, InitPosZ);
