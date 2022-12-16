@@ -1,7 +1,5 @@
 #include "NewTPCPhysicsList.hh"
 
-#include "G4EmProcessOptions.hh"
-
 //general process model
 #include "G4hMultipleScattering.hh"
 #include "G4NuclearStopping.hh"
@@ -15,6 +13,7 @@
 #include "G4hIonisation.hh"
 #include "G4hPairProduction.hh"
 #include "G4hCoulombScatteringModel.hh"
+#include "G4UniversalFluctuation.hh"
 
 // step and track limiter process
 #include "G4StepLimiter.hh"
@@ -134,7 +133,7 @@ void NewTPCPhysicsList::AddProcessParameter()
   G4PAIModel* pai = new G4PAIModel();
   G4Region* region = G4RegionStore::GetInstance()->GetRegion("regionTPC");
 
-  G4double highEnergyLimit = 100*MeV;
+  G4double highEnergyLimit = 100.*MeV;
   G4double LivermoreHighEnergyLimit = GeV;
 
   auto ph = G4PhysicsListHelper::GetPhysicsListHelper();
@@ -167,14 +166,13 @@ void NewTPCPhysicsList::AddProcessParameter()
     }
                 
     if (particleName == "e-"){
-      G4double highEnergyLimit = 100*MeV;
       G4eMultipleScattering* msc = new G4eMultipleScattering;
       msc->SetStepLimitType(fUseDistanceToBoundary);
       G4UrbanMscModel* msc1 = new G4UrbanMscModel();
       G4WentzelVIModel* msc2 = new G4WentzelVIModel();
       msc1->SetHighEnergyLimit(highEnergyLimit);
       msc2->SetLowEnergyLimit(highEnergyLimit);
-      msc->SetRangeFactor(0.01);
+//       msc->SetRangeFactor(0.01); // this function for GEANT4 10.6 version
       msc->AddEmModel(0, msc1);
       msc->AddEmModel(0, msc2);
 
@@ -210,7 +208,7 @@ void NewTPCPhysicsList::AddProcessParameter()
       G4WentzelVIModel* msc2 = new G4WentzelVIModel();
       msc1->SetHighEnergyLimit(highEnergyLimit);
       msc2->SetLowEnergyLimit(highEnergyLimit);
-      msc->SetRangeFactor(0.01);
+//       msc->SetRangeFactor(0.01); // this function for GEANT4 10.6 version
       msc->AddEmModel(0, msc1);
       msc->AddEmModel(0, msc2);
 
@@ -284,8 +282,6 @@ void NewTPCPhysicsList::AddProcessParameter()
       ph->RegisterProcess(ioncsc, particle);
     }
   }
-  G4EmProcessOptions opt;
-  opt.SetVerbose(1);
 }
 
 void NewTPCPhysicsList::AddLimiterProcess()
@@ -305,4 +301,3 @@ void NewTPCPhysicsList::AddLimiterProcess()
     }
   }
 }
-
