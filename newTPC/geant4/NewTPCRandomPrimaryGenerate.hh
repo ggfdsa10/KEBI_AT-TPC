@@ -26,20 +26,29 @@ class NewTPCRandomPrimaryGenerate : public G4VUserPrimaryGeneratorAction
     virtual ~NewTPCRandomPrimaryGenerate();
     virtual void GeneratePrimaries(G4Event*);         
     const G4ParticleGun* GetParticleGun() const { return fParticleGun; }
-  
-  private:
-    void AlphaScattering();
-    void Particle();
+
+    void SetInteractionPoint(TVector3 pos, TVector3 mom);
+    Double_t GetInteractionEnergy(){return InteractionEnergy;}
+
     G4ParticleGun*  fParticleGun;
 
+  private:
+    void Particle();
+    void HoyleState(G4Event* event);
 
-    TVector3 AlphaPos1, AlphaPos2, AlphaPos3;
-    TVector3 Alpha1, Alpha2, Alpha3;
-    TLorentzVector Alpha1_4Vec, Alpha2_4Vec, Alpha3_4Vec;
-    Double_t KEnergy1, KEnergy2, KEnergy3;
+    TRandom3* fRandom = nullptr;
+    KBG4RunManager* fRunManager = nullptr;
+    KBParameterContainer* fPar = nullptr;
+    G4ParticleDefinition* fParticle = nullptr;
+    G4ParticleTable* fParticleTable = nullptr;
+    G4IonTable* fIontable = nullptr;
+
     Double_t PositionX, PositionY, PositionZ;
     Double_t DirectionX, DirectionY, DirectionZ;
+    Double_t InteractionEnergy = 0;
 
+    TVector3 fInteractionPos;
+    TVector3 fInteractionMom;
 };
 
 #endif
