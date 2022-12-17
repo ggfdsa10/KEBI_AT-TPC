@@ -5,6 +5,7 @@
 #include "G4ThreeVector.hh"
 #include "globals.hh"
 #include "G4VProcess.hh"
+#include "NewTPCRandomPrimaryGenerate.hh"
 
 NewTPCTrackingAction::NewTPCTrackingAction()
 : G4UserTrackingAction()
@@ -24,7 +25,6 @@ void NewTPCTrackingAction::PreUserTrackingAction(const G4Track* track)
   G4int parentID = track -> GetParentID();
   G4int trackID = track -> GetTrackID();
   G4int PDG = track -> GetDefinition() -> GetPDGEncoding();
-  G4int source = track -> GetTrackID();
 
   if ((parentID < 4 && PDG == 11) || trackID < 4 ) {      //(PDG == 1000020040) || (PDG == 2212) || (PDG == 13)
     G4ThreeVector momentum = track -> GetMomentum();

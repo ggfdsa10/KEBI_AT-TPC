@@ -1,7 +1,7 @@
 void digi(TString name = "NewTPC")
 {
   auto run = KBRun::GetRun();
-  run -> SetIOFile(name+".mc_single", name+".digi_single");
+  run -> SetIOFile(name+".mc", name+".digi");
   run -> AddDetector(new NewTPC());
 
   auto parameter = new NewTPCSetupParameter();

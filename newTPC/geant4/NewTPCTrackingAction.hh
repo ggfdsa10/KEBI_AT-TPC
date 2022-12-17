@@ -8,6 +8,8 @@
 #include "globals.hh"
 #include "NewTPCRectnglePad.hh"
 #include "NewTPCHoneyCombPad.hh"
+#include "Randomize.hh"
+#include "TRandom3.h"
 
 class NewTPCTrackingAction : public G4UserTrackingAction
 {
@@ -17,7 +19,7 @@ class NewTPCTrackingAction : public G4UserTrackingAction
     virtual ~NewTPCTrackingAction() {}
 
     virtual void PreUserTrackingAction(const G4Track* track);
-
+    
   private:
     KBParameterContainer *fProcessTable;
     KBG4RunManager *fRunManager = nullptr;

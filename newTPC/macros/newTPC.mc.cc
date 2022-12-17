@@ -17,7 +17,9 @@
 #include "NewTPCDetectorConstruction.hh"
 #include "NewTPCPhysicsList.hh"
 #include "NewTPCRandomPrimaryGenerate.hh"
+#include "NewTPCEventAction.hh"
 #include "NewTPCTrackingAction.hh"
+#include "NewTPCSteppingAction.hh"
 
 int main(int argc, char** argv)
 {
@@ -33,7 +35,9 @@ int main(int argc, char** argv)
   runManager -> SetUserInitialization(physicsList);
   runManager -> SetParameterContainer(argv[1]);
   runManager -> SetUserInitialization(new NewTPCDetectorConstruction());
+  runManager -> SetUserAction(new NewTPCEventAction());
   runManager -> SetUserAction(new NewTPCTrackingAction());
+  runManager -> SetUserAction(new NewTPCSteppingAction());
 
   auto par = runManager -> GetParameterContainer();
   TString EventNum = par -> GetParString("Event");
@@ -48,6 +52,13 @@ int main(int argc, char** argv)
   G4UImanager* uiManager = G4UImanager::GetUIpointer();
   uiManager -> ApplyCommand("/run/suppressPP true");
 
+  bool isPhysics = par -> GetParBool("Physics");
+  if(isPhysics == true){
+    TString physicsName = par -> GetParString("PhysicsType");
+    int eventnum_i = 2*EventNum.Atoi();
+    EventNum = TString::Itoa(eventnum_i, 10);
+  }
+  
   if(Random == true) { 
     uiManager -> ApplyCommand("/run/beamOn "+EventNum);
   }
