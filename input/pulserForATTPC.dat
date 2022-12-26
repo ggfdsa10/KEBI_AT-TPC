@@ -1,6 +1,6 @@
 #pulser generator data
 #(shaping time) (number of data points) (step size) (rising tb threshold number) (default ndf)
-464 4943 0.1 12 100
+464 4943 0.1 18 100
 #(value) (rms) (total weight) # 130 is ndf
 0.00294286 0 1
 0.00325493 0 1

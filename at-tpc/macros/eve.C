@@ -17,7 +17,7 @@ void AllEventSave(){
 
 void eve(TString input = "ATTPC")
 {
-  TString version = "_noNoise";
+  TString version = "";
 
   auto run = new KBRun();
   run -> SetInputFile(input+Form(".mc%s", version.Data()));

@@ -28,18 +28,20 @@ class ATTPCRandomPrimaryGenerate : public G4VUserPrimaryGeneratorAction
     G4int GetNumberOfPrimary()  {return fNumberOfPrimary; } 
   
   private:
-    void TriggerFunction();
-    void ProtonBeam(int eventID, int trackNum);
-    void AlphaScattering(int eventID, int trackNum);
+    void ExternalTriggerPMT(G4Event* event);
+    void ProtonBeam(G4Event* event);
+
+    TRandom3* fRandom = nullptr;
+    KBG4RunManager* fRunManager = nullptr;
+    KBParameterContainer* fPar = nullptr;
+    G4ParticleDefinition* fParticle = nullptr;
+    G4ParticleTable* fParticleTable = nullptr;
+    G4IonTable* fIontable = nullptr;
+
     G4ParticleGun*  fParticleGun;
-    G4double ParticleEnergy = 0.;
-    G4double PositionX = 0.;
-    G4double PositionY = 0.;
-    G4double PositionZ = 0.;
-    G4double DirectionX = 0.;
-    G4double DirectionY = 0.;
-    G4double DirectionZ = 0.;
-    G4double PaiAngle, ThetaAngle;
+
+    Double_t PositionX, PositionY, PositionZ;
+    Double_t DirectionX, DirectionY, DirectionZ;
 
     G4int fNumberOfPrimary = 0;
 };

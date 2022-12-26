@@ -95,6 +95,7 @@ void NewTPCRandomPrimaryGenerate::HoyleState(G4Event* event)
   G4double ParticleEnergy = fPar -> GetParDouble("ParticleEnergy");
   Double_t Atomic_Mass = 931.5016;
   // Double_t minimumInteractionEnergy = 7.654; // hoyle state
+
   Double_t minimumInteractionEnergy = 0.5; // hoyle state
 
   Int_t eventID = event -> GetEventID();
@@ -106,6 +107,7 @@ void NewTPCRandomPrimaryGenerate::HoyleState(G4Event* event)
     DirectionX = 0.;
     DirectionY = 0.;
     DirectionZ = -1.;
+
 
     fParticleGun -> SetParticleDefinition(fParticle);
     fParticleGun -> SetParticleMomentumDirection(G4ThreeVector(DirectionX, DirectionY, DirectionZ));

@@ -109,9 +109,9 @@ bool ATTPC::BuildGeometry()
   TGeoVolume *tpc = new TGeoVolumeAssembly("AT-TPC");
   
   TGeoTranslation *TPC_offset = new TGeoTranslation("TPC_offset", tpcX-PadWidth/2-PadGap/2, tpcY-PadHeight/2-PadGap/2, tpcZ);
-  TGeoTranslation *World_offset = new TGeoTranslation("World_offset", -tpcX+PadWidth/2, -tpcY-PadHeight/2, -tpcZ);
-  TGeoTranslation *trigger_offset1 = new TGeoTranslation("Trigger_offset1", -triggerShift, -triggerDistance+4, triggerHeight);
-  TGeoTranslation *trigger_offset2 = new TGeoTranslation("Trigger_offset2", -triggerShift, triggerDistance+4, triggerHeight);
+  TGeoTranslation *World_offset = new TGeoTranslation("World_offset", -tpcX+PadWidth/2+PadGap/2, -tpcY+PadHeight/2+PadGap/2, -tpcZ);
+  TGeoTranslation *trigger_offset1 = new TGeoTranslation("Trigger_offset1", triggerShift, -triggerDistance, triggerHeight);
+  TGeoTranslation *trigger_offset2 = new TGeoTranslation("Trigger_offset2", triggerShift, +triggerDistance, triggerHeight);
   TGeoTranslation *Pad_offset = new TGeoTranslation("Pad_offset", 0., 0., -tpcZ);
 
   TGeoVolume *TPC_volume = fGeoManager -> MakeBox("TPC_volume", Gas ,tpcX, tpcY, tpcZ);
@@ -128,17 +128,15 @@ bool ATTPC::BuildGeometry()
   World_volume -> SetLineColor(kBlue-10);
   World_volume -> SetTransparency(99);
 
-  TGeoVolume *Trigger_volume1 = fGeoManager -> MakeBox("Trigger_volume1", Vacuum ,triggerSizeX/2, 1, triggerSizeZ/2);
+  TGeoVolume *Trigger_volume1 = fGeoManager -> MakeBox("Trigger_volume1", Vacuum ,triggerSizeX/2, 10, triggerSizeZ/2);
   Trigger_volume1 -> SetVisibility(true);
   Trigger_volume1 -> SetLineColor(kRed);
   Trigger_volume1 -> SetTransparency(70);
 
-  TGeoVolume *Trigger_volume2 = fGeoManager -> MakeBox("Trigger_volume2", Vacuum ,triggerSizeX/2, 1, triggerSizeZ/2);
+  TGeoVolume *Trigger_volume2 = fGeoManager -> MakeBox("Trigger_volume2", Vacuum ,triggerSizeX/2, 10, triggerSizeZ/2);
   Trigger_volume2 -> SetVisibility(true);
   Trigger_volume2 -> SetLineColor(kRed);
   Trigger_volume2 -> SetTransparency(70);
-
-
 
   top -> AddNode(tpc, 1, TPC_offset);
   tpc -> AddNode(TPC_volume, 1);
