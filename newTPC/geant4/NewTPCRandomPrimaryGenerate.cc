@@ -95,7 +95,7 @@ void NewTPCRandomPrimaryGenerate::HoyleState(G4Event* event)
   G4double ParticleEnergy = fPar -> GetParDouble("ParticleEnergy");
   Double_t Atomic_Mass = 931.5016;
   // Double_t minimumInteractionEnergy = 7.654; // hoyle state
-  Double_t minimumInteractionEnergy = 0.5; // hoyle state
+  Double_t minimumInteractionEnergy = 2; // hoyle state
 
   Int_t eventID = event -> GetEventID();
 
@@ -107,11 +107,11 @@ void NewTPCRandomPrimaryGenerate::HoyleState(G4Event* event)
     DirectionY = 0.;
     DirectionZ = -1.;
 
-    fParticleGun -> SetParticleDefinition(fParticle);
-    fParticleGun -> SetParticleMomentumDirection(G4ThreeVector(DirectionX, DirectionY, DirectionZ));
-    fParticleGun -> SetParticleEnergy(ParticleEnergy *MeV);
-    fParticleGun -> SetParticlePosition(G4ThreeVector(PositionX *mm, PositionY *mm, PositionZ *mm));
-    fParticleGun -> GeneratePrimaryVertex(event);
+    // fParticleGun -> SetParticleDefinition(fParticle);
+    // fParticleGun -> SetParticleMomentumDirection(G4ThreeVector(DirectionX, DirectionY, DirectionZ));
+    // fParticleGun -> SetParticleEnergy(ParticleEnergy *MeV);
+    // fParticleGun -> SetParticlePosition(G4ThreeVector(PositionX *mm, PositionY *mm, PositionZ *mm));
+    // fParticleGun -> GeneratePrimaryVertex(event);
 
     InteractionEnergy = fRandom->Uniform(minimumInteractionEnergy, ParticleEnergy);
   }
@@ -162,9 +162,9 @@ void NewTPCRandomPrimaryGenerate::HoyleState(G4Event* event)
     motherParticleDirection = motherParticleDirection.Unit();
     motherParticleDirection.SetXYZ(motherParticleDirection.X()*Corbon_Beta, motherParticleDirection.Y()*Corbon_Beta, motherParticleDirection.Z()*Corbon_Beta);
 
-    Alpha1_4Vec.Boost(motherParticleDirection);
-    Alpha2_4Vec.Boost(motherParticleDirection);
-    Alpha3_4Vec.Boost(motherParticleDirection);
+    // Alpha1_4Vec.Boost(motherParticleDirection);
+    // Alpha2_4Vec.Boost(motherParticleDirection);
+    // Alpha3_4Vec.Boost(motherParticleDirection);
 
     KEnergy1 = Alpha1_4Vec.E() - Alpha_Mass;
     KEnergy2 = Alpha2_4Vec.E() - Alpha_Mass;
@@ -174,11 +174,17 @@ void NewTPCRandomPrimaryGenerate::HoyleState(G4Event* event)
     Alpha2.SetXYZ(Alpha2_4Vec.Px(), Alpha2_4Vec.Py(), Alpha2_4Vec.Pz());
     Alpha3.SetXYZ(Alpha3_4Vec.Px(), Alpha3_4Vec.Py(), Alpha3_4Vec.Pz());
 
-    PositionX = fInteractionPos.x();
-    PositionY = fInteractionPos.y();
-    PositionZ = fInteractionPos.z();
+    // PositionX = fInteractionPos.x();
+    // PositionY = fInteractionPos.y();
+    // PositionZ = fInteractionPos.z();
+
+    PositionX = 0.;
+    PositionY = 0.;
+    PositionZ = 250.;
+  
 
     fParticle = fIontable ->FindIon(2,4,0); //helium
+    g4_info << " reaction particle : 3x" << fIontable ->GetIonName(2, 4, 0) << endl;
 
     fParticleGun -> SetParticleDefinition(fParticle);
     fParticleGun -> SetParticleMomentumDirection(G4ThreeVector(Alpha1.Unit().X(), Alpha1.Unit().Y(), Alpha1.Unit().Z()));

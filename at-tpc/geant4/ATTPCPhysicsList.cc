@@ -13,7 +13,7 @@
 #include "G4hIonisation.hh"
 #include "G4hPairProduction.hh"
 #include "G4hCoulombScatteringModel.hh"
-#include "G4universalFluctuation.hh"
+#include "G4UniversalFluctuation.hh"
 
 // step and track limiter process
 #include "G4StepLimiter.hh"
@@ -66,7 +66,6 @@ ATTPCPhysicsList::ATTPCPhysicsList() : G4VModularPhysicsList()
 
   for(G4int i =1;;++i) {
     G4VPhysicsConstructor* elem = const_cast<G4VPhysicsConstructor*>(physics->GetPhysics(i));
-
     if (elem == NULL) break;
     RegisterPhysics(elem);
   }

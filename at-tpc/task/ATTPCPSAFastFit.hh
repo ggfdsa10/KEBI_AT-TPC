@@ -65,10 +65,10 @@ class ATTPCPSAFastFit : public ATTPCPSA, public KBPulseGenerator
     Int_t fTbStartCut;
 
     /**
-     * Maximum number of iteration alowed for fitting parameter tbStart.
+     * Maximum number of iteration allowed for fitting parameter tbStart.
      * Where, tbStart is "staring time-bucket of the pulse"
      */
-    Int_t fIterMax = 250; //40
+    Int_t fIterMax = 300; //40
 
     /** 
      * Number of time-bucket to subtract fitted pulse from the adc distribution.
@@ -77,7 +77,7 @@ class ATTPCPSAFastFit : public ATTPCPSA, public KBPulseGenerator
      * for (tb = tbStart; tb < tbStart + fNumTbsCorrection; tb ++)
      *   [adc distribution]_tb -= [fitted pulse]_tb
      *
-     * Note that adc distribution will be used agian to find the next peak.
+     * Note that adc distribution will be used again to find the next peak.
      */
     Int_t fNumTbsCorrection = 50;
 

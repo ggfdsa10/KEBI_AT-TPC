@@ -2,7 +2,7 @@
 void reco(TString input = "ATTPC")
 {
 
-    TString version = "_noNoise";
+    TString version = "";
 
     auto run = new KBRun();
     run -> SetIOFile(input+Form(".digi%s", version.Data()), input+Form(".reco%s", version.Data()));
@@ -12,7 +12,7 @@ void reco(TString input = "ATTPC")
     psa -> SetPSA(new ATTPCPSAFastFit());
     run -> Add(psa);
 
-    // run -> Add(new ATTPCHelixTrackFindingTask());
+    run -> Add(new ATTPCHelixTrackFindingTask());
     // run -> Add(new ATTPCVertexFindingTask());
     // run -> Add(new ATTPCGenfitTask());
     

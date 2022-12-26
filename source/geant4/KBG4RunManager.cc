@@ -69,15 +69,11 @@ void KBG4RunManager::Initialize()
 
   auto procNames = G4ProcessTable::GetProcessTable() -> GetNameList();
   Int_t idx = 0;
-	G4cout << "####################" << G4endl;
-	G4cout << "Create Process Table" << G4endl;
   fProcessTable -> SetPar("Primary", idx++);
-	G4cout << idx-1 << " " << "Primary" << G4endl;
   for (auto name : *procNames){
+    if(fProcessTable -> CheckPar(name)){continue;}
 		fProcessTable -> SetPar(name, idx++);
-		G4cout << idx-1 << " " << name << G4endl;
 	}
-	G4cout << "####################" << G4endl;
 
   if (fPar->CheckPar("G4ExportGDML"))
   {

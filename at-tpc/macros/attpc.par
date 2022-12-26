@@ -1,7 +1,7 @@
 #G4VisFile    s  $KEBIPATH/at-tpc/macros/input/vis.mac
 G4InputMode i 0  #0: single, 1: text file
 G4InputFile   s  $KEBIPATH/at-tpc/macros/generate/CosmicMuon.gen
-G4OutputFile  s  $KEBIPATH/data/ATTPC.mc_noNoise.root
+G4OutputFile  s  $KEBIPATH/data/ATTPC.mc.root
 
 tpcPar f $KEBIPATH/at-tpc/macros/input/par_at-tpc.conf
 
