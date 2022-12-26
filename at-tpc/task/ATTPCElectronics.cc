@@ -35,9 +35,11 @@ bool ATTPCElectronics::Init()
   fPulseFunction = pulseGen -> GetPulseFunction();
   fPulseFunction -> SetParameters(fEChargeToADC,0);
 
-  auto noiseFile = new TFile("$KEBIPATH/at-tpc/macros/input/noise.root","read");
-  noiseTree = (TTree*)noiseFile -> Get("noise");
-  noiseTree->SetBranchAddress("noiseEvn", &noiseArray);
+  if(fNoiseOn == true){
+    auto noiseFile = new TFile("$KEBIPATH/at-tpc/macros/input/noise.root","read");
+    noiseTree = (TTree*)noiseFile -> Get("noise");
+    noiseTree->SetBranchAddress("noiseEvn", &noiseArray);
+  }
   
   return true;
 }
@@ -85,23 +87,23 @@ void ATTPCElectronics::Exec(Option_t*)
       }
     }
     
-    auto saturated = false;
-    Int_t saturatedFrom = 100000;
-    Int_t saturatedTo = 100000;
-    for (Int_t iTb = 0; iTb < fNTbs; iTb++) {
-      if (!saturated && out[iTb] > fADCMaxAmp) {
-        saturated = true;
-        saturatedFrom = iTb;
-      }
-      if (saturated && out[iTb] < fADCMaxAmp) {
-        saturatedTo = iTb;
-        break;
-      }
-    }
+    // auto saturated = false;
+    // Int_t saturatedFrom = 100000;
+    // Int_t saturatedTo = 100000;
+    // for (Int_t iTb = 0; iTb < fNTbs; iTb++) {
+    //   if (!saturated && out[iTb] > fADCMaxAmp) {
+    //     saturated = true;
+    //     saturatedFrom = iTb;
+    //   }
+    //   if (saturated && out[iTb] < fADCMaxAmp) {
+    //     saturatedTo = iTb;
+    //     break;
+    //   }
+    // }
 
-    if (saturatedTo-saturatedFrom>=5)
-    for (Int_t iTb = saturatedFrom+5; iTb < fNTbs; iTb++)
-      out[iTb] = 0;
+    // if (saturatedTo-saturatedFrom>=5)
+    // for (Int_t iTb = saturatedFrom+5; iTb < fNTbs; iTb++)
+    //   out[iTb] = 0;
 
     if(fNoiseOn == true){
       int noiseEvent = gRandom->Uniform(0, noiseTree->GetEntries());
@@ -109,7 +111,6 @@ void ATTPCElectronics::Exec(Option_t*)
 
       noiseTree->GetEntry(noiseEvent);
       for (Int_t i = 0; i< 512; i++){
-	      // Double_t noise = gRandom -> Gaus(434,42);
 	      out[i] += noiseArray[noiseAget][i];
       }
     }

@@ -11,7 +11,7 @@ void AllEventSave(){
 
   for(int event =0; event <eventNum; event++){
     KBRun::GetRun() -> RunEve(event);
-    KBRun::GetRun() -> WriteCvsDetectorPlanes("png");
+    KBRun::GetRun() -> WriteCvsDetectorPlanes("pdf");
   }
 }
 

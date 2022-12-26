@@ -88,7 +88,7 @@ void NewTPCDriftElectron::Exec(Option_t*)
     Int_t SecondaryNum = KEnergy/Wvalue;
     if(SecondaryNum < 1){ SecondaryNum = 1;}
 
-    if(PDG != 11)
+    if(PDG != 11 && PDG != 1000020040)
       continue;
 
     for (Int_t iElectron = 0; iElectron < SecondaryNum; iElectron++) {

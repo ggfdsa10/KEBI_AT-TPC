@@ -52,7 +52,7 @@ bool ATTPCDriftElectron::Init()
 
 void ATTPCDriftElectron::Exec(Option_t*)
 {
-  gRandom -> SetSeed(777);
+  gRandom -> SetSeed(0);
   fPadArray -> Delete();
   for (Int_t iPlane = 0; iPlane < fNPlanes; iPlane++){
     fTpc -> GetPadPlane(iPlane) -> Clear();

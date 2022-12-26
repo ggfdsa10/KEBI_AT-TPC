@@ -66,7 +66,6 @@ ATTPCPhysicsList::ATTPCPhysicsList() : G4VModularPhysicsList()
 
   for(G4int i =1;;++i) {
     G4VPhysicsConstructor* elem = const_cast<G4VPhysicsConstructor*>(physics->GetPhysics(i));
-
     if (elem == NULL) break;
     RegisterPhysics(elem);
   }

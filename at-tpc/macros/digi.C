@@ -1,6 +1,6 @@
 void digi(TString name = "ATTPC")
 {
-  TString version = "_noNoise";
+  TString version = "";
 
   auto run = KBRun::GetRun();
   run -> SetIOFile(name+Form(".mc%s",version.Data()), name+Form(".digi%s",version.Data()));
