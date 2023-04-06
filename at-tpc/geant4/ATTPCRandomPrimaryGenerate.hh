@@ -15,6 +15,8 @@
 
 #include "TMath.h"
 #include "TRandom3.h"
+#include "TH1D.h"
+#include "TGraph.h"
 #include <time.h>
 
 
@@ -27,10 +29,15 @@ class ATTPCRandomPrimaryGenerate : public G4VUserPrimaryGeneratorAction
     const G4ParticleGun* GetParticleGun() const { return fParticleGun; }
     G4int GetNumberOfPrimary()  {return fNumberOfPrimary; } 
   
+    void SetInteractionPoint(TVector3 pos, TVector3 mom); // for physics
+    Double_t GetInteractionEnergy(){return InteractionEnergy;} // for physics 
+
   private:
     void ExternalTriggerPMT(G4Event* event);
     void ProtonBeam(G4Event* event);
-
+    void HIMACSetup(G4Event* event);
+    void HoyleState(G4Event* event);
+    
     TRandom3* fRandom = nullptr;
     KBG4RunManager* fRunManager = nullptr;
     KBParameterContainer* fPar = nullptr;
@@ -42,6 +49,13 @@ class ATTPCRandomPrimaryGenerate : public G4VUserPrimaryGeneratorAction
 
     Double_t PositionX, PositionY, PositionZ;
     Double_t DirectionX, DirectionY, DirectionZ;
+
+    Double_t InteractionEnergy = 0;
+    TVector3 fInteractionPos;
+    TVector3 fInteractionMom;
+
+    // test
+    TH1D* muonFluxH1;
 
     G4int fNumberOfPrimary = 0;
 };

@@ -18,7 +18,7 @@ void nx(Int_t eventID = -1) {
 void AllEventSave(){  
     Long64_t eventNum = KBRun::GetRun() -> GetNumEvents();
     TString fileName = "ATTPCEXP";
-    TString ExpName = "MuonTest";
+    TString ExpName = "Muon";
     TString picturePath = "./picture";
 
     for(int event =0; event <eventNum; event++){
@@ -30,10 +30,10 @@ void AllEventSave(){
 
 void eve(TString input = "ATTPCEXP")
 {
-    TString version = "MuonTest";
-
+    TString version = "HIMAC";
     auto run = new KBRun();
-    run -> SetInputFile(input+Form(".raw%s", version.Data()));
+    run -> SetInputFile(input+Form(".%s", version.Data()));
+    // run -> AddFriend(input+Form(".%s_reco", version.Data()));
     run -> AddDetector(new ATTPC());
     run -> SetTag("eve");
     run -> Init();

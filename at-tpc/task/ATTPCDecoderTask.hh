@@ -34,6 +34,7 @@ class ATTPCDecoderTask : public KBTask
         void ExcuteOnline(Int_t eventIdx, bool skim);
         void PadIDMapping();
         void NewPadIDMapping();
+        void BoardIDMapping();
 
         bool IsFakeEvent(){return fIsFakeEvent;}
         bool IsSparkEvent(){return fIsSparkEvent;}
@@ -43,6 +44,8 @@ class ATTPCDecoderTask : public KBTask
 
         pair<Int_t, Int_t> GetPadID(Int_t asadIdx, Int_t agetIdx, Int_t chanIdx); //[PadID, FPN Id by Pad]
         Int_t GetFPNPadID(Int_t asadIdx, Int_t agetIdx, Int_t chanFPNIdx);
+        tuple<Int_t, Int_t, Int_t> GetBoardID(Int_t PadID);
+        tuple<Int_t, Int_t, Int_t> GetBoardFPNID(Int_t fpnPadID);
 
         uint64_t SetPreviousEventTime(uint64_t time){fEventTime = time;}
         uint64_t GetEventTime(){return fEventTime;}
@@ -104,6 +107,10 @@ class ATTPCDecoderTask : public KBTask
 
         map<vector<Int_t>, tuple<Int_t, Int_t, Int_t>> fPadIdxArray;
         map<vector<Int_t>, Int_t> fPadFPNIdxArray;
+
+        map<Int_t, tuple<Int_t, Int_t, Int_t>> fBoardIdxArray;
+        map<Int_t, tuple<Int_t, Int_t, Int_t>> fBoardFPNIdxArray;
+
         vector<Int_t> fSkipAAID;
 
 ClassDef(ATTPCDecoderTask, 1)

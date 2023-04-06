@@ -21,7 +21,7 @@ class ATTPCRectanglePad : public KBPadPlane
 
     virtual Int_t FindPadID(Int_t section, Int_t row, Int_t layer);
     virtual Int_t FindPadID(Double_t i, Double_t j);
-
+    
     virtual Double_t PadDisplacement() const;
   
     virtual bool IsInBoundary(Double_t i, Double_t j);

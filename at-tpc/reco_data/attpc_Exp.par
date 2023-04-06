@@ -1,3 +1,4 @@
-pathToRawData    string  /home/shlee/tpcByGeKim/data
+#pathToRawData    string  /home/shlee/workspace/221207_attpc2_muon_ext
+pathToRawData    string  /home/shlee/workspace/treeOfADC_all_2.root
 
 tpcPar f $KEBIPATH/at-tpc/reco_data/input/par_Exp_at-tpc.conf

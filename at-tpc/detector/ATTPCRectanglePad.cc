@@ -23,7 +23,6 @@ void ATTPCRectanglePad::Draw(Option_t *option)
   DrawFrame();
 }
 
-
 bool ATTPCRectanglePad::Init()
 {
   TObjArray *fInPadArray = new TObjArray();
@@ -153,7 +152,6 @@ Int_t ATTPCRectanglePad::FindPadID(Double_t i, Double_t j)
 
   return id;
 }
-
 
 Double_t ATTPCRectanglePad::PadDisplacement() const
 {

@@ -67,22 +67,22 @@ void ATTPCTrackingAction::PostUserTrackingAction(const G4Track* track)
     Double_t edep1 = 0.;
     Double_t edep2 = 0.;
 
-    if(PDG==2212){
+    // if(PDG==2212){
 
-      Double_t corrLength = fTrackLength.front();
-      Double_t TotalLength = fTrackLength.back() - corrLength;
-      fTrackEndEPoint = TotalLength - fTrackStartPoint;
+    //   Double_t corrLength = fTrackLength.front();
+    //   Double_t TotalLength = fTrackLength.back() - corrLength;
+    //   fTrackEndEPoint = TotalLength - fTrackStartPoint;
 
-      for(int i=0; i<fTrackLength.size(); i++){
-        fDiffLengthBuffer2.push_back(abs(fTrackLength[i] - fTrackEndEPoint));
-      }
+    //   for(int i=0; i<fTrackLength.size(); i++){
+    //     fDiffLengthBuffer2.push_back(abs(fTrackLength[i] - fTrackEndEPoint));
+    //   }
 
-      int indexEPoint1 = min_element(fDiffLengthBuffer1.begin(), fDiffLengthBuffer1.end()) -fDiffLengthBuffer1.begin();
-      int indexEPoint2 = min_element(fDiffLengthBuffer2.begin(), fDiffLengthBuffer2.end()) -fDiffLengthBuffer2.begin();
+    //   int indexEPoint1 = min_element(fDiffLengthBuffer1.begin(), fDiffLengthBuffer1.end()) -fDiffLengthBuffer1.begin();
+    //   int indexEPoint2 = min_element(fDiffLengthBuffer2.begin(), fDiffLengthBuffer2.end()) -fDiffLengthBuffer2.begin();
 
-      edep1 = fTrackEdep[indexEPoint1];
-      edep2 = fTrackEdep[indexEPoint2];
-    }
+    //   edep1 = fTrackEdep[indexEPoint1];
+    //   edep2 = fTrackEdep[indexEPoint2];
+    // }
     // fRunManager -> AddMCTrack(track -> GetTrackID(), track -> GetParentID(), track -> GetDefinition() -> GetPDGEncoding(), fMomentum.x(), fMomentum.y(), fMomentum.z(), fVolumeID, fPosition.x(), fPosition.y(), fPosition.z(), fKEnergy, edep1, edep2, fProcessID);
   }
 }

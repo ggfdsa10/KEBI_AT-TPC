@@ -17,6 +17,7 @@ ATTPCDecoderTask::ATTPCDecoderTask()
     fDecoder = new GETDecoder();
     fPreDecoder = new GETDecoder();
     NewPadIDMapping();
+    BoardIDMapping();
 } 
 
 bool ATTPCDecoderTask::Init()
@@ -187,12 +188,26 @@ void ATTPCDecoderTask::LoadData(TString pathToRawData, TString pathToMetaData)
                 fileList.push_back(fileName);
                 if(fileName.Length() > 10){
                     std::string filename = fileName.Data();
-                    fYear = std::stoi(filename.substr(filename.length() - 34, 4));
-                    fMonth = std::stoi(filename.substr(filename.length() - 29, 2));
-                    fDay = std::stoi(filename.substr(filename.length() - 26, 2));
-                    fHour = std::stoi(filename.substr(filename.length() - 23, 2));
-                    fMinute = std::stoi(filename.substr(filename.length() - 20, 2));
-                    fSecond = std::stof(filename.substr(filename.length() - 17, 6));
+                    std::string tmpName = filename.substr(5, filename.length()-10);
+                    char dataSeparator = 'T';
+                    char timeSeparator = '.';
+                    std::istringstream iss(tmpName);
+                    std::string date;
+                    std::string timeLine;
+                    getline(iss, date, dataSeparator);
+                    getline(iss, timeLine, dataSeparator);
+                
+                    fYear = std::stoi(date.substr(0, 4));
+                    fMonth = std::stoi(date.substr(5, 2));
+                    fDay = std::stoi(date.substr(8, 2));
+
+                    std::istringstream iss2(timeLine);
+                    std::string time;
+                    getline(iss2, time, timeSeparator);
+
+                    fHour = std::stoi(time.substr(0, 2));
+                    fMinute = std::stoi(time.substr(3, 2));
+                    fSecond = std::stof(time.substr(6, 2));
                 }
             }
         closedir (dir);
@@ -305,6 +320,9 @@ Int_t ATTPCDecoderTask::GetFPNPadID(Int_t asadIdx, Int_t agetIdx, Int_t chanFPNI
     key.push_back(fFPNChanArray[chanFPNIdx]);
     return fPadFPNIdxArray[key];
 }
+
+tuple<Int_t, Int_t, Int_t> ATTPCDecoderTask::GetBoardID(Int_t padID){return fBoardIdxArray[padID];}
+tuple<Int_t, Int_t, Int_t> ATTPCDecoderTask::GetBoardFPNID(Int_t padID){return fBoardFPNIdxArray[padID];}
 
 bool ATTPCDecoderTask::IsFPNChannel(Int_t chanIdx) {return (chanIdx == fFPNChanArray[0] || chanIdx == fFPNChanArray[1] || chanIdx == fFPNChanArray[2] || chanIdx == fFPNChanArray[3]) ? true : false;}
 
@@ -582,6 +600,25 @@ void ATTPCDecoderTask::NewPadIDMapping(){
 
 
                 fPadIdxArray.insert(make_pair(key, make_tuple(xIdx, yIdx, idxFPN)));
+            }
+        }
+    }
+}
+
+void ATTPCDecoderTask::BoardIDMapping()
+{
+    fBoardIdxArray.clear();
+    Int_t fpnPadIdx = 0;
+    for(int asadIdx=0; asadIdx<fNumAsAds; asadIdx++){
+        for(int agetIdx = 0; agetIdx < fNumAGETs; agetIdx++){
+            for(int chanIdx = 0; chanIdx < fNumChannels; chanIdx++){
+                Int_t padID = GetPadID(asadIdx, agetIdx, chanIdx).first;
+                fBoardIdxArray.insert(make_pair(padID, make_tuple(asadIdx, agetIdx, chanIdx)));
+
+                if(IsFPNChannel(chanIdx)){
+                    fBoardFPNIdxArray.insert(make_pair(fpnPadIdx, make_tuple(asadIdx, agetIdx, chanIdx)));
+                    fpnPadIdx++;
+                }
             }
         }
     }
