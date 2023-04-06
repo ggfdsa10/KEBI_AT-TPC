@@ -4,7 +4,6 @@
 #include "KBMCStep.hh"
 #include "ATTPCSetupParameter.hh"
 
-#include "TCanvas.h"
 #include "TMath.h"
 
 ClassImp(ATTPCDriftElectron)
@@ -32,6 +31,7 @@ bool ATTPCDriftElectron::Init()
   fVelocityE =  par -> GetParDouble("VelocityE");
   fLDiff = par -> GetParDouble("LDiff");
   fTDiff = par -> GetParDouble("TDiff");
+
   fBAt0DiffCoef2 = par -> GetParDouble("BAt0DiffCoef2");
   fWvalue = par -> GetParDouble("GasWvalue");
   fFanoFactor = par -> GetParDouble("FanoFactor");
@@ -46,14 +46,21 @@ bool ATTPCDriftElectron::Init()
   fPadArray = new TClonesArray("KBPad");
   run -> RegisterBranch("Pad", fPadArray, fPersistency);
 
+  fFPNPadArray = new TClonesArray("KBPad");
+  run -> RegisterBranch("FPNPad", fFPNPadArray, fPersistency);
+
+  fDecoder = new ATTPCDecoderTask();
+
   return true;
 }
 
 
 void ATTPCDriftElectron::Exec(Option_t*)
 {
-  gRandom -> SetSeed(777);
+  gRandom -> SetSeed(0);
   fPadArray -> Delete();
+  fFPNPadArray -> Delete();
+
   for (Int_t iPlane = 0; iPlane < fNPlanes; iPlane++){
     fTpc -> GetPadPlane(iPlane) -> Clear();
   }
@@ -79,10 +86,19 @@ void ATTPCDriftElectron::Exec(Option_t*)
     Double_t kPlane = plane -> GetPlaneK();
 
     Double_t lDrift = std::abs(kPlane - posMC.K());
+
+    // Double_t tDrift = lDrift/fVelocityE;
+    // Double_t sigmaLD = fLDiff * TMath::Sqrt(lDrift);
+    // Double_t sigmaTD = TransverseDiffusion(lDrift);
+
+    // original diffusion (no corraction) ===================================
     Double_t tDrift = lDrift/fVelocityE;
-    
-    Double_t sigmaLD = fLDiff * sqrt(lDrift);
-    Double_t sigmaTD = TransverseDiffusion(lDrift);
+    Double_t sigmaLD = fLDiff*TMath::Sqrt(lDrift);
+    Double_t sigmaTD = fTDiff*TMath::Sqrt(lDrift);
+    Double_t sigmaGEMTD = 0.03245/TMath::Sqrt(10.);
+
+    sigmaTD = sqrt(sigmaTD*sigmaTD + 3*pow(sigmaGEMTD, 2));
+    // ======================================================================
 
     Double_t Wvalue = WvalueDistribution();
     Int_t SecondaryNum = KEnergy/Wvalue;
@@ -129,6 +145,7 @@ void ATTPCDriftElectron::Exec(Option_t*)
   Int_t idx = 0;
   Int_t idxLast = 0;
   
+  // for Pad Channel
   for (Int_t iPlane = 0; iPlane < fNPlanes; iPlane++) {
     KBPad *pad;
     TIter itChannel(fTpc -> GetPadPlane(iPlane) -> GetChannelArray());
@@ -140,7 +157,26 @@ void ATTPCDriftElectron::Exec(Option_t*)
       padSave -> SetPad(pad);
       padSave -> CopyPadData(pad);
 
+      Int_t iAsAd = get<0>(fDecoder -> GetBoardID(idx));
+      Int_t iAGET = get<1>(fDecoder -> GetBoardID(idx));
+      Int_t iChannel = get<2>(fDecoder -> GetBoardID(idx));
+      padSave -> SetAsAdID(iAsAd);
+      padSave -> SetAGETID(iAGET);
+      padSave -> SetChannelID(iChannel);
       idx++;
+    }
+
+    // for FPN Channel
+    for(int fpnIdx = 0; fpnIdx< 16; fpnIdx++){
+      auto FPNpadSave = (KBPad *) fFPNPadArray -> ConstructedAt(fpnIdx);
+      Int_t iAsAd = get<0>(fDecoder -> GetBoardFPNID(fpnIdx));
+      Int_t iAGET = get<1>(fDecoder -> GetBoardFPNID(fpnIdx));
+      Int_t iChannel = get<2>(fDecoder -> GetBoardFPNID(fpnIdx));
+      FPNpadSave -> SetAsAdID(iAsAd);
+      FPNpadSave -> SetAGETID(iAGET);
+      FPNpadSave -> SetChannelID(iChannel);
+      FPNpadSave -> SetPadID(fpnIdx);
+      FPNpadSave -> SetSortValue(fpnIdx);
     }
 
     kb_info << "Number of fired pads in plane-" << iPlane << ": " << idx - idxLast << endl;
@@ -160,11 +196,22 @@ void ATTPCDriftElectron::GainDistribution(){
   Double_t GainParMean = TMath::Exp(-16.84+0.07451*fGemVolt);
   Double_t GainVariance = 1/(pow(TMath::Exp(-20.7+0.07985*fGemVolt)/GainParMean, 2)*fElectronNumRef - fFanoFactor);
 
-  fGainFunction = new TF1("GainFunction", this, &ATTPCDriftElectron::PolyaFunction, 0, GainMean/0.05, 3);
-  fGainFunction -> SetParameter(0, GainVariance);
-  fGainFunction -> SetParameter(1, GainMean); 
-  fGainFunction -> SetParameter(2, 1);
-  fGainFunction -> SetParameter(2, fGainFunction -> Integral(0,GainMean/0.05)); // normalization
+  // fGainFunction = new TF1("GainFunction", this, &ATTPCDriftElectron::PolyaFunction, 0, GainMean/0.05, 3);
+  // fGainFunction -> SetParameter(0, GainVariance);
+  // fGainFunction -> SetParameter(1, GainMean); 
+  // fGainFunction -> SetParameter(2, 1);
+  // fGainFunction -> SetParameter(2, fGainFunction -> Integral(0,GainMean/0.05)); // normalization
+
+  // test
+  fGainFunction = new TF1("GainFunction", this, &ATTPCDriftElectron::PolyaFunction, 0, 15000, 3);
+  Double_t a = 3.0369;
+  Double_t b = 4503.55;
+  Double_t c = 0.00024412;
+
+  if(!par->GetParBool("Physics")){
+    b = b*(par->GetParDouble("GemVolt")/400.);
+  }
+  fGainFunction -> SetParameters(3.0369, 4503.55, 0.00024412);
 }
 
 Double_t ATTPCDriftElectron::WvalueDistribution(){

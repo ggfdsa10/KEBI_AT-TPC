@@ -10,6 +10,7 @@
 #include "TClonesArray.h"
 #include "TRandom3.h"
 #include "ATTPCStripPad.hh"
+#include "ATTPCDecoderTask.hh"
 
 class ATTPCElectronics : public KBTask
 { 
@@ -22,6 +23,8 @@ class ATTPCElectronics : public KBTask
 
   private:
     TClonesArray* fPadArray;
+    TClonesArray* fFPNPadArray;
+
     ATTPCStripPad* fStripPad;
     Int_t fNPlanes;
     Int_t fNTbs;
@@ -33,6 +36,7 @@ class ATTPCElectronics : public KBTask
     TF1 *fPulseFunction;
     TTree* noiseTree;
     double noiseArray[4][512];
+    ATTPCDecoderTask* fDecoder;
 
     Bool_t fUsePointChargeMC = true;
     Bool_t fNoiseOn;

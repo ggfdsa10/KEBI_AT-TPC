@@ -14,6 +14,8 @@
 #include "ATTPC.hh"
 #include "ATTPCDecoderTask.hh"
 
+#include "TFile.h"
+#include "TTree.h"
 
 class ATTPCNoiseSubtractTask : public KBTask
 { 

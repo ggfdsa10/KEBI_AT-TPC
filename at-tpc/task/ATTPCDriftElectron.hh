@@ -8,6 +8,8 @@
 #include "TRandom3.h"
 #include "TClonesArray.h"
 
+#include "ATTPCDecoderTask.hh"
+
 class ATTPCDriftElectron : public KBTask
 { 
   public:
@@ -17,7 +19,7 @@ class ATTPCDriftElectron : public KBTask
     bool Init();
     void Exec(Option_t*);
 
-    void SetPadPersistency(bool persistence);
+    void SetPadPersistency(bool persistence){fPersistency = persistence;}
 
   private:
     void GainDistribution();
@@ -27,10 +29,12 @@ class ATTPCDriftElectron : public KBTask
 
     TClonesArray* fMCTrackArray;
     TClonesArray* fPadArray;
+    TClonesArray* fFPNPadArray;
     ATTPC *fTpc = nullptr;
     KBPadPlane *fPadPlane = nullptr;
     bool fPersistency = true;
     KBParameterContainer *par = nullptr;
+    ATTPCDecoderTask* fDecoder = nullptr;
 
     Int_t fNPlanes = 0;
     Double_t fGemVolt = 0;

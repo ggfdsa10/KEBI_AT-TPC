@@ -17,12 +17,12 @@ void AllEventSave(){
 
 void eve(TString input = "ATTPC")
 {
-  TString version = "_noNoise";
+  TString version = "_PointZ";
 
   auto run = new KBRun();
   run -> SetInputFile(input+Form(".mc%s", version.Data()));
   run -> AddFriend(input+Form(".digi%s", version.Data()));
-  run -> AddFriend(input+Form(".reco%s", version.Data()));
+  // run -> AddFriend(input+Form(".reco%s", version.Data()));
     cout << run->GetNumEvents() << endl;
   run -> AddDetector(new ATTPC());
   run -> SetTag("eve");

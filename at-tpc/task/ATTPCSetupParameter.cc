@@ -71,7 +71,7 @@ void ATTPCSetupParameter::GetGasParameters()
     TFile * Parameters = new TFile("$KEBIPATH/at-tpc/macros/input/P10Parameters.root","read");
     TF1* VDrift = (TF1*)Parameters -> Get("pol7");
     TF1* LDiff = (TF1*)Parameters -> Get("lengifit");
-
+    TF1* TDiffTF1 = (TF1*)Parameters -> Get("transfit");
     fVelocityE = VDrift -> Eval(parEfield) *0.01; //[mm/ns]
 
     Double_t fBfieldCoef1 = 0.0000453*TMath::Power(bfieldz,2) -0.000283*bfieldz +0.00031*TMath::Sqrt(bfieldz) +0.00000174;
@@ -80,6 +80,10 @@ void ATTPCSetupParameter::GetGasParameters()
 
     fTDiff = (fBfieldCoef1*parEfield +fBfieldCoef2) *10/TMath::Sqrt(10); //[mm/sqrt(mm)]
     fLDiff = LDiff -> Eval(parEfield) *10/TMath::Sqrt(10); //[mm/sqrt(mm)]
+
+    fVelocityE = 0.055104;
+    fLDiff = 0.338/TMath::Sqrt(10.);
+    fTDiff = 0.589/TMath::Sqrt(10.);
   }
 
   if(detMatName == "4He") {

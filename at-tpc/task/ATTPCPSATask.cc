@@ -71,7 +71,7 @@ void ATTPCPSATask::Exec(Option_t*)
     int index=0;
     for (auto channelHit : hitArray) {
       ///@todo build pad plane dependent code
-      Double_t k = (channelHit.GetTDC()-0.5)*fTbTime*fDriftVelocity;
+      Double_t k = (channelHit.GetTDC())*fTbTime*fDriftVelocity;
         
       KBVector3 pos(fTpc->GetEFieldAxis(),pad->GetI(),pad->GetJ(),k);
 

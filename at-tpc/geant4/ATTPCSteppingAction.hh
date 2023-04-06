@@ -6,6 +6,7 @@
 #include "G4UserSteppingAction.hh"
 #include "G4Step.hh"
 #include "globals.hh"
+#include "ATTPCEventAction.hh"
 #include "ATTPCTrackingAction.hh"
 #include "ATTPCRectanglePad.hh"
 #include "ATTPCHoneyCombPad.hh"
@@ -21,6 +22,7 @@ class ATTPCSteppingAction : public G4UserSteppingAction
 
   private:
     KBG4RunManager *fRunManager = nullptr;
+    KBParameterContainer* fPar = nullptr;
 };
 
 #endif

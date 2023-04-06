@@ -62,7 +62,6 @@ void ATTPCNoiseSubtractTask::Exec(Option_t*)
 
         KBPad *padFPN = (KBPad *) fPadFPNArray -> At(idFPNPad);
         auto bufferOutFPN = padFPN -> GetBufferOut();
-
         Double_t meanADC = 0.;
         for(int tb = int(fTBStart); tb < numTB; tb++){
             out[tb] = bufferOut[tb] - bufferOutFPN[tb];
@@ -131,7 +130,7 @@ void ATTPCNoiseSubtractTask::Exec(Option_t*)
 
                 for(int tb =0; tb<numTB; tb++){if(out[tb] < 0.){out[tb] = 0.;}}
                 pad -> SetBufferOut(out);
-                
+
                 // // save the noise template
                 // if(chanIdx ==0){
                 //     if(fDecoder->IsEvenChannel(agetIdx, chanIdx)){pad -> SetBufferIn(bufferNoiseEvn);}
@@ -142,6 +141,5 @@ void ATTPCNoiseSubtractTask::Exec(Option_t*)
     }
     return;
 }
-
 
 void ATTPCNoiseSubtractTask::SetPadPersistency(bool persistence){fPersistency = persistence;}

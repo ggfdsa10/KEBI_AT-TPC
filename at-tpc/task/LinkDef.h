@@ -16,6 +16,9 @@
 #pragma link C++ class ATTPCVertexFindingTask+;
 
 #pragma link C++ class ATTPCDecoderTask+;
+#pragma link C++ class ATTPCRootDecoder+;
 #pragma link C++ class ATTPCNoiseSubtractTask+;
+
+
 
 #endif

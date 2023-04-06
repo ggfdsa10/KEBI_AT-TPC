@@ -17,6 +17,7 @@
 #include "ATTPCDetectorConstruction.hh"
 #include "ATTPCPhysicsList.hh"
 #include "ATTPCRandomPrimaryGenerate.hh"
+#include "ATTPCEventAction.hh"
 #include "ATTPCTrackingAction.hh"
 #include "ATTPCSteppingAction.hh"
 
@@ -36,6 +37,7 @@ int main(int argc, char** argv)
   runManager -> SetUserInitialization(physicsList);
   runManager -> SetParameterContainer(argv[1]);
   runManager -> SetUserInitialization(new ATTPCDetectorConstruction());
+  runManager -> SetUserAction(new ATTPCEventAction());
   runManager -> SetUserAction(new ATTPCTrackingAction());
   runManager -> SetUserAction(new ATTPCSteppingAction());
   

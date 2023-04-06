@@ -30,14 +30,18 @@ bool ATTPCElectronics::Init()
   fEChargeToADC = fElectronCharge/(fDynamicRange *1.0e-15)*fADCMaxAmp;
 
   fPadArray = (TClonesArray *) run -> GetBranch("Pad");
+  fFPNPadArray = (TClonesArray *) run -> GetBranch("FPNPad");
 
   KBPulseGenerator *pulseGen = new KBPulseGenerator("pulserForATTPC.dat");
   fPulseFunction = pulseGen -> GetPulseFunction();
   fPulseFunction -> SetParameters(fEChargeToADC,0);
 
-  auto noiseFile = new TFile("$KEBIPATH/at-tpc/macros/input/noise.root","read");
-  noiseTree = (TTree*)noiseFile -> Get("noise");
-  noiseTree->SetBranchAddress("noiseEvn", &noiseArray);
+  if(fNoiseOn == true){
+    auto noiseFile = new TFile("$KEBIPATH/at-tpc/macros/input/noise.root","read");
+    noiseTree = (TTree*)noiseFile -> Get("noise");
+    noiseTree->SetBranchAddress("noiseArray", &noiseArray);
+    fDecoder = new ATTPCDecoderTask();
+  }
   
   return true;
 }
@@ -45,8 +49,26 @@ bool ATTPCElectronics::Init()
 void ATTPCElectronics::Exec(Option_t*)
 {
   gRandom -> SetSeed(0);
-  Int_t nPads = fPadArray -> GetEntries();
 
+  if(fNoiseOn == true){
+    Int_t nFPNPads = fFPNPadArray -> GetEntries();
+
+    for(int iPad = 0; iPad < nFPNPads; iPad++){
+      KBPad *pad = (KBPad *) fFPNPadArray -> At(iPad);
+      Double_t out[512] = {0};
+      int noiseEvent = gRandom->Uniform(0, noiseTree->GetEntries());
+      noiseTree->GetEntry(noiseEvent);
+      int iAGET = pad -> GetAGETID();
+      Double_t baseLine = gRandom -> Gaus(450., 30.);
+
+      for(int tb=0; tb<512; tb++){
+        out[tb] = noiseArray[iAGET][tb] + baseLine;
+      }
+      pad -> SetBufferOut(out);
+    }
+  }
+
+  Int_t nPads = fPadArray -> GetEntries();
   for (Int_t iPad = 0; iPad < nPads; iPad++) {
     KBPad *pad = (KBPad *) fPadArray -> At(iPad);
     Double_t out[512] = {0};
@@ -84,38 +106,39 @@ void ATTPCElectronics::Exec(Option_t*)
         }
       }
     }
-    
-    auto saturated = false;
-    Int_t saturatedFrom = 100000;
-    Int_t saturatedTo = 100000;
-    for (Int_t iTb = 0; iTb < fNTbs; iTb++) {
-      if (!saturated && out[iTb] > fADCMaxAmp) {
-        saturated = true;
-        saturatedFrom = iTb;
-      }
-      if (saturated && out[iTb] < fADCMaxAmp) {
-        saturatedTo = iTb;
-        break;
-      }
-    }
 
-    if (saturatedTo-saturatedFrom>=5)
-    for (Int_t iTb = saturatedFrom+5; iTb < fNTbs; iTb++)
-      out[iTb] = 0;
 
-    if(fNoiseOn == true){
-      int noiseEvent = gRandom->Uniform(0, noiseTree->GetEntries());
-      int noiseAget = gRandom->Uniform(0,3);
+    if(fNoiseOn == true){ 
+      Int_t iAsAd = pad -> GetAsAdID();
+      Int_t iAGET = pad -> GetAGETID();
+      Int_t iChannel = pad -> GetChannelID();
+      Int_t idxFPNChanByPads = (fDecoder -> GetPadID(iAsAd, iAGET, iChannel)).second;
+      Int_t idFPNPad = fDecoder -> GetFPNPadID(iAsAd, iAGET, idxFPNChanByPads);
 
-      noiseTree->GetEntry(noiseEvent);
+      KBPad *padFPN = (KBPad *) fFPNPadArray -> At(idFPNPad);
+      auto bufferNoiseOut = padFPN -> GetBufferOut();
+
+      int noiseEvent1 = gRandom->Uniform(0, noiseTree->GetEntries());
+      int noiseEvent2 = gRandom->Uniform(0, noiseTree->GetEntries());
+      noiseTree->GetEntry(noiseEvent1);
+      Double_t noiseByPad[512];
+
       for (Int_t i = 0; i< 512; i++){
-	      // Double_t noise = gRandom -> Gaus(434,42);
-	      out[i] += noiseArray[noiseAget][i];
+        noiseByPad[i] = noiseArray[iAGET][i];
+      }
+      noiseTree->GetEntry(noiseEvent2);
+      for (Int_t i = 0; i< 512; i++){
+        out[i] += (noiseArray[iAGET][i] + noiseByPad[i])/2.;
+        out[i] += bufferNoiseOut[i];
       }
     }
-    pad -> SetBufferIn(out);
+
+
+    // pad -> SetBufferIn(out);
     pad -> SetBufferOut(out);
   }
+
+
 
   if(fStripPad != nullptr){
     if(fStripView){
